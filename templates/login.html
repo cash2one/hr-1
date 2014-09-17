@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>一达人力资源</title>
+	<link rel="stylesheet" type="text/css" href="{% static "style/login_style.css" %}">
+	<link rel="stylesheet" type="text/css" href="{% static "style/bootstrap.min.css" %}">
+</head>
+<body>
+	<div id="wrap">
+	  <div class="main">
+	  	 <img src="{% static "images/login_logo.png" %}" alt="一达人力资源" width="527" height="50" class="logo" />
+	  	 <div class="login_box">
+	  	    <div class="login_main">
+      			<div id="verify"></div>
+
+	  	       <form id="login" method="post" action=".">
+	  	       	{% csrf_token %}
+	  	          	<div class="user">
+	  	          	   <span>用户名:</span><input type="text" name="username" id="username"/>
+	  	            </div>
+	  	          	<div class="password">
+	  	          	   <span>密&nbsp&nbsp&nbsp&nbsp码:</span><input type="password" name="password" id="password" />
+	  	            </div>
+	  	            <br>
+	  	            <div class="password">
+	  	          	   <span>验证码:</span><input type="password" name="verify_code" id="vali" />
+	  	            </div>
+	  	            <br>
+	  	            <span class="code" id="code" style="margin-left:120px"></span><font style="font-size:13px;color:green">点击图片更换</font>
+	  	            <br><br>
+				      <input type="submit" class="btn btn-info login-btn span4" value="登录"/>
+	  	       </form>
+	  	    </div>
+	  	 </div>
+	  </div>	 
+	</div>
+	<script type="text/javascript" src="{% static "script/jquery.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "script/verify.js" %}"></script>
+</body>
+</html>

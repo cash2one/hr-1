@@ -1,0 +1,25 @@
+body{font-family:"Microsoft YaHei";padding: 0px; margin: 0px;min-height: 100%;height: auto !important;}
+#wrap{min-width: 1293px;height:765px;background: url("/static/images/wrap_bg.png") center top repeat-x;}
+.main{width:1040px;height:100%;margin: 0 auto;position: relative;background: url("/static/images/main_bg.png") left 400px no-repeat;}
+#wrap .logo{position: absolute;left: 0px;top: 40%;}
+.login_box{width: 365px;height: 378px;position: absolute;right:0px;top:25%;margin-left:-180px;border:1px solid #ffffff;border-radius:10px;-webkit-border-radius:10px;-moz-border-radius:10px;-ms-border-radius:10px;-o-border-radius:10px;background-color: #ffffff;}
+.login_main{width:285px;height:230px;margin: 50px auto;}
+.user input[type="text"],.password input[type="password"]{position:absolute;right:0px;top:7px;width: 67%;height: 25px;padding: 0px;border: none;outline: none;padding-left: 5px;}
+.user span,.password span{color: #8c8c8c;font-size: 14px;margin-left: 32px;}
+.user,.password{width: 99%;height: 35px;line-height: 35px;border: 1px solid #d8d8d8;position: relative;border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;-ms-border-radius:5px;-o-border-radius:5px;}
+.user{background: url("/static/images/user_button.png") 5px 7px no-repeat;margin-bottom: 15px;}
+.password{background: url("/static/images/password_button.png") 5px 7px no-repeat;}
+.auto_login{height: 70px;position: relative;margin: 20px 0px 10px 0px;}
+.sure{width:285px;line-height: 26px;}
+.sure span{color: #999999;font-size: 14px;margin-left: 50px;}
+.auto_login .sure div{width: 172px;height:30px;position: absolute;right: 0px;top: 0px;border: 1px solid #b5b5b5;}
+.auto_login .sure div input{width: 86px;height: 30px;padding: 0px;border: none;outline: none;padding-left: 5px;}
+.auto_login span.remember_password{color: #494949;font-size: 12px;position: absolute;bottom: 1px;right:0px;}
+.auto_login input[type="checkbox"]{position: absolute;bottom: 0px;right: 50px;}
+.login_main a.login_button{display: block;height: 40px;background-color: #ffffff;text-align: center;color: #014883;font-size: 18px;text-decoration: none;line-height: 40px;margin-top: 5px;letter-spacing: 8px;border: 1px solid #b5b5b5;} 
+.code {
+  padding: 5px 5px;
+  background: #555555;
+  font-size: 24px;
+  color: #000000;
+}

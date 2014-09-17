@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>一达人力资源_管理系统</title>
+<link href="style/reset.css" rel="stylesheet" type="text/css" />
+<link href="style/style.css" rel="stylesheet" type="text/css" />
+<link href="style/public.css" rel="stylesheet" type="text/css" />
+<link href="style/lhgcalendar.css" rel="stylesheet" type="text/css" />
+<script src="script/jquery.min.js"></script>
+<script src="script/lhgcalendar.min.js"></script>
+<script src="script/all.js"></script>
+</head>
+
+<body>
+    <div class="top-area">
+            <div class="top">
+                <span class="rt" id="hl1"></span>			
+                <span id="hl2">
+                    Hi，admin&nbsp;&nbsp;&nbsp;角色：[系统管理员]&nbsp;&nbsp;<a href="#">退出</a>
+                </span>
+            </div>
+    </div><!--top-area-->
+    
+    <div class="logo-area">
+        <div class="logo"></div>
+    </div><!--logo-area-->
+    <div class="wrapper">	
+        <div class="w-left">
+        	<ul>
+                <li><a href="javascript:;" class="big_txt"><span class="logo_small_one"></span>劳务管理</a>
+                    <ul class="big_txt_inner">
+                        <li title="劳务信息登记">
+                            <a href="javascript:;" class="small_txt"><i></i>劳务信息登记</a>
+                            <ul class="w-left-inner" style="display:block;">
+                                <li class="inner_txt inner_on"><a href="man_print.html" title="手动录入" style="color:#222222;">手动录入</a></li>
+                                <li class="inner_txt"><a href="bulk_print.html" title="批量录入" style="color:#222222;">批量录入</a></li>
+                            </ul>
+                        </li>
+                
+                        <li title="劳务信息查询">
+                           <a href="javscript:;" class="small_txt"><i></i>劳务信息查询</a>
+                           <ul class="w-left-inner">
+                               <li class="inner_txt"><a href="official_search.html" title="单位查询" style="color:#222222;">单位查询</a></li>
+                               <li class="inner_txt"><a href="person_search.html" title="个人查询" style="color:#222222;">个人查询</a></li>
+                           </ul>
+                        </li>
+                        <li title="劳务信息统计"><a href="ms_tongji.html" class="small_txt_tongji">劳务信息统计</a></li>
+                        <li title="历史劳务信息查询"><a href="history_check.html" class="small_txt_tongji" style="text-indent:42px;">历史劳务信息查询</a></li>
+                    </ul>
+                </li>
+                <li><a href="javascript:;" class="big_txt"><span class="logo_small_two"></span>财务管理</a>
+                    <ul style="display:none;" class="big_txt_inner">
+                        <li title="企业资金管理"><a href="corp_money.html" class="small_txt_tongji">企业资金管理</a></li>
+                        <li title="工资管理">
+                            <a class="small_txt" style="text-indent:75px;"><i></i>工资管理</a>
+                            <ul class="w-left-inner">
+                                <li class="inner_txt"><a href="salary_manage.html" title="查询" style="color:#222222;margin-left:15px;">查询</a></li>
+                                <li class="inner_txt"><a href="bulk_modify.html" title="批量修改" style="color:#222222;">批量修改</a></li>
+                            </ul>
+                        </li>
+                        <li title="社保资金管理">
+                            <a href="javascript:;" class="small_txt">社保资金管理</a>
+                            <ul class="w-left-inner">
+                                <li class="inner_txt"><a href="bulk_modify.html" title="批量修改" style="color:#222222;">批量修改</a></li>
+                            </ul>
+                        </li>   
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="w-right">   
+            <div class="th-y" style="border:none;">
+	            <div id="shoudong_two">
+	                <div class="th-input" style="width:42%;">
+	                    
+	                    <span>缴费基数：</span><input class="txt_input" type="text" name="password" style="margin-left:28px;width:205px;" /><br/>
+	                    <span>单位缴费金额：</span><input class="txt_input" type="text" name="equalTo" style="width:205px;" /><br/>
+	                    <span>个人缴费金额：</span><input class="txt_input" type="text" name="equalTo" style="width:205px;"/><br/>
+	                    <span>缴费起始时间：</span><input type="text" class="txt_input calendar" id="startDate" style="width:205px;"><br/>
+	                    <span>缴费终止时间：</span><input type="text" class="txt_input calendar" id="endDate" style="width:205px;">
+	                    <button class="return_button"><a href="man_print.html" title="返回" style="color:white;">返回</a></button>
+	                    <button class="return_button">确认保存</button>
+	                </div>
+            	</div>               
+            </div>               
+        </div>
+    </div><!--wrapper END-->
+</body>
+</html>
