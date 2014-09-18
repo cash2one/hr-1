@@ -50,7 +50,7 @@ class CompanyInfo(SoftDeletionModel):
 
 class EmployeeProfile(SoftDeletionModel):
     """ 员工基本信息"""
-    company = models.ForeignKey(User)
+    company = models.ForeignKey(User, default=None, null=True)
     serial_id = models.CharField('序号', max_length=20)
     name = models.CharField('姓名', max_length=10)
     sex = models.CharField('性别', max_length=2)

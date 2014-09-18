@@ -42,7 +42,7 @@
                         <li title="劳务信息登记">
                             <a href="javascript:;" class="small_txt"><i></i>劳务信息登记</a>
                             <ul class="w-left-inner" style="display:block;">
-                                <li class="inner_txt inner_on"><a href="man_print.html" title="手动录入" style="color:#222222;">手动录入</a></li>
+                                <li class="inner_txt inner_on"><a href="{% url "labour.views.personal" %}" title="手动录入" style="color:#222222;">手动录入</a></li>
                                 <li class="inner_txt"><a href="bulk_print.html" title="批量录入" style="color:#222222;">批量录入</a></li>
                             </ul>
                         </li>
@@ -78,10 +78,10 @@
                 </li>
             </ul>
         </div>
-    </div><!--wrapper END-->
 
 {% block container %}
 {% endblock %}
+    </div><!--wrapper END-->
 
 {% block script %}    
 <script type="text/javascript" src="{% static "script/jquery.min.js" %}"></script>

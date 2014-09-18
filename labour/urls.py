@@ -6,7 +6,7 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('labour.views',
 
     url(r'^$', 'index'),
-    
+    url(r'^personal/$', 'personal')
     #url(r'^(?P<folder>\D+)/info/(?P<recipe_id>\d+)/$', 'recipe_info'),
 
 )
