@@ -5,7 +5,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', include('labour.urls')),
+    url(r'^$', 'hr.views.login'),
     url(r'^labour/', include('labour.urls')),
 
 )

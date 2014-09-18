@@ -3,9 +3,9 @@ body { font-family:"微软雅黑"; color:#444; background-color:#e7e8ec;}
 table{ width:100%;}
 th{ text-align:right; line-height:36px;}
 button{ display:inline-block; position:relative;margin-right: .1em;cursor: pointer;text-align: center;zoom: 1;overflow: visible;font-family: "Microsoft Yahei","宋体",Arial, Verdana;font-size: 12px;border:0 none !important;
-background:url('../image/btn_small.png') no-repeat;font-weight: normal;width:72px;height:26px;color: #ffffff;line-height: 26px;}
+background:url('/static/images/btn_small.png') no-repeat;font-weight: normal;width:72px;height:26px;color: #ffffff;line-height: 26px;}
 button a{display:block;width: 100%;height: 100%;}
-.calendar{background:url(../image/iconDate.gif) center right no-repeat;cursor:pointer;}
+.calendar{background:url('/static/images/iconDate.gif') center right no-repeat;cursor:pointer;}
 
 /*链接*/
 a { color:#369; }
@@ -22,26 +22,26 @@ a:hover.link-style1 { color:#fff; }
 
 /*logo*/
 .logo-area {height:auto; background:#0078d8; padding:20px 0;}
-.logo {margin:0 auto; width:895px; height:90px; background:url('../image/logo.png') no-repeat;}
-.admin_logo{margin:0 auto; width:899px; height:98px; background:url('../image/admin_logo.png') no-repeat;}
+.logo {margin:0 auto; width:895px; height:90px; background:url('/static/images/logo.png') no-repeat;}
+.admin_logo{margin:0 auto; width:899px; height:98px; background:url('/static/images/admin_logo.png') no-repeat;}
 /*整体*/
 .wrapper { width:980px; margin:20px auto 10px; overflow:hidden; background:#ffffff; }
 	.w-left{ float:left; width:179px; height:100%;}
 	.w-left ul{width: 100%;}
 	.w-left li a.big_txt{font-size:18px;position:relative;display:inline-block;*display:block;width:100%;color:#222222; padding:8px 0px; cursor:pointer;border-bottom: 1px solid #e2e2e2;text-indent: 40px;text-align: left;}
 	.w-left li a.big_txt:hover{color:#ffffff; background-color:#369;}
-	.w-left li a.big_txt:hover span.logo_small_one{background: url("../image/logo_laowu_one.png") left top no-repeat;}
-	.w-left li a.big_txt:hover span.logo_small_two{background: url("../image/logo_caiwu_one.png") left top no-repeat;}
-	.w-left li a.big_txt:hover span.logo_small_three{background: url("../image/logo_tongchou_one.png") left top no-repeat;}
+	.w-left li a.big_txt:hover span.logo_small_one{background: url("/static/images/logo_laowu_one.png") left top no-repeat;}
+	.w-left li a.big_txt:hover span.logo_small_two{background: url("/static/images/logo_caiwu_one.png") left top no-repeat;}
+	.w-left li a.big_txt:hover span.logo_small_three{background: url("/static/images/logo_tongchou_one.png") left top no-repeat;}
 	.w-left li a.small_txt{position:relative;display:inline-block;*display:block;width:100%; font-size:16px; color:#222222; padding:8px 0px; text-align:left; cursor:pointer;border-bottom: 1px solid #e2e2e2;text-indent: 58px;}
 	.w-left li a.small_txt_tongji{position:relative;display:inline-block;*display:block;width:100%; font-size:16px; color:#222222; padding:8px 0px; text-align:left; cursor:pointer;border-bottom: 1px solid #e2e2e2;text-indent: 58px;}
 	.w-left li a.zhanghao_manage{position:relative;display:inline-block;width:100%; font-size:16px; color:#222222; padding:8px 0px; text-align:center; cursor:pointer;border-bottom: 1px solid #e2e2e2;}
 	.w-left .w-left-inner li.left_inner:hover{background-color:#369;color:#ffffff;}
-	.w-left li a span.logo_small_one{background: url("../image/logo_laowu_two.png") left top no-repeat;width:25px;height: 13px;position: absolute;left:8px;top:10px;}
-	.w-left li a span.logo_small_two{background: url("../image/logo_caiwu_two.png") left top no-repeat;width:27px;height: 19px;position: absolute;left:8px;top:10px;}
-	.w-left li a span.logo_small_three{background: url("../image/logo_tongchou_two.png") left top no-repeat;width:22px;height: 18px;position: absolute;left:8px;top:10px;}
+	.w-left li a span.logo_small_one{background: url("/static/images/logo_laowu_two.png") left top no-repeat;width:25px;height: 13px;position: absolute;left:8px;top:10px;}
+	.w-left li a span.logo_small_two{background: url("/static/images/logo_caiwu_two.png") left top no-repeat;width:27px;height: 19px;position: absolute;left:8px;top:10px;}
+	.w-left li a span.logo_small_three{background: url("/static/images/logo_tongchou_two.png") left top no-repeat;width:22px;height: 18px;position: absolute;left:8px;top:10px;}
 	.w-left li a i{ 
-		background: url("../image/traingle.png") left top no-repeat ;
+		background: url("/static/images/traingle.png") left top no-repeat ;
 		width: 13px;
 		height: 7px;
 		position: absolute;

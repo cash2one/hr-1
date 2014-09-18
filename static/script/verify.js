@@ -17,6 +17,8 @@ $(document).ready(function() {
     
   $('form').submit(function(){
     var b = true;
+    $("#verify").css("display", "none");
+    $(".alert").css("display", "none");
     if($( "#password").val().length == 0 ){
       $("#verify").html('<div class="alert alert-error">请输入密码!</div>').show();
       b = false;

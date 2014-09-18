@@ -27,21 +27,36 @@ class SoftDeletionModel(models.Model):
         super(SoftDeletionModel, self).delete()
 
 
-class Company(SoftDeletionModel):
-    """ 公司信息"""
-    pass
-
-
 class UserProfile(SoftDeletionModel):
     """ 用户基本信息"""
-    user = models.ForeignKey(User)
-    company = models.ForeignKey(Company)
+    ADMIN = 0
+    COMPANY = 1
+
+    LEVEL_CHOICES = (
+        (ADMIN, '管理员'),
+        (COMPANY, '公司'),
+    )
+
+    user = models.OneToOneField(User, related_name='profile')
+    level = models.IntegerField('用户权限', choices=LEVEL_CHOICES, default=0)
+
+
+class CompanyInfo(SoftDeletionModel):
+    """ 公司信息"""
+    profile = models.ForeignKey(UserProfile, related_name='company')
+    name = models.CharField('公司姓名', max_length=30)
+    address = models.CharField('公司地址', max_length=50)
+
+
+class EmployeeProfile(SoftDeletionModel):
+    """ 员工基本信息"""
+    company = models.ForeignKey(User)
     serial_id = models.CharField('序号', max_length=20)
     name = models.CharField('姓名', max_length=10)
     sex = models.CharField('性别', max_length=2)
     nation = models.CharField('民族', max_length=10, default=None, null=True)
-    birth = models.DatetimeField('出生日期', default=None, null=True)
-    id_no = models.DatetimeField('身份证号', default=None, null=True)
+    birth = models.DateTimeField('出生日期', default=None, null=True)
+    id_no = models.DateTimeField('身份证号', default=None, null=True)
 
     edu_level = models.CharField('文化程度', max_length=10, default=None, null=True)
     graduate = models.CharField('毕业院校', max_length=20, default=None, null=True)
@@ -55,11 +70,8 @@ class UserProfile(SoftDeletionModel):
 
     job_type = models.CharField('工种', max_length=15, default=None, null=True)
     is_fired = models.BooleanField('是否解除劳动关系', default=False, blank=True)
-    fired_date = models.DatetimeField('解除时间', default=None, null=True)
-    fired_reason = models.DatetimeField('解除原因', default=None, null=True)
+    fired_date = models.DateTimeField('解除时间', default=None, null=True)
+    fired_reason = models.DateTimeField('解除原因', default=None, null=True)
 
     def __unicode__(self):
         return self.name
-
-
-class 

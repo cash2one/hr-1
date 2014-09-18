@@ -25,7 +25,7 @@
         <div class="top">
             <span class="rt" id="hl1"></span>           
             <span id="hl2">
-                Hi，admin&nbsp;&nbsp;&nbsp;角色：[系统管理员]&nbsp;&nbsp;<a href="#">退出</a>
+                Hi，{{ user.username }}&nbsp;&nbsp;&nbsp;角色：[{% if user.profile.level == 0%}系统管理员{% elif user.profile.level == 1%}公司用户{% endif %}]&nbsp;&nbsp;<a href="#">退出</a>
             </span>
         </div>
     </div><!--top-area-->
@@ -88,7 +88,7 @@
 <script type="text/javascript" src="{% static "script/lhgcalendar.min.js" %}"></script>
 <script type="text/javascript" src="{% static "script/all.js" %}"></script>
 <script type="text/javascript" src="{% static "script/verify.js" %}"></script>
-
+<script type="text/javascript" src="{% static "script/bootstrap.min.js" %}"></script>
 {% endblock %}
 
 {% block extra_script %}

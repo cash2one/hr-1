@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'labour',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -145,6 +146,12 @@ LOGGING = {
             'filename': 'logs/labour_info.log',
             'formatter': 'verbose',
         },
+        'login': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/login_info.log',
+            'formatter': 'verbose',
+        },
         'err': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
@@ -170,6 +177,10 @@ LOGGING = {
         },
         'info': {
             'handlers': ['info'],
+            'level': 'INFO',
+        },
+        'login': {
+            'handlers': ['login'],
             'level': 'INFO',
         },
         'err': {

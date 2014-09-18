@@ -47,39 +47,39 @@ a:active {text-decoration: none;}	/* 选定的链接 */
 .edit{
 	width: 18px;
 	height: 20px;
-	background: url("../images/edit.png") no-repeat;
+	background: url("/static/images/edit.png") no-repeat;
 	display: inline-block;
 }
 .del{
 	width: 18px;
 	height: 20px;
-	background: url("../images/del.png") no-repeat;
+	background: url("/static/images/del.png") no-repeat;
 	display: inline-block;
 }
 /*添加按钮样式*/
 .add-title-txt{font-size: 18px;}
 .add-button{position: absolute; right: 6px; top: 6px; cursor:pointer;color:#489ff0;}
-.th-button-Tianjia{ background:url("../images/th_btn_blue.gif") -5px 4px no-repeat;height:30px; width:100px;padding-left:17px;margin-left:10px;}
-.th-button-Delete{ background:url("../images/th_btn_blue.gif") 0px -14px no-repeat; height:30px; width:100px;padding-left:20px;}
-.th-button-Print{background:url("../images/th_btn_blue.gif") 0px -30px no-repeat; height:30px; width:100px;padding-left:20px;}
-.th-button-RepairRecord{background:url("../images/th_btn_blue.gif") 0px -46px no-repeat; height:30px; width:100px;padding-left:20px;}
-.th-button-barcodePrint{background:url("../images/th_btn_blue.gif") 0px -63px no-repeat; height:30px; width:100px;padding-left:20px;}
-.th-button-checkout{background:url("../images/th_btn_blue.gif") 0px -81px no-repeat; height:30px; width:100px;padding-left:20px;}
-.th-button-bind{background:url("../images/th_btn_blue.gif") 0px -98px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-save{background:url("../images/th_btn.png") 2px -125px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-back{background:url("../images/th_btn.png") 2px -142px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-submit{background:url("../images/th_btn.png") 2px -233px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-shangbao{background:url("../images/th_btn.png") 2px -179px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-Xiafa{background:url("../images/th_btn.png") 2px -160px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-complete{background:url("../images/th_btn.png") 2px -216px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-receive{background:url("../images/th_btn.png") 2px -198px no-repeat; height:30px; width:100px;padding-left:23px;}
-.th-button-slideHide{background:url("../images/slideHide.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px;}
-.th-button-slideShow{background:url("../images/slideShow.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px;}
+.th-button-Tianjia{ background:url("/static/images/th_btn_blue.gif") -5px 4px no-repeat;height:30px; width:100px;padding-left:17px;margin-left:10px;}
+.th-button-Delete{ background:url("/static/images/th_btn_blue.gif") 0px -14px no-repeat; height:30px; width:100px;padding-left:20px;}
+.th-button-Print{background:url("/static/images/th_btn_blue.gif") 0px -30px no-repeat; height:30px; width:100px;padding-left:20px;}
+.th-button-RepairRecord{background:url("/static/images/th_btn_blue.gif") 0px -46px no-repeat; height:30px; width:100px;padding-left:20px;}
+.th-button-barcodePrint{background:url("/static/images/th_btn_blue.gif") 0px -63px no-repeat; height:30px; width:100px;padding-left:20px;}
+.th-button-checkout{background:url("/static/images/th_btn_blue.gif") 0px -81px no-repeat; height:30px; width:100px;padding-left:20px;}
+.th-button-bind{background:url("/static/images/th_btn_blue.gif") 0px -98px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-save{background:url("/static/images/th_btn.png") 2px -125px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-back{background:url("/static/images/th_btn.png") 2px -142px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-submit{background:url("/static/images/th_btn.png") 2px -233px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-shangbao{background:url("/static/images/th_btn.png") 2px -179px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-Xiafa{background:url("/static/images/th_btn.png") 2px -160px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-complete{background:url("/static/images/th_btn.png") 2px -216px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-receive{background:url("/static/images/th_btn.png") 2px -198px no-repeat; height:30px; width:100px;padding-left:23px;}
+.th-button-slideHide{background:url("/static/images/slideHide.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px;}
+.th-button-slideShow{background:url("/static/images/slideShow.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px;}
 
-.th-button-slideUp{background:url("../images/slideDown.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px; font-size:12px; color:#4c99fb; cursor:pointer;}
-.th-button-slideDown{background:url("../images/slideUp.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px;font-size:12px; color:#4c99fb;cursor:pointer;}
+.th-button-slideUp{background:url("/static/images/slideDown.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px; font-size:12px; color:#4c99fb; cursor:pointer;}
+.th-button-slideDown{background:url("/static/images/slideUp.png") no-repeat 10% 50%; height:30px; width:100px;padding-left:23px;font-size:12px; color:#4c99fb;cursor:pointer;}
 
-.th_bg{ background:url("../images/th_btn_big.gif") no-repeat;display:inline-block;width:110px;height:21px;}
+.th_bg{ background:url("/static/images/th_btn_big.gif") no-repeat;display:inline-block;width:110px;height:21px;}
 .add-title-r{position: absolute; right: 0px; top:6px;}
 .add-title-l{position: absolute; left: 5px; top:6px;}
 /* 颜色、字体、对齐 */
@@ -215,12 +215,12 @@ a:active {text-decoration: none;}	/* 选定的链接 */
 .transferOutstoreList{width:93%; margin:0 auto;}
 .img_add{cursor:pointer;height:16px;width:16px;display:inline-block;margin-top:7px;margin-left:20px;float:left;}
 .addinvoices{color:#fff;float:left;display:inline-block;margin-top:6px;margin-left:5px;font-size:15px;letter-spacing:1px;font-weight:bold;cursor:pointer;}
-.editgrid{ position:absolute;cursor:pointer; display:block; width:12px; height:12px; background:url('../images/grid_edit.png')}
-.editgrid_hover{background:url('../images/grid_edit_hover.png')}
-.deletegrid{ position:absolute; cursor:pointer; display:block; width:12px; height:12px; background:url('../images/grid_delete.png')}
-.deletegrid_hover{background:url('../images/gird_delete_hover.png')}
-.allshowBtn{float:right; position:relative; top:2px; right:10px; width:86px; height:25px; background:url('../images/slide.png') 0 -35px; cursor:pointer;}
-.allshowBtn-hover{ background:url('../images/slide.png') 0 0;}
+.editgrid{ position:absolute;cursor:pointer; display:block; width:12px; height:12px; background:url('/static/images/grid_edit.png')}
+.editgrid_hover{background:url('/static/images/grid_edit_hover.png')}
+.deletegrid{ position:absolute; cursor:pointer; display:block; width:12px; height:12px; background:url('/static/images/grid_delete.png')}
+.deletegrid_hover{background:url('/static/images/gird_delete_hover.png')}
+.allshowBtn{float:right; position:relative; top:2px; right:10px; width:86px; height:25px; background:url('/static/images/slide.png') 0 -35px; cursor:pointer;}
+.allshowBtn-hover{ background:url('/static/images/slide.png') 0 0;}
 
 /*维修统计分析*/
 .chartStatistic .title span{background:none;padding-left:0;}

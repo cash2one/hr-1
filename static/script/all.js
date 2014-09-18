@@ -1,11 +1,11 @@
 var foo = {
     mouseover : function(){
         $(this).css({"color":"#ffffff","background-color":"#369"});
-	    $(this).find('span.logo_small_one').attr("background","url('../image/logo_laowu_one.png') left top no-repeat");
+	    $(this).find('span.logo_small_one').attr("background","url('/static/image/logo_laowu_one.png') left top no-repeat");
     },
     mouseout : function(){
     	$(this).css({"color":"#222222","background-color":"#ffffff"});
-	   	$(this).find('span.logo_small_one').attr("background","url('../image/logo_laowu_two.png') left top no-repeat");
+	   	$(this).find('span.logo_small_one').attr("background","url('/static/image/logo_laowu_two.png') left top no-repeat");
 	}
 }
 $(function() {

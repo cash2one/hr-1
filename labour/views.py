@@ -5,6 +5,9 @@ from django.shortcuts import render
 
 # Create your views here.
 
-def login(request, tempalte_name='login.html'):
-    """ 登录"""
-    return render(request, tempalte_name, {})
+def index(request, template_name="labour/index.html"):
+    """ 管理员登陆页面"""
+    user = request.user
+    return render(request, template_name, {
+        'user': user,
+    })

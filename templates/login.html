@@ -14,18 +14,36 @@
 	  	 <div class="login_box">
 	  	    <div class="login_main">
       			<div id="verify"></div>
+      			{% if form.non_field_errors %}
+				{% for error in form.non_field_errors %}
+				  <div class="alert alert-error" id="error-vali">
+				    {{ error }}
+				  </div>
+				{% endfor %}
+				{% endif %}
+
+				{% for error in form.username.errors %}
+				  <div class="alert alert-error">
+				    {{ error }}
+				  </div>
+				{% endfor %}
+				{% for error in forms.password.errors %}
+				  <div class="alert alert-error">
+				    {{ error }}
+				  </div>
+				{% endfor %}
 
 	  	       <form id="login" method="post" action=".">
 	  	       	{% csrf_token %}
 	  	          	<div class="user">
-	  	          	   <span>用户名:</span><input type="text" name="username" id="username"/>
+	  	          	   <span>用户名:</span>{{ form.username }}
 	  	            </div>
 	  	          	<div class="password">
-	  	          	   <span>密&nbsp&nbsp&nbsp&nbsp码:</span><input type="password" name="password" id="password" />
+	  	          	   <span>密&nbsp&nbsp&nbsp&nbsp码:</span>{{ form.password }}
 	  	            </div>
 	  	            <br>
-	  	            <div class="password">
-	  	          	   <span>验证码:</span><input type="password" name="verify_code" id="vali" />
+	  	            <div class="user">
+	  	          	   <span>验证码:</span><input type="text" name="verify_code" id="vali" placeholder="请输入验证码"/>
 	  	            </div>
 	  	            <br>
 	  	            <span class="code" id="code" style="margin-left:120px"></span><font style="font-size:13px;color:green">点击图片更换</font>
