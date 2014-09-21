@@ -14,39 +14,53 @@ class EmployeeProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployeeProfile
-        fields = ('serial_id', 'name', 'sex')
-        exclude = ['get_pwd_code']
-
-    SEX_TYPE_CHOICES = (
-        ('1', '男'),
-        ('2', '女')
-    )
-
+        fields = ['serial_id', 'birth', 'id_no','name', 'nation', 'graduate', 'profession', \
+            'residence_type', 'residence_place', 'now_address', 'mobile', 'emergency_name',\
+            'emergency_mobile', 'sex']
 
     serial_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入序列号'}), error_messages={'required': '请输入序列号'})
     name = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入姓名'}), error_messages={'required': '请输入姓名'})
-    sex = forms.ChoiceField(choices=SEX_TYPE_CHOICES, widget=forms.RadioSelect(), initial=SEX_TYPE_CHOICES[0][0])
-"""
-    nation = models.CharField('民族', max_length=10, default=None, null=True)
-    birth = models.DateTimeField('出生日期', default=None, null=True)
-    id_no = models.DateTimeField('身份证号', default=None, null=True)
+    nation = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入民族'}), required=False)
+    id_no = forms.CharField(max_length=18, widget=forms.TextInput(attrs={'placeholder': '请输入身份证号'}), error_messages={'required': '请输入身份证号'})
 
-    edu_level = models.CharField('文化程度', max_length=10, default=None, null=True)
-    graduate = models.CharField('毕业院校', max_length=20, default=None, null=True)
-    profession = models.CharField('专业', max_length=20, default=None, null=True)
-    residence_type = models.CharField('户口类型', max_length=20, default=None, null=True)
-    residence_place = models.CharField('户籍行政区', max_length=100, default=None, null=True)
-    now_address = models.CharField('先住址', max_length=100, default=None, null=True)
-    mobile = models.CharField('电话', max_length=15, default=None, null=True)
-    emergency_name = models.CharField('紧急联系人', max_length=15, default=None, null=True)
-    emergency_mobile = models.CharField('紧急联系人电话', max_length=15, default=None, null=True)
+    graduate = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入毕业院校'}), required=False)
+    profession = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入专业'}), required=False)
+    residence_place = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': '请输入户籍行政区'}), required=False)
+    now_address = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': '请输入地址', 'style': 'width:370px'}), required=False)
+    mobile = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入电话'}), error_messages={'required': '请输入电话'})
+    emergency_name = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入紧急联系人'}), required=False)
+    emergency_mobile = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入紧急联系人电话'}), required=False)
 
-    job_type = models.CharField('工种', max_length=15, default=None, null=True)
-    is_fired = models.BooleanField('是否解除劳动关系', default=False, blank=True)
-    fired_date = models.DateTimeField('解除时间', default=None, null=True)
-    fired_reason = models.DateTimeField('解除原因', default=None, null=True)
+    def clean_id_no(self):
+        if len(self.cleaned_data['id_no']) != 18:
+            raise forms.ValidationError("身份证输入错误")
+        elif EmployeeProfile.objects.filter(id_no=self.cleaned_data['id_no'], is_fired=False).exists():
+            raise forms.ValidationError("身份证号已存在")
+        return self.cleaned_data['id_no']
 
-    realname = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入您的真实姓名', 'class': 'form-control pull-left'}), error_messages={'required': '请输入您的真实姓名'})
-    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': '请填写您常用的邮箱', 'class': 'form-control pull-left'}), error_messages={'required': '请填写您常用的邮箱'})
-    mobile_no = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入您的手机号码', 'class': 'form-control pull-left'}), error_messages={'required': '请输入您的手机号码'})
-    """
+    def clean_serial_id(self):
+        if EmployeeProfile.objects.filter(serial_id=self.cleaned_data['serial_id']).exists():
+            raise forms.ValidationError("序列号已存在")
+        return self.cleaned_data['serial_id']
+
+    def clean_birth(self):
+        if not self.cleaned_data['birth']:
+            raise forms.ValidationError("请输入出生日期")
+        return self.cleaned_data['birth']
+
+    def clean(self):
+        return self.cleaned_data
+
+    def save(self, request, commit=True):
+        m = super(EmployeeProfileForm, self).save(commit=False)
+        sex = request.POST.get('sex', '男')
+        edu_level = request.POST.get('edu_level', '无')
+        residence_type = request.POST.get('residence_type', '城市户口')
+        is_fired = request.POST.get('is_fired', '0')
+        m.sex = sex
+        m.edu_level = edu_level
+        m.residence_type = residence_type
+        m.is_fired = int(is_fired)
+        m.save(request)
+        return m
+
