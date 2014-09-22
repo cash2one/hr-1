@@ -4,7 +4,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from labour.models import EmployeeProfile
+from labour.models import EmployeeProfile, Contract, CompanyProfile
 
 class EmployeeProfileForm(forms.ModelForm):
     """ 公司员工信息表单"""
@@ -63,4 +63,39 @@ class EmployeeProfileForm(forms.ModelForm):
         m.is_fired = int(is_fired)
         m.save(request)
         return m
+
+
+class ContractForm(forms.ModelForm):
+    """ 员工合同表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(ContractForm, self).__init__(*args, **kwargs)
+        self._request = request
+
+    class Meta:
+        model = Contract
+        exclude = ['user']
+
+
+class CompanyForm(forms.ModelForm):
+    """ 公司添加表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(CompanyForm, self).__init__(*args, **kwargs)
+        self._request = request
+
+    class Meta:
+        model = CompanyProfile
+        exclude = ['name', 'address', 'link_man', 'link_man_mobile']
+
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入用户名', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入用户名'})
+    pwd = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '请输入密码', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入密码'})
+    confirm_pwd = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '请再次输入', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请再次输入'})
+    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司名称', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司名称'})
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司地址', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司地址'})
+    link_man = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入联系人'})
+    link_man_mobile = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人电话', 'class': 'txt_input', 'style': "margin-left:20px;width:205px;"}), error_messages={'required': '请输入联系人电话'})
+   
+    def save(self, request, commit=True):
+        m = super(CompanyForm, self).save(commit=False)
+        user = User()
+
 

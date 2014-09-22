@@ -32,7 +32,7 @@ class LoginForm(forms.Form):
     def login(self, request):
         user = authenticate(username=self.cleaned_data['username'], password=self.cleaned_data['password'])  
         login(request, user)
-        LOGIN_LOG.info(generate_info_msg(request, action=u'登录', level=user.profile.level))
+        LOGIN_LOG.info(generate_info_msg(request, action=u'登录', level=user.account.level))
 
     def clean_username(self):
         try:

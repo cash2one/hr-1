@@ -25,7 +25,7 @@
         <div class="top">
             <span class="rt" id="hl1"></span>           
             <span id="hl2">
-                Hi，{{ user.username }}&nbsp;&nbsp;&nbsp;角色：[{% if user.profile.level == 0%}系统管理员{% elif user.profile.level == 1%}公司用户{% endif %}]&nbsp;&nbsp;<a href="#">退出</a>
+                Hi，{{ user.username }}&nbsp;&nbsp;&nbsp;角色：[{% if user.account.level == 0%}系统管理员{% elif user.profile.level == 1%}公司用户{% endif %}]&nbsp;&nbsp;<a href="#">退出</a>
             </span>
         </div>
     </div><!--top-area-->
@@ -42,7 +42,8 @@
                         <li title="劳务信息登记">
                             <a href="javascript:;" class="small_txt"><i></i>劳务信息登记</a>
                             <ul class="w-left-inner" style="display:block;">
-                                <li class="inner_txt inner_on"><a href="{% url "labour.views.employee_add" %}" title="手动录入" style="color:#222222;">手动录入</a></li>
+                                <li class="inner_txt {% block company_add %}{% endblock %}"><a href="{% url "labour.views.company_add" %}" title="公司录入" style="color:#222222;">公司录入</a></li>
+                                <li class="inner_txt {% block employee_add %}{% endblock %}"><a href="{% url "labour.views.employee_add" %}" title="手动录入" style="color:#222222;">员工录入</a></li>
                                 <li class="inner_txt"><a href="bulk_print.html" title="批量录入" style="color:#222222;">批量录入</a></li>
                             </ul>
                         </li>

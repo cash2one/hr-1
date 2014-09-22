@@ -1,8 +1,8 @@
-{% extends 'base.html' %}   
+{% extends 'base.html' %}  
+{% block employee_add %} inner_on {% endblock %} 
 {% block container %} 
         <div class="w-right"> 
             <div class="th-y" style="border:none;">
-                {{ form.non_field_errors }}
                   {% if form.non_field_errors %}
                     {% for error in form.non_field_errors %}
                       <div class="alert alert-error">
@@ -144,7 +144,7 @@
                       <table class="reg-info" style="width:100%;">
                         <tr>
                             <th class="bg-none" style="width:97px;">个人单位信息</th>
-                            <td><a href="#"><button style="background:grey">详情</button></a></td>
+                            <td><a href="/labour/employee/{{employee.id}}/contract/"><button>详情</button></a></td>
                         </tr>
                         <tr>
                             <th class="bg-none" style="width:97px;">医疗保险信息</th>

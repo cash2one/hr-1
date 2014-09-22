@@ -1,0 +1,43 @@
+{% extends 'base.html' %}  
+{% block employee_add %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right">   
+            <div class="th-y" style="border:none;">
+	            <div id="shoudong_two">
+	                <div class="th-input" style="width:42%;">
+	                    
+	                    <span>工种：</span><input class="txt_input" type="text" name="job_type" style="margin-left:28px;width:205px;" /><br/>
+	                    <span>用工单位：</span>
+                        <select name="company">
+                            {% for company in companys %}
+                            <option value="{{company.id}}">{{ company.company.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <br/>
+	                    <span>用工单位地址：</span><input class="txt_input" type="text" name="address" style="width:205px;"/><br/>
+	                    
+	                     <span>用工单位联系人：</span><input class="txt_input" type="text" name="link_man" style="width:205px;"/><br/>
+	                     
+	                     txt_input calendar
+                        <span>单位协议起始日期：</span>{{ form.company_protocal_start }}<br/>
+	                    <span>单位协议终止日期：</span>{{ form.company_protocal_end }}<br/>
+	                    <span>劳动合同起始日期：</span>{{ form.labour_contract_start }}<br/>
+	                    <span>劳动合同终止日期：</span>{{ form.labour_contract_end }}<br/>
+	                    <span>试用期起始日期：</span>{{ form.probation_start }}<br/>
+	                    <span>试用期终止日期：</span>{{ form.probation_end }}<br/>
+	                    
+	                     <span>银行卡号：</span>{{ form.bank_no }}<br/>
+	                      <span>月工资：</span>{{ form.month_salary }}<br/>
+	                       <span>实发工资：</span>{{ form.real_salary }}<br/>
+	                        <span>服务费：</span>{{ form.service_pay }}<br/>
+	                         <span>工资发放时间：</span>{{ form.salary_provide }}<br/>
+	                       
+	                    <button class="return_button"><a href="man_print.html" title="返回" style="color:white;">返回</a></button>
+	                    
+	                    <button type="button" class="return_button">确认保存</button>
+	                </div>
+            	</div>               
+            </div>               
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}

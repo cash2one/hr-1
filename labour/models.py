@@ -37,20 +37,22 @@ class UserProfile(SoftDeletionModel):
         (COMPANY, '公司'),
     )
 
-    user = models.OneToOneField(User, related_name='profile')
+    user = models.OneToOneField(User, related_name='account')
     level = models.IntegerField('用户权限', choices=LEVEL_CHOICES, default=0)
 
 
-class CompanyInfo(SoftDeletionModel):
+class CompanyProfile(SoftDeletionModel):
     """ 公司信息"""
-    profile = models.ForeignKey(UserProfile, related_name='company')
+    profile = models.OneToOneField(UserProfile, related_name='profile')
     name = models.CharField('公司姓名', max_length=30)
     address = models.CharField('公司地址', max_length=50)
+    link_man = models.CharField('联系人', max_length=20)
+    link_man_mobile = models.CharField('联系人电话', max_length=20)
 
 
 class EmployeeProfile(SoftDeletionModel):
     """ 员工基本信息"""
-    company = models.ForeignKey(User, default=None, null=True)
+    company = models.ForeignKey(CompanyProfile, default=None, null=True)
     serial_id = models.CharField('序号', max_length=20)
     name = models.CharField('姓名', max_length=10)
     sex = models.CharField('性别', max_length=2)
@@ -75,3 +77,20 @@ class EmployeeProfile(SoftDeletionModel):
 
     def __unicode__(self):
         return self.name
+
+
+class Contract(SoftDeletionModel):
+    """ 员工合同信息"""
+    user = models.ForeignKey(EmployeeProfile, related_name='contract')
+    company_protocal_start = models.DateTimeField('单位协议开始时间', default=None, null=True)
+    company_protocal_end = models.DateTimeField('单位协议结束时间', default=None, null=True)
+    labour_contract_start = models.DateTimeField('劳动合同开始时间', default=None, null=True)
+    labour_contract_end = models.DateTimeField('劳动合同结束时间', default=None, null=True)
+    probation_start = models.DateTimeField('试用期开始时间', default=None, null=True)
+    probation_end = models.DateTimeField('试用期结束时间', default=None, null=True)
+    bank_no = models.CharField('银行卡号', max_length=20)
+    month_salary = models.CharField('实发工资', max_length=10)
+    real_salary = models.CharField('实发工资', max_length=10)
+    service_pay = models.CharField('服务费', max_length=10)
+    salary_provide = models.DateTimeField('工资发放时间', default=None, null=True)
+

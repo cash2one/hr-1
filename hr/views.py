@@ -18,7 +18,7 @@ def login(request, form_class=LoginForm, template_name='login.html'):
         form = form_class(request, data=request.POST)
         if form.is_valid():
             form.login(request)
-            level = request.user.profile.level
+            level = request.user.account.level
             if level == UserProfile.ADMIN:
                 return HttpResponseRedirect(reverse('labour.views.index'))
     else:
