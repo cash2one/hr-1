@@ -16,7 +16,7 @@ class EmployeeProfileForm(forms.ModelForm):
         model = EmployeeProfile
         fields = ['serial_id', 'birth', 'id_no','name', 'nation', 'graduate', 'profession', \
             'residence_type', 'residence_place', 'now_address', 'mobile', 'emergency_name',\
-            'emergency_mobile', 'sex']
+            'emergency_mobile', 'sex', 'edu_level', 'is_fired']
 
     serial_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入序列号'}), error_messages={'required': '请输入序列号'})
     name = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入姓名'}), error_messages={'required': '请输入姓名'})
@@ -34,12 +34,10 @@ class EmployeeProfileForm(forms.ModelForm):
     def clean_id_no(self):
         if len(self.cleaned_data['id_no']) != 18:
             raise forms.ValidationError("身份证输入错误")
-        elif EmployeeProfile.objects.filter(id_no=self.cleaned_data['id_no'], is_fired=False).exists():
-            raise forms.ValidationError("身份证号已存在")
         return self.cleaned_data['id_no']
 
     def clean_serial_id(self):
-        if EmployeeProfile.objects.filter(serial_id=self.cleaned_data['serial_id']).exists():
+        if EmployeeProfile.objects.filter(serial_id=self.cleaned_data['serial_id']).exclude(id=self.instance.id).exists():
             raise forms.ValidationError("序列号已存在")
         return self.cleaned_data['serial_id']
 
@@ -53,15 +51,9 @@ class EmployeeProfileForm(forms.ModelForm):
 
     def save(self, request, commit=True):
         m = super(EmployeeProfileForm, self).save(commit=False)
-        sex = request.POST.get('sex', '男')
-        edu_level = request.POST.get('edu_level', '无')
-        residence_type = request.POST.get('residence_type', '城市户口')
-        is_fired = request.POST.get('is_fired', '0')
-        m.sex = sex
-        m.edu_level = edu_level
-        m.residence_type = residence_type
+        is_fired = request.POST.get('is_fired')
         m.is_fired = int(is_fired)
-        m.save(request)
+        m.save()
         return m
 
 
@@ -84,18 +76,33 @@ class CompanyForm(forms.ModelForm):
 
     class Meta:
         model = CompanyProfile
-        exclude = ['name', 'address', 'link_man', 'link_man_mobile']
+        fields = ['name', 'address', 'link_man', 'link_man_mobile', 'service_cost']
 
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入用户名', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入用户名'})
-    pwd = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '请输入密码', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入密码'})
-    confirm_pwd = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': '请再次输入', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请再次输入'})
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司名称', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司名称'})
     address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司地址', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司地址'})
     link_man = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入联系人'})
-    link_man_mobile = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人电话', 'class': 'txt_input', 'style': "margin-left:20px;width:205px;"}), error_messages={'required': '请输入联系人电话'})
+    link_man_mobile = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人电话', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入联系人电话'})
+    service_cost = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入服务费', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入服务费'})
    
-    def save(self, request, commit=True):
-        m = super(CompanyForm, self).save(commit=False)
-        user = User()
+    def clean_name(self):
+        if CompanyProfile.objects.filter(name=self.cleaned_data['name']).exclude(id=self.instance.id).exists():
+            raise forms.ValidationError("公司已存在")
+        return self.cleaned_data['name']
 
+    def clean_link_man_mobile(self):
+        try:
+            int(self.cleaned_data['link_man_mobile'])
+        except:
+            raise forms.ValidationError('电话格式错误')
+        return self.cleaned_data['link_man_mobile']
 
+    def clean_service_cost(self):
+        try:
+            int(self.cleaned_data['service_cost'])
+        except:
+            raise forms.ValidationError('服务费输入错误')
+        return self.cleaned_data['service_cost']
+
+    def clean(self):
+        print self.errors
+        return self.cleaned_data

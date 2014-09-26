@@ -53,6 +53,12 @@
                     </div>
                     {% endif %}
 
+                    {% if 'employee_add_succ' in message.tags %}
+                    <div class="alert alert-block alert-success">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+
                     {% if 'employee_add_exist' in message.tags %}
                     <div class="alert alert-error">
                         {{ message }}
@@ -88,13 +94,13 @@
                                 <td>
                                     <select name="edu_level">
                                         <option value="无">无</option>
-                                        <option value="小学" {% if employee.edu_level == '小学'%}checked{% endif %}>小学</option>
-                                        <option value="初中" {% if employee.edu_level == '初中'%}checked{% endif %}>初中</option>
-                                        <option value="高中" {% if employee.edu_level == '高中'%}checked{% endif %}>高中</option>
-                                        <option value="中专" {% if employee.edu_level == '中专'%}checked{% endif %}>中专</option>
-                                        <option value="本科" {% if employee.edu_level == '本科'%}checked{% endif %}>本科</option>
-                                        <option value="硕士" {% if employee.edu_level == '硕士'%}checked{% endif %}>硕士</option>
-                                        <option value="博士" {% if employee.edu_level == '博士'%}checked{% endif %}>博士</option>
+                                        <option value="小学" {% if employee.edu_level == '小学'%}selected{% endif %}>小学</option>
+                                        <option value="初中" {% if employee.edu_level == '初中'%}selected{% endif %}>初中</option>
+                                        <option value="高中" {% if employee.edu_level == '高中'%}selected{% endif %}>高中</option>
+                                        <option value="中专" {% if employee.edu_level == '中专'%}selected{% endif %}>中专</option>
+                                        <option value="本科" {% if employee.edu_level == '本科'%}selected{% endif %}>本科</option>
+                                        <option value="硕士" {% if employee.edu_level == '硕士'%}selected{% endif %}>硕士</option>
+                                        <option value="博士" {% if employee.edu_level == '博士'%}selected{% endif %}>博士</option>
                                     </select>
                                 </td>
                                 <th>毕业院校：</th>
@@ -106,8 +112,8 @@
                                 <th>户口性质：</th>
                                 <td>
                                     <select name="residence_type">
-                                        <option value="农业户口"  {% if employee.residence_type == '农业户口'%}checked{% endif %}>农业户口</option>
-                                        <option value="城市户口"  {% if employee.residence_type == '城市户口'%}checked{% endif %}>城市户口</option>
+                                        <option value="农业户口"  {% if employee.residence_type == '农业户口'%}selected{% endif %}>农业户口</option>
+                                        <option value="城市户口"  {% if employee.residence_type == '城市户口'%}selected{% endif %}>城市户口</option>
                                     </select>
                                 </td>
                                 <th>户籍行政区：</th>
@@ -115,7 +121,7 @@
                             </tr>
                             <tr>
                                 <th>现住址：</th>
-                                <td colspan="5"> <input type="text" name="now_address" value="{{ foemployeerm.now_address|default:'无' }}"/> </td>                        
+                                <td colspan="5"> <input type="text" name="now_address" value="{{ employee.now_address|default:'无' }}"/> </td>                        
                             </tr>
                             <tr>
                                 <th>*联系电话：</th>
@@ -135,16 +141,18 @@
                           <td>解除原因</td>
                       </tr>
                       <tr>
-                          <th style="text-align:left;"><input type="radio" name="is_fired" value="1" {% if employee.is_fired == '1'%}checked{% endif %}/><span>是</span>
-                          <input type="radio" name="is_fired" value="0" {% if employee.is_fired == '0'%}checked{% endif %}/><span>否</span></th>
+                          <th style="text-align:left;"><input type="radio" name="is_fired" value="1" {% if employee.is_fired == 1 %}checked{% endif %}/><span>是</span>
+                          <input type="radio" name="is_fired" value="0" {% if employee.is_fired == 0 %}checked{% endif %}/><span>否</span></th>
                           <td>无</td>
                           <td>无</td>
                       </tr>
                     </table>
+                  </form>   
+                    
                       <table class="reg-info" style="width:100%;">
                         <tr>
                             <th class="bg-none" style="width:97px;">个人单位信息</th>
-                            <td><a href="/labour/employee/{{employee.id}}/contract/"><button>详情</button></a></td>
+                            <td><a href="/labour/employee/{{employee.id}}/contract/"><button type="button">详情</button></a></td>
                         </tr>
                         <tr>
                             <th class="bg-none" style="width:97px;">医疗保险信息</th>
@@ -173,7 +181,6 @@
                   <div>   
                     <button type="submit" style="margin-right:20px;margin-left:308px;margin-top:20px;">确定</button><button>重置</button>
                   </div>    
-                  </form>   
             </div>               
         </div><!-- w-right -->
 {% endblock %}

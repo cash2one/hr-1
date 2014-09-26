@@ -10,7 +10,7 @@
 	                    <span>用工单位：</span>
                         <select name="company">
                             {% for company in companys %}
-                            <option value="{{company.id}}">{{ company.company.name }}</option>
+                            <option value="{{company.id}}">{{ company.name }}</option>
                             {% endfor %}
                         </select>
                         <br/>

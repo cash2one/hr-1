@@ -43,11 +43,12 @@ class UserProfile(SoftDeletionModel):
 
 class CompanyProfile(SoftDeletionModel):
     """ 公司信息"""
-    profile = models.OneToOneField(UserProfile, related_name='profile')
+    profile = models.OneToOneField(UserProfile, related_name='profile', default=None, null=True)
     name = models.CharField('公司姓名', max_length=30)
     address = models.CharField('公司地址', max_length=50)
     link_man = models.CharField('联系人', max_length=20)
     link_man_mobile = models.CharField('联系人电话', max_length=20)
+    service_cost = models.CharField('服务费', max_length=20)
 
 
 class EmployeeProfile(SoftDeletionModel):

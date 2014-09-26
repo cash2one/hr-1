@@ -2,10 +2,8 @@
 {% block company_add %} inner_on {% endblock %} 
 {% block container %} 
         <div class="w-right">   
-
             <div class="th-y" style="border:none;">
                 <div id="shoudong_two">
-
                     <div class="th-input" style="width:42%;">
                   {% if form.non_field_errors %}
                     {% for error in form.non_field_errors %}
@@ -50,13 +48,19 @@
                   {% endif %}
 
                  {% for message in messages %}
-                    {% if 'employee_update_succ' in message.tags %}
+                    {% if 'company_update_succ' in message.tags %}
                     <div class="alert alert-block alert-success">
                         {{ message }}
                     </div>
                     {% endif %}
 
-                    {% if 'employee_add_exist' in message.tags %}
+                    {% if 'company_add_succ' in message.tags %}
+                    <div class="alert alert-block alert-success">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+
+                    {% if 'company_add_exist' in message.tags %}
                     <div class="alert alert-error">
                         {{ message }}
                     </div>
