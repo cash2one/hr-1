@@ -65,9 +65,33 @@ class ContractForm(forms.ModelForm):
 
     class Meta:
         model = Contract
-        exclude = ['user']
+        exclude = ['employee']
 
+    job_type = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入工种类型', 'class': 'txt', 'style': "margin-left:28px;width:205px;"}),
+            error_messages={'required': '请输入工种类型'})
+    
+    company_protocal_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入单位协议开始时间', 'class': 'txt calendar', 'id': 'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入单位协议开始时间'})
+    company_protocal_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入单位协议结束时间', 'class': 'txt calendar','id': 'startDate2', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入单位协议结束时间'})
+    labour_contract_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入劳动合同开始时间', 'class': 'txt calendar','id': 'startDate3', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入劳动合同开始时间'})
+    labour_contract_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入劳动合同结束时间', 'class': 'txt calendar','id': 'startDate4', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入劳动合同结束时间'})
+    probation_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入实习开始时间', 'class': 'txt calendar','id': 'startDate5', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入实习开始时间'})
+    probation_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入实习结束时间', 'class': 'txt calendar','id': 'startDate6', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入实习结束时间'})
+    bank_no = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入银行卡号', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;margin-top:px;"}),
+            error_messages={'required': '请输入银行卡号'})
+    month_salary = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入月工资', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;margin-top:-1px;"}),
+            error_messages={'required': '请输入月工资'})
+    real_salary = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入实际工资', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;margin-top:-1px;"}),
+            error_messages={'required': '请输入实际工资'})
+    salary_provide = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入工资发放时间', 'class': 'txt calendar','id': 'startDate7', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
+            error_messages={'required': '请输入工资发放时间'})
 
+    
 class CompanyForm(forms.ModelForm):
     """ 公司添加表单"""
     def __init__(self, request=None, *args, **kwargs):

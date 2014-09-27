@@ -71,7 +71,6 @@ class EmployeeProfile(SoftDeletionModel):
     emergency_name = models.CharField('紧急联系人', max_length=15, default=None, null=True, blank=True)
     emergency_mobile = models.CharField('紧急联系人电话', max_length=15, default=None, null=True, blank=True)
 
-    job_type = models.CharField('工种', max_length=15, default=None, null=True, blank=True)
     is_fired = models.BooleanField('是否解除劳动关系', default=False, blank=True)
     fired_date = models.DateTimeField('解除时间', default=None, null=True, blank=True)
     fired_reason = models.DateTimeField('解除原因', default=None, null=True, blank=True)
@@ -82,7 +81,8 @@ class EmployeeProfile(SoftDeletionModel):
 
 class Contract(SoftDeletionModel):
     """ 员工合同信息"""
-    user = models.ForeignKey(EmployeeProfile, related_name='contract')
+    employee = models.ForeignKey(EmployeeProfile, related_name='contract')
+    job_type = models.CharField('工种', max_length=15, default=None, null=True, blank=True)
     company_protocal_start = models.DateTimeField('单位协议开始时间', default=None, null=True)
     company_protocal_end = models.DateTimeField('单位协议结束时间', default=None, null=True)
     labour_contract_start = models.DateTimeField('劳动合同开始时间', default=None, null=True)
@@ -92,6 +92,5 @@ class Contract(SoftDeletionModel):
     bank_no = models.CharField('银行卡号', max_length=20)
     month_salary = models.CharField('实发工资', max_length=10)
     real_salary = models.CharField('实发工资', max_length=10)
-    service_pay = models.CharField('服务费', max_length=10)
     salary_provide = models.DateTimeField('工资发放时间', default=None, null=True)
 

@@ -77,8 +77,10 @@ def contract(request, employee_id, form_class=ContractForm, template_name="labou
     else:
         form = form_class()
     return render(request, template_name, {
+        'user': user,
         'form': form,
         'companys': companys,
+        'employee': employee,
     })
 
 def company_add(request, form_class=CompanyForm, template_name='labour/company_add.html'):

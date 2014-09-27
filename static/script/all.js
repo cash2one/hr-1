@@ -28,6 +28,13 @@ $(function() {
            return false ;
 	   })
 	   $('#startDate').calendar({ btnBar:false}); 
+     $('#startDate1').calendar({ btnBar:false}); 
+     $('#startDate2').calendar({ btnBar:false}); 
+     $('#startDate3').calendar({ btnBar:false}); 
+     $('#startDate4').calendar({ btnBar:false}); 
+     $('#startDate5').calendar({ btnBar:false}); 
+     $('#startDate6').calendar({ btnBar:false}); 
+     $('#startDate7').calendar({ btnBar:false}); 
 	   $('#endDate').calendar({ btnBar:false});   
 
         $(".w-left li a.small_txt").click(function(){

@@ -4,37 +4,168 @@
         <div class="w-right">   
             <div class="th-y" style="border:none;">
 	            <div id="shoudong_two">
-	                <div class="th-input" style="width:42%;">
-	                    
-	                    <span>工种：</span><input class="txt_input" type="text" name="job_type" style="margin-left:28px;width:205px;" /><br/>
-	                    <span>用工单位：</span>
-                        <select name="company">
-                            {% for company in companys %}
-                            <option value="{{company.id}}">{{ company.name }}</option>
+	                <div class="th-input" style="width:52%;">
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
                             {% endfor %}
-                        </select>
-                        <br/>
-	                    <span>用工单位地址：</span><input class="txt_input" type="text" name="address" style="width:205px;"/><br/>
-	                    
-	                     <span>用工单位联系人：</span><input class="txt_input" type="text" name="link_man" style="width:205px;"/><br/>
-	                     
-	                     txt_input calendar
-                        <span>单位协议起始日期：</span>{{ form.company_protocal_start }}<br/>
-	                    <span>单位协议终止日期：</span>{{ form.company_protocal_end }}<br/>
-	                    <span>劳动合同起始日期：</span>{{ form.labour_contract_start }}<br/>
-	                    <span>劳动合同终止日期：</span>{{ form.labour_contract_end }}<br/>
-	                    <span>试用期起始日期：</span>{{ form.probation_start }}<br/>
-	                    <span>试用期终止日期：</span>{{ form.probation_end }}<br/>
-	                    
-	                     <span>银行卡号：</span>{{ form.bank_no }}<br/>
-	                      <span>月工资：</span>{{ form.month_salary }}<br/>
-	                       <span>实发工资：</span>{{ form.real_salary }}<br/>
-	                        <span>服务费：</span>{{ form.service_pay }}<br/>
-	                         <span>工资发放时间：</span>{{ form.salary_provide }}<br/>
-	                       
+                          {% endif %}
+
+                        {% if form.job_type.errors %}
+                            {% for error in form.job_type.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.company_protocal_start.errors %}
+                            {% for error in form.company_protocal_start.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.company_protocal_end.errors %}
+                            {% for error in form.company_protocal_end.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.labour_contract_start.errors %}
+                            {% for error in form.labour_contract_start.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.labour_contract_end.errors %}
+                            {% for error in form.labour_contract_end.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.probation_start.errors %}
+                            {% for error in form.labour_contract_start.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.probation_end.errors %}
+                            {% for error in form.labour_contract_end.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.bank_no.errors %}
+                            {% for error in form.birth.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.month_salary.errors %}
+                            {% for error in form.month_salary.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.real_salary.errors %}
+                            {% for error in form.real_salary.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.service_cost.errors %}
+                            {% for error in form.service_cost.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                        {% elif form.salary_provide.errors %}
+                            {% for error in form.salary_provide.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+
+                         {% for message in messages %}
+                            {% if 'contract_update_succ' in message.tags %}
+                            <div class="alert alert-block alert-success">
+                                {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if 'contract_add_succ' in message.tags %}
+                            <div class="alert alert-block alert-success">
+                                {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if 'contract_not_exist' in message.tags %}
+                            <div class="alert alert-error">
+                                {{ message }}
+                            </div>
+                            {% endif %}
+                          {% endfor %}
+                        <form action='.' method="post">
+                            {% csrf_token %}
+	                    <table>
+                            <tr>
+    	                       <td >工种：</td><td>{{ form.job_type }}</td>
+                            </tr>
+                            <tr>
+        	                    <td>用工单位：</td>
+                                <td style="height:35px">
+                                    <select name="company" style="margin-left:28px">
+                                        {% for company in companys %}
+                                        <option value="{{company.id}}">{{ company.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+    	                       <td>用工单位地址：</td><td style="height:25px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ employee.company.name|default:'无' }}</td>
+    	                    </tr>
+                            <tr>
+    	                       <td>用工单位联系人：</td><td style="height:25px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ employee.company.address|default:'无'  }}</td>
+                            </tr>
+                            <tr>
+                                <td>单位协议起始日期：</td><td>{{ form.company_protocal_start }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>单位协议终止日期：</td><td>{{ form.company_protocal_end }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>劳动合同起始日期：</td><td>{{ form.labour_contract_start }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>劳动合同终止日期：</td><td>{{ form.labour_contract_end }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>试用期起始日期：</td><td>{{ form.probation_start }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>试用期终止日期：</td><td>{{ form.probation_end }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>银行卡号：</td><td>{{ form.bank_no }}</td>
+                            </tr>
+                            <tr>
+    	                      <td>月工资：</td><td>{{ form.month_salary }}</td>
+                            </tr>
+                            <tr>
+    	                       <td>实发工资：</td><td>{{ form.real_salary }}</td>
+                            </tr>
+                            <tr>
+    	                        <td>服务费：</td><td style="height:25px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ employee.company.name|default:'无' }}</td>
+                            </tr>
+                            <tr>
+    	                         <td>工资发放时间：</td><td>{{ form.salary_provide }}</td>
+                            </tr>
+	                    </table>
+                        <button type="submit" class="return_button">确认保存</button>
 	                    <button class="return_button"><a href="man_print.html" title="返回" style="color:white;">返回</a></button>
 	                    
-	                    <button type="button" class="return_button">确认保存</button>
+                        </form>
 	                </div>
             	</div>               
             </div>               
