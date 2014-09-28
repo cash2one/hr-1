@@ -59,13 +59,14 @@ class EmployeeProfileForm(forms.ModelForm):
 
 class ContractForm(forms.ModelForm):
     """ 员工合同表单"""
-    def __init__(self, request=None, *args, **kwargs):
+    def __init__(self, request=None, employee=None, *args, **kwargs):
         super(ContractForm, self).__init__(*args, **kwargs)
         self._request = request
+        self._employee = employee
 
     class Meta:
         model = Contract
-        exclude = ['employee']
+        exclude = ['employee','created', 'updated', 'deleted']
 
     job_type = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入工种类型', 'class': 'txt', 'style': "margin-left:28px;width:205px;"}),
             error_messages={'required': '请输入工种类型'})
@@ -91,7 +92,44 @@ class ContractForm(forms.ModelForm):
     salary_provide = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入工资发放时间', 'class': 'txt calendar','id': 'startDate7', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
             error_messages={'required': '请输入工资发放时间'})
 
-    
+    def clean_bank_no(self):
+        try:
+            float(self.cleaned_data['bank_no'])
+        except ValueError:
+            raise forms.ValidationError("请输入正确的银行卡")
+        return self.cleaned_data['bank_no']
+
+    def clean_month_salary(self):
+        try:
+            float(self.cleaned_data['month_salary'])
+        except ValueError:
+            raise forms.ValidationError("请输入正确的月工资")
+        return self.cleaned_data['month_salary']
+
+    def clean_real_salary(self):
+        try:
+            int(self.cleaned_data['real_salary'])
+        except ValueError:
+            raise forms.ValidationError("请输入正确的实际工资")
+        return self.cleaned_data['real_salary']
+
+    def clean(self):
+        print self.errors
+        return self.cleaned_data
+
+    def save(self, request=None, employee=None, commit=True):
+        if employee:
+            c = super(ContractForm, self).save(commit=False)
+            c.employee = employee
+            company = CompanyProfile.objects.get(id=request.POST['company'])
+            employee.company = company
+            employee.save()
+            c.save()
+            return c
+        else:
+            super(ContractForm, self).save(commit=True)
+
+
 class CompanyForm(forms.ModelForm):
     """ 公司添加表单"""
     def __init__(self, request=None, *args, **kwargs):
@@ -126,7 +164,3 @@ class CompanyForm(forms.ModelForm):
         except:
             raise forms.ValidationError('服务费输入错误')
         return self.cleaned_data['service_cost']
-
-    def clean(self):
-        print self.errors
-        return self.cleaned_data

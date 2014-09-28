@@ -56,7 +56,7 @@
                               </div>
                             {% endfor %}
                         {% elif form.bank_no.errors %}
-                            {% for error in form.birth.errors %}
+                            {% for error in form.bank_no.errors %}
                               <div class="alert alert-error">
                                 {{ error }}
                               </div>
@@ -123,12 +123,6 @@
                                 </td>
                             </tr>
                             <tr>
-    	                       <td>用工单位地址：</td><td style="height:25px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ employee.company.name|default:'无' }}</td>
-    	                    </tr>
-                            <tr>
-    	                       <td>用工单位联系人：</td><td style="height:25px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ employee.company.address|default:'无'  }}</td>
-                            </tr>
-                            <tr>
                                 <td>单位协议起始日期：</td><td>{{ form.company_protocal_start }}</td>
                             </tr>
                             <tr>
@@ -156,14 +150,11 @@
     	                       <td>实发工资：</td><td>{{ form.real_salary }}</td>
                             </tr>
                             <tr>
-    	                        <td>服务费：</td><td style="height:25px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ employee.company.name|default:'无' }}</td>
-                            </tr>
-                            <tr>
     	                         <td>工资发放时间：</td><td>{{ form.salary_provide }}</td>
                             </tr>
 	                    </table>
                         <button type="submit" class="return_button">确认保存</button>
-	                    <button class="return_button"><a href="man_print.html" title="返回" style="color:white;">返回</a></button>
+	                    <a href="/labour/employee/{{ employee.id}}/update/" title="返回"><button type="button">返回</button></a>
 	                    
                         </form>
 	                </div>

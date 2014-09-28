@@ -93,4 +93,5 @@ class Contract(SoftDeletionModel):
     month_salary = models.CharField('实发工资', max_length=10)
     real_salary = models.CharField('实发工资', max_length=10)
     salary_provide = models.DateTimeField('工资发放时间', default=None, null=True)
+    
 
