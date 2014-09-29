@@ -177,16 +177,42 @@ class HealthForm(forms.ModelForm):
 
     health_card = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入卡号', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
         error_messages={'required': '请输入卡号'})
-    health_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+    health_payment_base = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
         error_messages={'required': '请输入缴费基数'})
-    health_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+    health_payment_self = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
         error_messages={'required': '请输入个人缴费金额'})
-    health_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+    health_payment_company = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
         error_messages={'required': '请输入公司缴费金额'})
     health_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
         error_messages={'required': '请输入保险起始时间'})
     health_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
         error_messages={'required': '请输入保险终止时间'})
+
+    def clean_health_payment_base(self):
+        try:
+            int(self.cleaned_data['health_payment_base'])
+        except KeyError:
+            raise forms.ValidationError("缴费基数输入错误")
+        return self.cleaned_data['health_payment_base']
+    
+    def clean_health_payment_self(self):
+        try:
+            int(self.cleaned_data['health_payment_self'])
+        except KeyError:
+            raise forms.ValidationError("个人缴费金额输入错误")
+        return self.cleaned_data['health_payment_self']
+    
+    def clean_health_payment_company(self):
+        try:
+            int(self.cleaned_data['health_payment_company'])
+        except KeyError:
+            raise forms.ValidationError("公司缴费金额输入错误")
+        return self.cleaned_data['health_payment_company']
+   
+    def clean(self):
+        if self.cleaned_data['health_payment_start'] > self.cleaned_data['health_payment_end']:
+            raise forms.ValidationError("起始日期不能大于结束日期")
+        return self.cleaned_data
    
 
 class EndowmentForm(forms.ModelForm):
@@ -201,16 +227,21 @@ class EndowmentForm(forms.ModelForm):
 
     endowment_card = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入卡号', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
         error_messages={'required': '请输入卡号'})
-    endowment_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入缴费基数'})
-    endowment_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入个人缴费金额'})
-    endowment_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入公司缴费金额'})
+    endowment_payment_base = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数', 'invalid': '缴费基数输入错误'})
+    endowment_payment_self = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额', 'invalid': '个人缴费金额输入错误'})
+    endowment_payment_company = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额', 'invalid': '公司缴费金额输入错误'})
     endowment_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
         error_messages={'required': '请输入保险起始时间'})
     endowment_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
         error_messages={'required': '请输入保险终止时间'})
+   
+    def clean(self):
+        if self.cleaned_data['endowment_payment_start'] > self.cleaned_data['endowment_payment_end']:
+            raise forms.ValidationError("起始日期不能大于结束日期")
+        return self.cleaned_data
    
 
 class BornForm(forms.ModelForm):
@@ -223,16 +254,21 @@ class BornForm(forms.ModelForm):
         model = CompanyProfile
         fields = ['born_payment_base', 'born_payment_self', 'born_payment_company', 'born_payment_start', 'born_payment_end']
 
-    born_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入缴费基数'})
-    born_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入个人缴费金额'})
-    born_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入公司缴费金额'})
+    born_payment_base = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数', 'invalid': '缴费基数输入错误'})
+    born_payment_self = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额', 'invalid': '个人缴费金额输入错误'})
+    born_payment_company = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额', 'invalid': '公司缴费金额输入错误'})
     born_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
         error_messages={'required': '请输入保险起始时间'})
     born_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
         error_messages={'required': '请输入保险终止时间'})
+
+    def clean(self):
+        if self.cleaned_data['born_payment_start'] > self.cleaned_data['born_payment_end']:
+            raise forms.ValidationError("起始日期不能大于结束日期")
+        return self.cleaned_data
 
 
 class IndustrialForm(forms.ModelForm):
@@ -245,16 +281,21 @@ class IndustrialForm(forms.ModelForm):
         model = CompanyProfile
         fields = ['industrial_payment_base', 'industrial_payment_self', 'industrial_payment_company', 'industrial_payment_start', 'industrial_payment_end']
 
-    industrial_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入缴费基数'})
-    industrial_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入个人缴费金额'})
-    industrial_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入公司缴费金额'})
+    industrial_payment_base = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数', 'invalid': '缴费基数输入错误'})
+    industrial_payment_self = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额', 'invalid': '个人缴费金额输入错误'})
+    industrial_payment_company = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额', 'invalid': '公司缴费金额输入错误'})
     industrial_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
         error_messages={'required': '请输入保险起始时间'})
     industrial_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
         error_messages={'required': '请输入保险终止时间'})
+   
+    def clean(self):
+        if self.cleaned_data['industrial_payment_start'] > self.cleaned_data['industrial_payment_end']:
+            raise forms.ValidationError("起始日期不能大于结束日期")
+        return self.cleaned_data
   
 
 class UnemployeedForm(forms.ModelForm):
@@ -267,16 +308,21 @@ class UnemployeedForm(forms.ModelForm):
         model = CompanyProfile
         fields = ['unemployed_payment_base', 'unemployed_payment_self', 'unemployed_payment_company', 'unemployed_payment_start', 'unemployed_payment_end']
 
-    unemployed_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入缴费基数'})
-    unemployed_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入个人缴费金额'})
-    unemployed_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入公司缴费金额'})
+    unemployed_payment_base = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数', 'invalid': '缴费基数输入错误'})
+    unemployed_payment_self = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额', 'invalid': '个人缴费金额输入错误'})
+    unemployed_payment_company = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额', 'invalid': '公司缴费金额输入错误'})
     unemployed_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
         error_messages={'required': '请输入保险起始时间'})
     unemployed_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
         error_messages={'required': '请输入保险终止时间'})
+
+    def clean(self):
+        if self.cleaned_data['unemployed_payment_start'] > self.cleaned_data['unemployed_payment_end']:
+            raise forms.ValidationError("起始日期不能大于结束日期")
+        return self.cleaned_data
   
 
 class ReservedForm(forms.ModelForm):
@@ -289,14 +335,19 @@ class ReservedForm(forms.ModelForm):
         model = CompanyProfile
         fields = ['reserved_payment_base', 'reserved_payment_self', 'reserved_payment_company', 'reserved_payment_start', 'reserved_payment_end']
 
-    reserved_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入缴费基数'})
-    reserved_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入个人缴费金额'})
-    reserved_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
-        error_messages={'required': '请输入公司缴费金额'})
+    reserved_payment_base = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数', 'invalid': '缴费基数输入错误'})
+    reserved_payment_self = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额', 'invalid': '个人缴费金额输入错误'})
+    reserved_payment_company = forms.FloatField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额', 'invalid': '公司缴费金额输入错误'})
     reserved_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入起始时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
         error_messages={'required': '请输入起始时间'})
     reserved_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入终止时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
         error_messages={'required': '请输入终止时间'})
+
+    def clean(self):
+        if self.cleaned_data['reserved_payment_start'] > self.cleaned_data['reserved_payment_end']:
+            raise forms.ValidationError("起始日期不能大于结束日期")
+        return self.cleaned_data
   

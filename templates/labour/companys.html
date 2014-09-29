@@ -4,24 +4,29 @@
 {% block container %} 
         <div class="w-right">
         	<div class="th-input" style="width:42%">
-                <span>单位名称：</span><input class="txt_input" type="text" name="id"/>
-                <button>查询</button>
+                <form action='.' method="get">
+                    <span>单位名称：</span><input class="txt_input" type="text" name="search"/>
+                    <button type="submit">查询</button>
+                </form>
             </div> 
             <table class="reg-info">
-                <tr>
-                    <th><button style="margin:5px 0.1em 5px 0px;" class="select_first">全选</button></th>
-                    <td>公司名称</td>
-                    <td>地址</td>
-                    <td>详情</td>
-                </tr>
+                <thead>
+                    <th>公司名称</th>
+                    <th>地址</th>
+                    <th>详情</th>
+                </thead>
                 {% for company in companys %}
-            	<tr>
-                    <th><button style="margin:5px 0.1em 5px 0px;" class="select_first">全选</button></th>
-                    <td>{{ company.name }}</td>
+            	<tr >
+                    <td style="height:40px">{{ company.name }}</td>
                     <td>{{ company.address|slice:':6' }}...</td>
-                    <td><a href="/labour/company/{{company.id}}/update/"><button type="button">员工详情</button></a></td>
+                    <td><a href="/labour/{{company.id}}/employees/"><button type="button">员工详情</button></a></td>
                 </tr>
                 {% endfor %}
+                {% if not companys %}
+                    <tr>
+                      <td colspan='3' style="height:40px;color:red">未搜索到数据</td>
+                    </tr>
+                  {% endif %}
             </table>  
             <div class="pager">
                <span class="fr">

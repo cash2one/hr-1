@@ -162,12 +162,41 @@ def companys(request, template_name='labour/companys.html'):
         'page_numbers': page_numbers,
     })
 
-def employees(request, template_name='labour/employees.html'):
+def employees(request, company_id, template_name='labour/employees.html'):
     """ 全部员工信息"""
-    name = request.GET.get('name', None)
-    id_no = request.GET.get('id_no', None)
-    return render(request, template_name, {
+    if company_id != 0:
+        try:
+            company = CompanyProfile.objects.get(id=company_id)
+        except CompanyProfile.DoesNotExist:
+            messages.error(request, '该公司不存在', extra_tags='company_not_exist')
+            return HttpResponseRedirect(reverse("labour.views.company_add"))
 
+        name = request.GET.get('name', None)
+        id_no = request.GET.get('id_no', None)
+        health_no = request.GET.get('health_no', None)
+        search = request.GET.get('search', None)
+        search_dict = {}
+
+        if search is not None:
+            if name is not None:
+                search_dict['name__contains'] = name
+            if id_no is not None:
+                search_dict['id_no__contains'] = id_no
+            if health_no is not None:
+                search_dict['health_no__contains'] = health_no
+
+            employee_list = EmployeeProfile.objects.filter(company=company, **search_dict)
+        else:
+            employee_list = EmployeeProfile.objects.filter(company=company)
+    else:
+        employee_list = EmployeeProfile.objects.filter()
+
+
+    employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'employees': employees,
+        'user': request.user,
     })
 
 def insurance(request, employee_id, insurance):
@@ -207,8 +236,12 @@ def base_insurance(request, employee_id, form_class, template_name):
         form = form_class(request, data=request.POST, instance=employee)
         if form.is_valid():
             form.save(request)
+            if employee is None:
+                messages.info(request, '添加成功', extra_tags='add_succ')
+            else:
+                messages.info(request, '修改成功', extra_tags='update_succ')
     else:
-        form = form_class()
+        form = form_class(instance=employee)
     return render(request, template_name, {
         'form': form,
         'user': request.user,

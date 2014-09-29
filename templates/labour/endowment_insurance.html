@@ -60,20 +60,14 @@
                           {% endif %}
 
                          {% for message in messages %}
-                            {% if 'endowment_update_succ' in message.tags %}
+                            {% if 'update_succ' in message.tags %}
                             <div class="alert alert-block alert-success">
                                 {{ message }}
                             </div>
                             {% endif %}
 
-                            {% if 'endowment_add_succ' in message.tags %}
+                            {% if 'add_succ' in message.tags %}
                             <div class="alert alert-block alert-success">
-                                {{ message }}
-                            </div>
-                            {% endif %}
-
-                            {% if 'endowment_not_exist' in message.tags %}
-                            <div class="alert alert-error">
                                 {{ message }}
                             </div>
                             {% endif %}

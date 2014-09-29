@@ -60,20 +60,14 @@
                           {% endif %}
 
                          {% for message in messages %}
-                            {% if 'health_update_succ' in message.tags %}
+                            {% if 'update_succ' in message.tags %}
                             <div class="alert alert-block alert-success">
                                 {{ message }}
                             </div>
                             {% endif %}
 
-                            {% if 'health_add_succ' in message.tags %}
+                            {% if 'add_succ' in message.tags %}
                             <div class="alert alert-block alert-success">
-                                {{ message }}
-                            </div>
-                            {% endif %}
-
-                            {% if 'health_not_exist' in message.tags %}
-                            <div class="alert alert-error">
                                 {{ message }}
                             </div>
                             {% endif %}
