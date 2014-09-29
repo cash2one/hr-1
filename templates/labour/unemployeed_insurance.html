@@ -1,0 +1,106 @@
+{% extends 'base.html' %}  
+{% block add %} display:block {% endblock %} 
+{% block employee_add %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right">   
+            <div class="th-y" style="border:none;">
+                <div id="shoudong_two">
+                    <div class="th-input" style="width:52%;">
+                        <h3>--------失业保险信息添加/修改--------</h3>
+                        <br>
+                        <form action='.' method='post'>
+                            {% csrf_token %}
+                            {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+
+                          {% if form.unemployed_payment_base.errors %}
+                            {% for error in form.unemployed_payment_base.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% elif form.unemployed_payment_company.errors %}
+                            {% for error in form.unemployed_payment_company.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+
+                          {% elif form.unemployed_payment_self.errors %}
+                            {% for error in form.unemployed_payment_self.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+
+                          {% elif form.unemployed_payment_start.errors %}
+                            {% for error in form.unemployed_payment_start.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+                          {% elif form.unemployed_payment_end.errors %}
+                            {% for error in form.unemployed_payment_end.errors %}
+                              <div class="alert alert-error">
+                                {{ error }}
+                              </div>
+                            {% endfor %}
+
+                          {% endif %}
+
+                         {% for message in messages %}
+                            {% if 'unemployed_update_succ' in message.tags %}
+                            <div class="alert alert-block alert-success">
+                                {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if 'unemployed_add_succ' in message.tags %}
+                            <div class="alert alert-block alert-success">
+                                {{ message }}
+                            </div>
+                            {% endif %}
+
+                            {% if 'unemployed_not_exist' in message.tags %}
+                            <div class="alert alert-error">
+                                {{ message }}
+                            </div>
+                            {% endif %}
+                          {% endfor %}
+                            <table>
+                                <tr>
+                                    <td>缴费基数：</td>
+                                    <td>{{ form.unemployed_payment_base }}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位缴费金额：</td>
+                                    <td>{{ form.unemployed_payment_company }}</td>
+                                </tr>
+                                <tr>
+                                    <td>个人缴费金额：</td>
+                                    <td>{{ form.unemployed_payment_self }}</td>
+                                </tr>
+                                <tr>
+                                    <td>缴费起始时间：</td>
+                                    <td>{{ form.unemployed_payment_start }}</td>
+                                </tr>
+                                <tr>
+                                    <td>缴费终止时间：</td>
+                                    <td>{{ form.unemployed_payment_end }}</td>
+                                </tr>
+                            </table>
+                            <button type="submit" class="return_button">确认保存</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="/labour/employee/{{ employee.id}}/update/" title="返回"><button type="button">返回</button></a>
+                        </form>
+                    </div>
+                </div>               
+            </div>               
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}

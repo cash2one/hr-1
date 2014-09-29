@@ -41,18 +41,18 @@
                     <ul class="big_txt_inner">
                         <li title="劳务信息登记">
                             <a href="javascript:;" class="small_txt"><i></i>劳务信息登记</a>
-                            <ul class="w-left-inner" style="display:block;">
-                                <a href="{% url "labour.views.company_add" %}" title="公司录入" style="color:#222222;"><li class="inner_txt {% block company_add %}{% endblock %}">公司录入</li></a>
-                                <a href="{% url "labour.views.employee_add" %}" title="手动录入" style="color:#222222;"><li class="inner_txt {% block employee_add %}{% endblock %}">员工录入</li></a>
-                                <a href="bulk_print.html" title="批量录入" style="color:#222222;"><li class="inner_txt">批量录入</li></a>
+                            <ul class="w-left-inner" style="{% block add %}{% endblock %}">
+                                <li class="inner_txt {% block company_add %}{% endblock %}"><a href="{% url "labour.views.company_add" %}" title="公司录入" style="color:#222222;">公司录入</a></li>
+                                <li class="inner_txt {% block employee_add %}{% endblock %}"><a href="{% url "labour.views.employee_add" %}" title="手动录入" style="color:#222222;">员工录入</a></li>
+                                <li class="inner_txt"><a href="bulk_print.html" title="批量录入" style="color:#222222;">批量录入</a></li>
                             </ul>
                         </li>
                 
                         <li title="劳务信息查询">
                            <a href="javscript:;" class="small_txt"><i></i>劳务信息查询</a>
-                           <ul class="w-left-inner">
-                               <li class="inner_txt"><a href="official_search.html" title="单位查询" style="color:#222222;">单位查询</a></li>
-                               <li class="inner_txt"><a href="person_search.html" title="个人查询" style="color:#222222;">个人查询</a></li>
+                           <ul class="w-left-inner" style="{% block search %}{% endblock %}">
+                               <li class="inner_txt {% block company_search %}{% endblock %}"><a href="{% url "labour.views.companys" %}" title="单位查询" style="color:#222222;">单位查询</a></li>
+                               <li class="inner_txt {% block employee_search %}{% endblock %}"><a href="{% url "labour.views.employees" %}" title="个人查询" style="color:#222222;">个人查询</a></li>
                            </ul>
                         </li>
                         <li title="劳务信息统计"><a href="ms_tongji.html" class="small_txt_tongji">劳务信息统计</a></li>

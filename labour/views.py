@@ -8,6 +8,9 @@ from django.core.urlresolvers import reverse
 
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
 from labour.models import EmployeeProfile, UserProfile, CompanyProfile, Contract
+from labour.forms import HealthForm, BornForm, UnemployeedForm, ReservedForm, IndustrialForm, EndowmentForm
+from utils import adjacent_paginator
+
 
 def index(request, template_name="labour/index.html"):
     """ 管理员登陆页面"""
@@ -143,3 +146,83 @@ def company_update(request, company_id, form_class=CompanyForm, template_name='l
     return render(request, template_name, {
         'form': form,
     })
+
+def companys(request, template_name='labour/companys.html'):
+    """ 全部公司信息"""
+    search = request.GET.get('search', None)
+    if search is not None:
+        company_list = CompanyProfile.objects.filter(name__contains=search)
+    else:
+        company_list = CompanyProfile.objects.filter(is_deleted=0)
+
+    companys, page_numbers = adjacent_paginator(company_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'companys': companys,
+        'page_numbers': page_numbers,
+    })
+
+def employees(request, template_name='labour/employees.html'):
+    """ 全部员工信息"""
+    name = request.GET.get('name', None)
+    id_no = request.GET.get('id_no', None)
+    return render(request, template_name, {
+
+    })
+
+def insurance(request, employee_id, insurance):
+    """ 保险信息分流"""
+    if insurance == 'health':
+        # 养老保险
+        return base_insurance(request, employee_id, HealthForm, 'labour/health_insurance.html')
+    elif insurance == 'endowment':
+        # 医疗保险
+        return base_insurance(request, employee_id, EndowmentForm, 'labour/endowment_insurance.html')
+
+    elif insurance == 'born':
+        # 生育保险
+        return base_insurance(request, employee_id, BornForm, 'labour/born_insurance.html')
+
+    elif insurance == 'industrial':
+        # 工伤保险
+        return base_insurance(request, employee_id, IndustrialForm, 'labour/industrial_insurance.html')
+
+    elif insurance == 'unemployeed':
+        # 失业保险
+        return base_insurance(request, employee_id, UnemployeedForm, 'labour/unemployeed_insurance.html')
+
+    elif insurance == 'reserved':
+        # 住房公积金
+        return base_insurance(request, employee_id, ReservedForm, 'labour/reserved_insurance.html')
+
+
+def base_insurance(request, employee_id, form_class, template_name):
+    """ 保险信息"""
+    try:
+        employee = EmployeeProfile.objects.get(id=employee_id)
+    except EmployeeProfile.DoesNotExist:
+        employee = None
+
+    if request.method == "POST":
+        form = form_class(request, data=request.POST, instance=employee)
+        if form.is_valid():
+            form.save(request)
+    else:
+        form = form_class()
+    return render(request, template_name, {
+        'form': form,
+        'user': request.user,
+        'employee': employee,
+    })
+
+
+
+
+
+
+
+
+
+
+
+

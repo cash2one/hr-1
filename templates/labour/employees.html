@@ -1,0 +1,67 @@
+{% extends 'base.html' %}  
+{% block search %} display:block {% endblock %} 
+{% block employee_search %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right">
+                <div class="th-input" style="width:42%">
+                  <span class="ml24">姓名：</span><input class="txt_input" type="text" name="id"/><br/>
+                  <span>身份证号：</span><input class="txt_input" type="text" name="password" /><br/>
+                  <span>医保卡号：</span><input class="txt_input" type="text" name="equalTo" /><br/>
+                  <button class="make_sure" style="margin:10px 0px 0px 120px">查询</button>
+                </div>  
+              <table class="reg-info">
+                  <tr>
+                      <th><button style="margin:5px 0.1em 5px 0px;" class="select_second">全选</button></th>
+                      <td>姓名</td>
+                      <td>年龄</td>
+                      <td>身份证号</td>
+                      <td>医保卡号</td>
+                  </tr>
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                  </tr>
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                  </tr>
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                  </tr>
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                      <td>&nbsp</td>
+                  </tr>
+                </table> 
+                <div class="pager">
+                 <span class="fr">
+                     <button>导出</button>
+                     <button>缴费管理</button>
+                 </span>
+                 <a href="#">【首页】</a>
+                 <a href="#">【上一页】</a>
+                 <a href="#">【下一页】</a>
+                 <a href="#">【尾页】</a>
+                </div>            
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}

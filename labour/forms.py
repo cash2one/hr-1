@@ -164,3 +164,139 @@ class CompanyForm(forms.ModelForm):
         except:
             raise forms.ValidationError('服务费输入错误')
         return self.cleaned_data['service_cost']
+
+class HealthForm(forms.ModelForm):
+    """ 医疗保险表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(HealthForm, self).__init__(*args, **kwargs)
+        self._request = request
+
+    class Meta:
+        model = CompanyProfile
+        fields = ['health_card', 'health_payment_base', 'health_payment_self', 'health_payment_company', 'health_payment_start', 'health_payment_end']
+
+    health_card = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入卡号', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入卡号'})
+    health_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数'})
+    health_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额'})
+    health_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额'})
+    health_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
+        error_messages={'required': '请输入保险起始时间'})
+    health_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
+        error_messages={'required': '请输入保险终止时间'})
+   
+
+class EndowmentForm(forms.ModelForm):
+    """ 养老保险表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(EndowmentForm, self).__init__(*args, **kwargs)
+        self._request = request
+
+    class Meta:
+        model = CompanyProfile
+        fields = ['endowment_card', 'endowment_payment_base', 'endowment_payment_self', 'endowment_payment_company', 'endowment_payment_start', 'endowment_payment_end']
+
+    endowment_card = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入卡号', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入卡号'})
+    endowment_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数'})
+    endowment_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额'})
+    endowment_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额'})
+    endowment_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
+        error_messages={'required': '请输入保险起始时间'})
+    endowment_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
+        error_messages={'required': '请输入保险终止时间'})
+   
+
+class BornForm(forms.ModelForm):
+    """ 生育保险表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(BornForm, self).__init__(*args, **kwargs)
+        self._request = request
+
+    class Meta:
+        model = CompanyProfile
+        fields = ['born_payment_base', 'born_payment_self', 'born_payment_company', 'born_payment_start', 'born_payment_end']
+
+    born_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数'})
+    born_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额'})
+    born_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额'})
+    born_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
+        error_messages={'required': '请输入保险起始时间'})
+    born_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
+        error_messages={'required': '请输入保险终止时间'})
+
+
+class IndustrialForm(forms.ModelForm):
+    """ 工伤保险表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(IndustrialForm, self).__init__(*args, **kwargs)
+        self._request = request
+
+    class Meta:
+        model = CompanyProfile
+        fields = ['industrial_payment_base', 'industrial_payment_self', 'industrial_payment_company', 'industrial_payment_start', 'industrial_payment_end']
+
+    industrial_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数'})
+    industrial_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额'})
+    industrial_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额'})
+    industrial_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
+        error_messages={'required': '请输入保险起始时间'})
+    industrial_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
+        error_messages={'required': '请输入保险终止时间'})
+  
+
+class UnemployeedForm(forms.ModelForm):
+    """ 失业保险表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(UnemployeedForm, self).__init__(*args, **kwargs)
+        self._request = request
+        
+    class Meta:
+        model = CompanyProfile
+        fields = ['unemployed_payment_base', 'unemployed_payment_self', 'unemployed_payment_company', 'unemployed_payment_start', 'unemployed_payment_end']
+
+    unemployed_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数'})
+    unemployed_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额'})
+    unemployed_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额'})
+    unemployed_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险起始时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
+        error_messages={'required': '请输入保险起始时间'})
+    unemployed_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入保险终止时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
+        error_messages={'required': '请输入保险终止时间'})
+  
+
+class ReservedForm(forms.ModelForm):
+    """ 公积金表单"""
+    def __init__(self, request=None, *args, **kwargs):
+        super(ReservedForm, self).__init__(*args, **kwargs)
+        self._request = request
+        
+    class Meta:
+        model = CompanyProfile
+        fields = ['reserved_payment_base', 'reserved_payment_self', 'reserved_payment_company', 'reserved_payment_start', 'reserved_payment_end']
+
+    reserved_payment_base = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入缴费基数', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入缴费基数'})
+    reserved_payment_self = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入个人缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入个人缴费金额'})
+    reserved_payment_company = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司缴费金额', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}),
+        error_messages={'required': '请输入公司缴费金额'})
+    reserved_payment_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入起始时间', 'class': 'txt calendar', 'id':'startDate1', 'style': "margin-left:28px;width:205px;margin-top:3px"}),
+        error_messages={'required': '请输入起始时间'})
+    reserved_payment_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入终止时间', 'class': 'txt calendar', 'id':'startDate2', 'style': "margin-left:28px;width:205px;margin-top:10px"}),
+        error_messages={'required': '请输入终止时间'})
+  

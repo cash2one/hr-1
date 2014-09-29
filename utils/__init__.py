@@ -20,6 +20,22 @@ def generate_paginator(queryset, page):
 
     return paged_queryset
 
+def adjacent_paginator(queryset, page, page_num=20, adjacent_pages=2):
+    """ 分页"""
+    paginator = Paginator(queryset, page_num)
+    try:
+        paged_queryset = paginator.page(page)
+    except PageNotAnInteger:
+        paged_queryset = paginator.page(1)
+    except EmptyPage:
+        paged_queryset = paginator.page(paginator.num_pages)
+
+    start_page = max(paged_queryset.number - adjacent_pages, 1)
+    end_page = min(paged_queryset.number + adjacent_pages, paginator.num_pages)
+
+    page_numbers = range(start_page, end_page + 1)
+    return paged_queryset, page_numbers
+
 def generate_sn():
     """ 生成序列号"""
     return datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
