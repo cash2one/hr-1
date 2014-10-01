@@ -1,0 +1,58 @@
+{% extends 'base.html' %}  
+{% block search %} display:block {% endblock %} 
+{% block container %} 
+        <div class="w-right">
+        	<table class="reg-info">
+                <tr>
+                    <th class="reset_width bg-none">养老保险到期人数</th>
+                    <td style="width:270px;">{{ endowment_count }}人</td>
+                    <td><a href="/labour/statistics/endowment/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">医疗保险到期人数</th>
+                    <td>{{ health_count }}人</td>
+                    <td><a href="/labour/statistics/health/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">生育保险到期人数</th>
+                    <td>{{ born_count }}人</td>
+                    <td><a href="/labour/statistics/born/"> <button>详情</button></a></td>
+                <tr>
+                    <th class="reset_width bg-none">工伤保险到期人数</th>
+                    <td>{{ industrial_count }}人</td>
+                    <td><a href="/labour/statistics/industrial/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">失业保险到期人数</th>
+                    <td>{{ unemployed_count }}人</td>
+                    <td><a href="/labour/statistics/unemployed/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">公积金保险到期人数</th>
+                    <td>{{ reserved_count }}人</td>
+                    <td><a href="/labour/statistics/reserved/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">退休人员到期⼈人数</th>
+                    <td>无</td>
+                    <td><a href="#"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">单位协议到期人数</th>
+                    <td>{{ company_protocal_count }}人</td>
+                    <td><a href="/labour/statistics/company_protocal/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">劳动合同到期人数</th>
+                    <td>{{ labour_contract_count }}人</td>
+                    <td><a href="/labour/statistics/labour_contract/"> <button>详情</button></a></td>
+                </tr>
+                <tr>
+                    <th class="reset_width bg-none">试用期到期人数</th>
+                    <td>{{ probation_count }}人</td>
+                    <td><a href="/labour/statistics/probation/"> <button>详情</button></a></td>
+                </tr>
+            </table>                        
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}  
+{% block search %} display:block {% endblock %} 
+{% block employee_search %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right">
+          <br>
+          <h3 style="text-align:center">---到期人数列表---</h3>
+          <br>
+              <table class="reg-info">
+                  <tr>
+                      <th><button style="margin:5px 0.1em 5px 0px;" class="select_second">全选</button></th>
+                      <td>姓名</td>
+                      <td>性别</td>
+                      <td>身份证号</td>
+                      <td>医保卡号</td>
+                      <td>所属公司</td>
+                      <td>详情</td>
+                  </tr>
+                  {% for employee in employees %}
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <td> {{ employee.name }} </td>
+                      <td> {{ employee.sex }} </td>
+                      <td> {{ employee.id_no }} </td>
+                      <td> {{ employee.health_card }} </td>
+                      <td> {{ employee.company.name }} </td>
+                      <td><a href="/labour/employee/{{ employee.id }}/update/"><button type="button">员工详情</button></a></td>
+
+                  </tr>
+                  {% endfor %}
+                  {% if not employees %}
+                    <tr>
+                      <td colspan='7' style="height:40px;color:red">未搜索到数据</td>
+                    </tr>
+                  {% endif %}
+                </table> 
+                <div class="pager">
+                 <span class="fr">
+                     <button>导出</button>
+                     <button>缴费管理</button>
+                     <a href="/labour/statistics/all/" title="返回"><button type="button">返回</button></a>
+
+                 </span>
+                 <a href="#">【首页】</a>
+                 <a href="#">【上一页】</a>
+                 <a href="#">【下一页】</a>
+                 <a href="#">【尾页】</a>
+                </div>            
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}

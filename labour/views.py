@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+import datetime
+
 from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -164,7 +166,7 @@ def companys(request, template_name='labour/companys.html'):
 
 def employees(request, company_id, template_name='labour/employees.html'):
     """ 全部员工信息"""
-    if company_id != 0:
+    if company_id != '0':
         try:
             company = CompanyProfile.objects.get(id=company_id)
         except CompanyProfile.DoesNotExist:
@@ -247,6 +249,60 @@ def base_insurance(request, employee_id, form_class, template_name):
         'user': request.user,
         'employee': employee,
     })
+
+def statistics(request, statis_type='all', template_name='labour/labour_statistics.html'):
+    """ 劳务信息统计"""
+    today = datetime.datetime.now()
+
+    if statis_type == 'all':
+        endowment_count = EmployeeProfile.objects.filter(endowment_payment_end__lt=today).count()
+        health_count = EmployeeProfile.objects.filter(health_payment_end__lt=today).count()
+        born_count = EmployeeProfile.objects.filter(born_payment_end__lt=today).count()
+        industrial_count = EmployeeProfile.objects.filter(industrial_payment_end__lt=today).count()
+        unemployed_count = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today).count()
+        reserved_count = EmployeeProfile.objects.filter(reserved_payment_end__lt=today).count()
+        company_protocal_count = Contract.objects.filter(company_protocal_end__lt=today).count()
+        labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today).count()
+        probation_count = Contract.objects.filter(probation_end__lt=today).count()
+
+        return render(request, template_name, {
+            'endowment_count': endowment_count,
+            'health_count': health_count,
+            'born_count': born_count,
+            'industrial_count': industrial_count,
+            'unemployed_count': unemployed_count,
+            'reserved_count': reserved_count,
+            'company_protocal_count': company_protocal_count,
+            'labour_contract_count': labour_contract_count,
+            'probation_count': probation_count,
+        })
+    elif statis_type == 'endowment':
+        profiles = EmployeeProfile.objects.filter(endowment_payment_end__lt=today)
+    elif statis_type == 'health':
+        profiles = EmployeeProfile.objects.filter(health_payment_end__lt=today)
+    elif statis_type == 'born':
+        profiles = EmployeeProfile.objects.filter(born_payment_end__lt=today)
+    elif statis_type == 'industrial':
+        profiles = EmployeeProfile.objects.filter(industrial_payment_end__lt=today)
+    elif statis_type == 'unemployeed':
+        profiles = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today)
+    elif statis_type == 'reserved':
+        profiles = EmployeeProfile.objects.filter(reserved_payment_end__lt=today)
+    elif statis_type == 'company_protocal':
+        profiles = Contract.objects.filter(company_protocal_end__lt=today)
+    elif statis_type == 'labour_contract':
+        profiles = Contract.objects.filter(labour_contract_end__lt=today)
+    elif statis_type == 'probation':
+        profiles = Contract.objects.filter(probation_end__lt=today)
+    else:
+        return HttpResponseRedirect(reverse('labour.views.statistics'))
+
+    template_name = 'labour/labour_statistics_detail.html'
+    return render(request, template_name, {
+        'employees': profiles,
+    })
+
+
 
 
 

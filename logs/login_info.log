@@ -20,3 +20,5 @@ INFO 2014-09-29 20:51:09,090 forms login 7321 4385013760 userid=1 action=登录 
 INFO 2014-09-29 20:51:43,518 forms login 7321 4385013760 userid=1 action=登录 username=root verify_code=w2d0 level=0 
 INFO 2014-09-29 20:52:33,748 forms login 7348 4465844224 userid=1 action=登录 username=root verify_code=4s0m level=0 
 INFO 2014-09-29 23:45:44,537 forms login 333 4430118912 userid=1 action=登录 username=root verify_code=c6sd level=0 
+INFO 2014-09-30 22:34:14,887 forms login 506 4361203712 userid=1 action=登录 username=root verify_code=z55t level=0 
+INFO 2014-10-01 20:12:11,477 forms login 420 4432134144 userid=1 action=登录 username=root verify_code=n3r6 level=0 
