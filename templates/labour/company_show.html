@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+  <style type="text/css">
+    table {
+      margin:10px;
+      font-size: 15px;
+    }
+    td {
+      width: 50px;
+      height: 50px;
+    }
+  </style>
+{% endblock %}
+{% block search %} display:block {% endblock %} 
+{% block company_search %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right">   
+            <div class="th-y" style="border:none;">
+                <div id="shoudong_two">
+                    <div class="th-input" style="width:62%;">
+                           <table class="reg-info" >
+                            <tr>
+                              <td><span>公司名称:</span></td>
+                              <td>{{ company.name }}</td>
+                            </tr>
+                            <tr>
+                              <td>公司地址:</td>
+                              <td>{{ company.address }}</td>
+                            </tr>
+                            <tr>
+                              <td>联&nbsp;&nbsp;系&nbsp;&nbsp;人:</td>
+                              <td>{{ company.link_man }}</td>
+                            </tr>
+                            <tr>
+                              <td>联系人电话:</td>
+                              <td>{{ company.link_man_mobile }}</td>
+                            </tr>
+                            <tr>
+                              <td>服务费:</td>
+                              <td>{{ company.service_cost|default:'0' }}元</td>
+                            </tr>
+                            </table>
+                            <a href="/labour/companys/" title="返回" style="margin-left:400px"><button type="button">返回</button></a>
+
+                    </div>
+                </div>               
+            </div>               
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}

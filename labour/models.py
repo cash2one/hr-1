@@ -56,6 +56,7 @@ class EmployeeProfile(SoftDeletionModel):
     company = models.ForeignKey(CompanyProfile, default=None, null=True)
     serial_id = models.CharField('序号', max_length=20)
     name = models.CharField('姓名', max_length=10)
+    email = models.EmailField('邮箱', max_length=20)
     sex = models.CharField('性别', max_length=2)
     nation = models.CharField('民族', max_length=10, default=None, null=True, blank=True)
     birth = models.DateTimeField('出生日期', default=None, null=True, blank=True)
@@ -73,7 +74,7 @@ class EmployeeProfile(SoftDeletionModel):
 
     is_fired = models.BooleanField('是否解除劳动关系', default=False, blank=True)
     fired_date = models.DateTimeField('解除时间', default=None, null=True, blank=True)
-    fired_reason = models.DateTimeField('解除原因', default=None, null=True, blank=True)
+    fired_reason = models.CharField('解除原因', max_length=100, default=None, null=True, blank=True)
 
     #医疗保险
     health_card = models.CharField('医疗保险卡号', max_length=30, default=None, blank=True, null=True)
@@ -125,7 +126,7 @@ class EmployeeProfile(SoftDeletionModel):
 
 class Contract(SoftDeletionModel):
     """ 员工合同信息"""
-    employee = models.ForeignKey(EmployeeProfile, related_name='contracts')
+    employee = models.OneToOneField(EmployeeProfile, related_name='contract')
     job_type = models.CharField('工种', max_length=15, default=None, null=True, blank=True)
     company_protocal_start = models.DateTimeField('单位协议开始时间', default=None, null=True)
     company_protocal_end = models.DateTimeField('单位协议结束时间', default=None, null=True)

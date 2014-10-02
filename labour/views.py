@@ -149,6 +149,32 @@ def company_update(request, company_id, form_class=CompanyForm, template_name='l
         'form': form,
     })
 
+def company_show(request, company_id, template_name='labour/company_show.html'):
+    """ 公司信息show"""
+    try:
+        company = CompanyProfile.objects.get(id=company_id)
+    except CompanyProfile.DoesNotExist:
+        messages.error(request, '该公司不存在', extra_tags='company_not_exist')
+        return HttpResponseRedirect(reverse("labour.views.company_add"))
+
+    return render(request, template_name, {
+        'company': company,
+        'user': request.user,
+    })
+
+def employee_show(request, employee_id, template_name='labour/employee_show.html'):
+    """ 员工信息show"""
+    try:
+        employee = EmployeeProfile.objects.get(id=employee_id)
+    except EmployeeProfile.DoesNotExist:
+        messages.error(request, '该雇员不存在', extra_tags='employee_not_exist')
+        return HttpResponseRedirect(reverse("labour.views.employee_add"))
+
+    return render(request, template_name, {
+        'user': request.user,
+        'employee': employee,
+    })
+
 def companys(request, template_name='labour/companys.html'):
     """ 全部公司信息"""
     search = request.GET.get('search', None)
@@ -164,34 +190,26 @@ def companys(request, template_name='labour/companys.html'):
         'page_numbers': page_numbers,
     })
 
-def employees(request, company_id, template_name='labour/employees.html'):
+def employees(request, template_name='labour/employees.html'):
     """ 全部员工信息"""
-    if company_id != '0':
-        try:
-            company = CompanyProfile.objects.get(id=company_id)
-        except CompanyProfile.DoesNotExist:
-            messages.error(request, '该公司不存在', extra_tags='company_not_exist')
-            return HttpResponseRedirect(reverse("labour.views.company_add"))
+    
+    name = request.GET.get('name', None)
+    id_no = request.GET.get('id_no', None)
+    health_no = request.GET.get('health_no', None)
+    search = request.GET.get('search', None)
+    search_dict = {}
 
-        name = request.GET.get('name', None)
-        id_no = request.GET.get('id_no', None)
-        health_no = request.GET.get('health_no', None)
-        search = request.GET.get('search', None)
-        search_dict = {}
+    if search is not None:
+        if name is not None:
+            search_dict['name__contains'] = name
+        if id_no is not None:
+            search_dict['id_no__contains'] = id_no
+        if health_no is not None:
+            search_dict['health_no__contains'] = health_no
 
-        if search is not None:
-            if name is not None:
-                search_dict['name__contains'] = name
-            if id_no is not None:
-                search_dict['id_no__contains'] = id_no
-            if health_no is not None:
-                search_dict['health_no__contains'] = health_no
-
-            employee_list = EmployeeProfile.objects.filter(company=company, **search_dict)
-        else:
-            employee_list = EmployeeProfile.objects.filter(company=company)
+        employee_list = EmployeeProfile.objects.filter(**search_dict)
     else:
-        employee_list = EmployeeProfile.objects.filter()
+        employee_list = EmployeeProfile.objects.all()
 
 
     employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
@@ -199,6 +217,24 @@ def employees(request, company_id, template_name='labour/employees.html'):
     return render(request, template_name, {
         'employees': employees,
         'user': request.user,
+    })
+
+def company_employees(request, company_id, template_name='labour/company_employees.html'):
+    """ 全部员工信息"""
+    try:
+        company = CompanyProfile.objects.get(id=company_id)
+    except CompanyProfile.DoesNotExist:
+        messages.error(request, '该公司不存在', extra_tags='company_not_exist')
+        return HttpResponseRedirect(reverse("labour.views.company_add"))
+
+    employee_list = EmployeeProfile.objects.filter(company=company)
+
+    employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'employees': employees,
+        'user': request.user,
+        'company': company,
     })
 
 def insurance(request, employee_id, insurance):
@@ -298,10 +334,44 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         return HttpResponseRedirect(reverse('labour.views.statistics'))
 
     template_name = 'labour/labour_statistics_detail.html'
+
+    employees, page_numbers = adjacent_paginator(profiles, request.GET.get('page', 1))
+    
     return render(request, template_name, {
-        'employees': profiles,
+        'employees': employees,
     })
 
+def labour_history(request, template_name='labour/labour_history.html'):
+    """ 历史劳务信息"""
+    employee_list = EmployeeProfile.objects.filter(is_fired=True)
+    companys = CompanyProfile.objects.all()
+
+    name = request.GET.get('name', None)
+    id_no = request.GET.get('id_no', None)
+    company_id = request.GET.get('company_id', None)
+    search = request.GET.get('search', None)
+    search_dict = {}
+
+    if search is not None:
+        if name is not None:
+            search_dict['name__contains'] = name
+        if id_no is not None:
+            search_dict['id_no__contains'] = id_no
+        if company_id != '0':
+            search_dict['company_id'] = company_id
+
+        employee_list = EmployeeProfile.objects.filter(is_fired=True, **search_dict)
+    else:
+        employee_list = EmployeeProfile.objects.filter(is_fired=True)
+
+
+    employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'employees': employees,
+        'page_numbers': page_numbers,
+        'companys': companys,
+    })
 
 
 

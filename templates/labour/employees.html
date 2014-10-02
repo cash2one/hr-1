@@ -27,11 +27,11 @@
                   <tr>
                       <th><input type="checkbox" name="all_person" class="h37"></th>
                       <td> {{ employee.name }} </td>
-                      <td> {{ employee.sex }} </td>
-                      <td> {{ employee.id_no }} </td>
-                      <td> {{ employee.health_card }} </td>
-                      <td> {{ employee.company.name }} </td>
-                      <td><a href="/labour/employee/{{ employee.id }}/update/"><button type="button">员工详情</button></a></td>
+                      <td> {{ employee.sex|default:'无' }} </td>
+                      <td> {{ employee.id_no|default:'无' }} </td>
+                      <td> {{ employee.health_card|default:'无' }} </td>
+                      <td> {{ employee.company.name|default:'无' }} </td>
+                      <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">员工详情</button></a></td>
 
                   </tr>
                   {% endfor %}

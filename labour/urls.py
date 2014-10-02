@@ -10,11 +10,14 @@ urlpatterns = patterns('labour.views',
     # 个人信息
     url(r'^employee/add/$', 'employee_add'),
     url(r'^employee/(?P<employee_id>\d+)/update/$', 'employee_update'),
-    url(r'^(?P<company_id>\d+)/employees/$', 'employees'),
+    url(r'^employee/(?P<employee_id>\d+)/show/$', 'employee_show'),
+    url(r'^(?P<company_id>\d+)/employees/$', 'company_employees'),
+    url(r'^employees/$', 'employees'),
     
     # 公司信息
     url(r'^company/add/$', 'company_add'),
     url(r'^company/(?P<company_id>\d+)/update/$', 'company_update'),
+    url(r'^company/(?P<company_id>\d+)/show/$', 'company_show'),
     url(r'^companys/$', 'companys'),
 
     # 合同信息
@@ -26,6 +29,8 @@ urlpatterns = patterns('labour.views',
 
     # 劳务统计
     url(r'^statistics/(?P<statis_type>\D+)/$', 'statistics'),
-    
+
+    #历史劳务信息
+    url(r'^history/$', 'labour_history'),
 
 )

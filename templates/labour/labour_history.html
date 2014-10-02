@@ -1,13 +1,19 @@
 {% extends 'base.html' %}  
-{% block search %} display:block {% endblock %} 
-{% block employee_search %} inner_on {% endblock %} 
 {% block container %} 
         <div class="w-right">
                 <div class="th-input" style="width:42%">
                   <form action='.' method="get">
                       <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name"/><br/>
                       <span>身份证号：</span><input class="txt_input" type="text" name="id_no" /><br/>
-                      <span>医保卡号：</span><input class="txt_input" type="text" name="health_card" /><br/>
+                      <span>用工单位：</span>
+                        <select name="company_id">
+                          <option value="0">无</option>
+                      {% for company in companys %}
+                          <option value="{{ company.id }}">{{ company.name }}</option>
+                      {% endfor %}
+                        </select>
+
+                      <br/>
                       <input type="hidden" value="0" name="search"/>
                       <button style="submit" class="make_sure" style="margin:10px 0px 0px 120px">查询</button>
                   </form>
@@ -27,10 +33,11 @@
                   <tr>
                       <th><input type="checkbox" name="all_person" class="h37"></th>
                       <td> {{ employee.name }} </td>
-                      <td> {{ employee.sex }} </td>
                       <td> {{ employee.id_no }} </td>
-                      <td> {{ employee.health_card }} </td>
                       <td> {{ employee.company.name }} </td>
+                      
+                      <td> {{ employee.fired_date|date:'Y-m-d' }} </td>
+                      <td> {{ employee.fired_reason }} </td>
                       <td><a href="/labour/employee/{{ employee.id }}/update/"><button type="button">员工详情</button></a></td>
 
                   </tr>

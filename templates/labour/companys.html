@@ -18,8 +18,11 @@
                 {% for company in companys %}
             	<tr >
                     <td style="height:40px">{{ company.name }}</td>
-                    <td>{{ company.address|slice:':6' }}...</td>
-                    <td><a href="/labour/{{company.id}}/employees/"><button type="button">员工详情</button></a></td>
+                    <td>{{ company.address|slice:':6'|default:'无' }}...</td>
+                    <td>
+                        <a href="/labour/company/{{company.id}}/show/"><button type="button">公司详情</button></a>
+                        <a href="/labour/{{company.id}}/employees/"><button type="button">员工详情</button></a>
+                    </td>
                 </tr>
                 {% endfor %}
                 {% if not companys %}
@@ -29,10 +32,6 @@
                   {% endif %}
             </table>  
             <div class="pager">
-               <span class="fr">
-                   <button>导出</button>
-                   <button>缴费管理</button>
-               </span>
                {% if companys.paginator.num_pages > 1 %}
                <div class="pagination" style="width: 452px">
                     <ul class="clearfix">

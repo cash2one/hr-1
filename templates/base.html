@@ -52,11 +52,11 @@
                            <a href="javscript:;" class="small_txt"><i></i>劳务信息查询</a>
                            <ul class="w-left-inner" style="{% block search %}{% endblock %}">
                                <li class="inner_txt {% block company_search %}{% endblock %}"><a href="{% url "labour.views.companys" %}" title="单位查询" style="color:#222222;">单位查询</a></li>
-                               <li class="inner_txt {% block employee_search %}{% endblock %}"><a href="/labour/0/employees/" title="个人查询" style="color:#222222;">个人查询</a></li>
+                               <li class="inner_txt {% block employee_search %}{% endblock %}"><a href="/labour/employees/" title="个人查询" style="color:#222222;">个人查询</a></li>
                            </ul>
                         </li>
                         <li title="劳务信息统计"><a href="/labour/statistics/all/" class="small_txt_tongji">劳务信息统计</a></li>
-                        <li title="历史劳务信息查询"><a href="history_check.html" class="small_txt_tongji" style="text-indent:42px;">历史劳务信息查询</a></li>
+                        <li title="历史劳务信息查询"><a href="/labour/history/" class="small_txt_tongji" style="text-indent:42px;">历史劳务信息查询</a></li>
                     </ul>
                 </li>
                 <li><a href="javascript:;" class="big_txt"><span class="logo_small_two"></span>财务管理</a>
@@ -89,7 +89,7 @@
 <script type="text/javascript" src="{% static "script/lhgcalendar.min.js" %}"></script>
 <script type="text/javascript" src="{% static "script/all.js" %}"></script>
 <script type="text/javascript" src="{% static "script/verify.js" %}"></script>
-<script type="text/javascript" src="{% static "script/bootstrap.min.js" %}"></script>
+<!-- <script type="text/javascript" src="{% static "script/bootstrap.min.js" %}"></script> -->
 {% endblock %}
 
 {% block extra_script %}

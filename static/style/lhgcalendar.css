@@ -5,7 +5,7 @@
 
 .lcui_border{ font:12px/1.333 tahoma,arial,\5b8b\4f53,sans-serif;background-color:#fff; }
 
-.lcui_lt,.lcui_rt,.lcui_lb,.lcui_rb,.lcui_l,.lcui_r,.cui_py,.cui_ny,.cui_pm,.cui_nm{ width:3px;background:url(../image/default_s.gif) no-repeat; }
+.lcui_lt,.lcui_rt,.lcui_lb,.lcui_rb,.lcui_l,.lcui_r,.cui_py,.cui_ny,.cui_pm,.cui_nm{ width:3px;background:url(/static/images/default_s.gif) no-repeat; }
 
 .lcui_lt,.lcui_rt{ height:10px; }
 .lcui_lt{ background-position:-65px 0; }
@@ -18,7 +18,7 @@
 .lcui_l{ background-position:-73px 0; }
 .lcui_r{ background-position:-77px 0; }
 
-.lcui_t,.lcui_b{ background:url(../image/default_s2.gif) repeat-x;font-size:0; }
+.lcui_t,.lcui_b{ background:url(/static/images/default_s2.gif) repeat-x;font-size:0; }
 .lcui_t{ background-position:0 0; }
 .lcui_b{ background-position:0 -10px; }
 
@@ -35,7 +35,7 @@
 
 .cui_db td{ background-color:#f7f7f7;color:#999;font:11px verdana,arial,sans-serif;cursor:default;height:20px;width:24px;text-align:center; }
 .cui_db a{ color:#000;text-decoration:none;display:block;height:20px;line-height:20px;width:24px;cursor:default; }
-.cui_db a:hover,.cui_today{ background:#f3f3f3 url(../image/default_s.gif) no-repeat;background-position:0 0; }
+.cui_db a:hover,.cui_today{ background:#f3f3f3 url(/static/images/default_s.gif) no-repeat;background-position:0 0; }
 
 .cui_foot{ padding:2px 0 1px 0;_padding:1px 0 0; }
 .lcui_today,.lcui_empty{ width:44px; }

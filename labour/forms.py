@@ -14,12 +14,13 @@ class EmployeeProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployeeProfile
-        fields = ['serial_id', 'birth', 'id_no','name', 'nation', 'graduate', 'profession', \
+        fields = ['serial_id', 'birth', 'email', 'id_no','name', 'nation', 'graduate', 'profession', \
             'residence_type', 'residence_place', 'now_address', 'mobile', 'emergency_name',\
             'emergency_mobile', 'sex', 'edu_level', 'is_fired']
 
     serial_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入序列号'}), error_messages={'required': '请输入序列号'})
     name = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入姓名'}), error_messages={'required': '请输入姓名'})
+    email = forms.EmailField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入邮箱'}), error_messages={'required': '请输入邮箱'})
     nation = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入民族'}), required=False)
     id_no = forms.CharField(max_length=18, widget=forms.TextInput(attrs={'placeholder': '请输入身份证号'}), error_messages={'required': '请输入身份证号'})
 
@@ -47,12 +48,17 @@ class EmployeeProfileForm(forms.ModelForm):
         return self.cleaned_data['birth']
 
     def clean(self):
+        print self.errors
         return self.cleaned_data
 
     def save(self, request, commit=True):
         m = super(EmployeeProfileForm, self).save(commit=False)
+        fired_date = request.POST.get("fired_date")
+        fired_reason = request.POST.get("fired_reason")
         is_fired = request.POST.get('is_fired')
         m.is_fired = int(is_fired)
+        m.fired_date = fired_date
+        m.fired_reason = fired_reason
         m.save()
         return m
 

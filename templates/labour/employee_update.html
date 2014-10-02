@@ -30,6 +30,18 @@
                         {{ error }}
                       </div>
                     {% endfor %}
+                  {% elif form.fired_date.errors %}
+                    {% for error in form.fired_date.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% elif form.fired_reason.errors %}
+                    {% for error in form.fired_reason.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
 
                   {% elif form.mobile.errors %}
                     {% for error in form.mobile.errors %}
@@ -83,8 +95,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>民族：</th>
-                                <td> <input type="text" name="nation" value="{{ employee.nation|default:'无' }}"> </td>
+                                <th>*email：</th>
+                                <td> <input type="text" name="email" value="{{ employee.email|default:'无' }}"/> </td>
                                 <th>*出生日期：</th>
                                 <td><input type="text" class="txt calendar" id="startDate" style="width:140px;" name="birth" value="{{ employee.birth|date:'Y-m-d' }}"/></td>
                                 <th>*身份证号：</th>
@@ -119,6 +131,8 @@
                                 </td>
                                 <th>户籍行政区：</th>
                                 <td> <input type="text" name="residence_place" value="{{ employee.residence_place|default:'无' }}"/> </td>
+                                <th>民族：</th>
+                                <td> <input type="text" name="nation" value="{{ employee.nation|default:'无' }}"/> </td>
                             </tr>
                             <tr>
                                 <th>现住址：</th>
@@ -142,13 +156,23 @@
                           <td>解除原因</td>
                       </tr>
                       <tr>
-                          <th style="text-align:left;"><input type="radio" name="is_fired" value="1" {% if employee.is_fired == 1 %}checked{% endif %}/><span>是</span>
-                          <input type="radio" name="is_fired" value="0" {% if employee.is_fired == 0 %}checked{% endif %}/><span>否</span></th>
-                          <td>无</td>
-                          <td>无</td>
+                          <th style="text-align:left;">
+                            <input type="radio" name="is_fired" value="1" id="yes" {% if employee.is_fired == 1 %}checked{% endif %}/><span>是</span>
+                            <input type="radio" name="is_fired" value="0" id="no" {% if employee.is_fired == 0 %}checked{% endif %}/><span>否</span></th>
+                          <td>
+                            {% if employee.is_fired == 0 %}
+                              <font id="f1"> 无 </font>
+                            {% endif %}
+                            <input type="text" class="txt calendar" id="startDate2" style="display:{% if employee.is_fired == 0 %}none{% else %}block{% endif %};" name="fired_date" value="{{ employee.fired_date|default:'无' }}"/>
+                          </td>
+                          <td>
+                            {% if employee.is_fired == 0 %}
+                              <font id="f2"> 无 </font>
+                            {% endif %}
+                            <input id="reason"  type="text" class="txt" style="display:{% if employee.is_fired == 0 %}none{% else %}block{% endif %};" name="fired_reason" value="{{ employee.fired_reason|default:'无' }}"/>
+                          </td>
                       </tr>
                     </table>
-                  </form>   
                     
                       <table class="reg-info" style="width:100%;">
                         <tr>
@@ -181,7 +205,28 @@
                       </table> 
                   <div>   
                     <button type="submit" style="margin-right:20px;margin-left:308px;margin-top:20px;">确定</button><button>重置</button>
-                  </div>    
+                  </div>  
+              </form>   
+
             </div>               
         </div><!-- w-right -->
+{% endblock %}
+
+{% block extra_script %}
+  <script type="text/javascript">
+    $("#yes").click(function(){
+      $("#f1").css("display", "none");
+      $("#startDate2").css("display", "block");
+      $("#reason").css("display", "block");
+    });
+
+    $("#no").click(function(){
+      $("#f2").css("display", "none");
+      $("#startDate2").css("display", "none");
+      $("#reason").css("display", "none");
+
+    });
+
+
+  </script>
 {% endblock %}

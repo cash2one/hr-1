@@ -1,0 +1,129 @@
+{% extends 'base.html' %}  
+{% block extra_css %}
+  <style type="text/css">
+    td th{
+      text-align: left;
+    }
+  </style>
+{% endblock %}
+{% block search %} display:block {% endblock %} 
+{% block employee_search %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right"> 
+            <div class="th-y" style="border:none;">
+                    <div style="border: #b6c0c9 1px solid;padding-bottom: 5px;margin-bottom:10px;">
+                        <h5>基本信息</h5>
+                        <table>
+                            <tr>
+                                <th>序号：</th>
+                                <td> {{ employee.serial_id|default:'无' }} </td>
+                                <th>姓名：</th>
+                                <td> {{ employee.name|default:'无' }} </td>
+                                <th>性别：</th>
+                                <td>
+                                    {{ employee.sex }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>email：</th>
+                                <td> {{ employee.email|default:'无' }} </td>
+                                <th>出生日期：</th>
+                                <td> {{ employee.birth|date:'Y-m-d' }} </td>
+                                <th>身份证号：</th>
+                                <td> {{ employee.id_no|default:'无' }}"/> </td>
+                            </tr>
+                            <tr>
+                                <th>文化程度：</th>
+                                <td>{{ employee.edu_level|default:'无' }}</td>
+                                <th>毕业院校：</th>
+                                <td> {{ employee.graduate|default:'无' }} </td>
+                                <th>专业：</th>
+                                <td> {{ employee.profession|default:'无' }} </td>
+                            </tr>
+                             <tr>
+                                <th>户口性质：</th>
+                                <td>{{ employee.residence_type|default:'无' }}</td>
+                                <th>户籍行政区：</th>
+                                <td> {{ employee.residence_place|default:'无' }} </td>
+                                <th>民族：</th>
+                                <td> {{ employee.nation|default:'无' }} </td>
+                            </tr>
+                            <tr>
+                                <th>现住址：</th>
+                                <td colspan="5"> {{ employee.now_address|default:'无' }} </td>                        
+                            </tr>
+                            <tr>
+                                <th>联系电话：</th>
+                                <td> {{ employee.mobile|default:'无' }} </td>
+                                <th>紧急联系人：</th>
+                                <td> {{ employee.emergency_name|default:'无' }} </td>
+                                <th>紧急联系人电话：</th>
+                                <td> {{ employee.emergency_mobile|default:'无' }} </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h5>详细信息</h5>
+                    <table style="width:100%;" id="detail_message">
+                       <tr>
+                          <th>是否解除劳动关系</th>
+                          <td>解除时间</td>
+                          <td>解除原因</td>
+                      </tr>
+                      <tr>
+                          <th>
+                            {% if employee.is_fired == 1 %}是{% else %}否{% endif %}
+                          <td>
+                            {% if employee.is_fired == 0 %}
+                              <font id="f1"> 无 </font>
+                            {% else %}
+                              {{ employee.fired_date|default:'无' }}
+                            {% endif %}
+                          </td>
+                          <td>
+                            {% if employee.is_fired == 0 %}
+                              <font id="f1"> 无 </font>
+                            {% else %}
+                              {{ employee.fired_reason|default:'无' }}
+                            {% endif %}
+                          </td>
+                      </tr>
+                    </table>
+                    
+                      <table class="reg-info" style="width:100%;">
+                        <tr>
+                            <th class="bg-none" style="width:97px;">个人单位信息</th>
+                            <td><a href="/labour/employee/{{employee.id}}/contract/"><button type="button">详情</button></a></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-none" style="width:97px;">医疗保险信息</th>
+                            <td><a href="/labour/employee/{{ employee.id }}/health/" title="详情" style="color:white;"><button>详情</button></a></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-none" style="width:97px;">生育保险信息</th>
+                            <td><a href="/labour/employee/{{ employee.id }}/born/" title="详情" style="color:white;"><button>详情</button></a></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-none" style="width:97px;">工伤保险信息</th>
+                            <td><a href="/labour/employee/{{ employee.id }}/industrial/" title="详情" style="color:white;"><button>详情</button></a></td>
+                        <tr>
+                            <th class="bg-none" style="width:97px;">失业保险信息</th>
+                            <td><a href="/labour/employee/{{ employee.id }}/unemployeed/" title="详情" style="color:white;"><button>详情</button></a></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-none" style="width:97px;">公积金信息</th>
+                            <td><a href="/labour/employee/{{ employee.id }}/reserved/" title="详情" style="color:white;"><button>详情</button></a></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-none" style="width:97px;">养老保险信息</th>
+                            <td><a href="/labour/employee/{{ employee.id }}/endowment/" title="详情" style="color:white;"><button>详情</button></a></td>                       
+                        </tr>
+                      </table> 
+                  <div>   
+                    <button type="submit" style="margin-right:20px;margin-left:308px;margin-top:20px;">确定</button>
+                    <a onclick="javascript:history.go(-1)" title="返回"><button type="button">返回</button></a>
+                  </div>  
+              </form>   
+
+            </div>               
+        </div><!-- w-right -->
+{% endblock %}

@@ -25,6 +25,12 @@
                         {{ error }}
                       </div>
                     {% endfor %}
+                  {% elif form.email.errors %}
+                    {% for error in form.email.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
                   {% elif form.id_no.errors %}
                     {% for error in form.id_no.errors %}
                       <div class="alert alert-error">
@@ -84,8 +90,8 @@
                                 </td>
 		                    </tr>
 		                    <tr>
-		                    	<th>民族：</th>
-		                        <td> {{ form.nation }} </td>
+		                    	<th>*邮件：</th>
+		                        <td> {{ form.email }} </td>
 		                        <th>*出生日期：</th>
 		                        <td><input type="text" class="txt calendar" id="startDate" style="width:122px;" name="birth"/></td>
 		                        <th>*身份证号：</th>
@@ -120,6 +126,8 @@
                                 </td>
 		                        <th>户籍行政区：</th>
 		                        <td> {{ form.residence_place }} </td>
+                            <th>民族：</th>
+                            <td> {{ form.nation }} </td>
 		                    </tr>
 		                    <tr>
 		                    	<th>现住址：</th>
