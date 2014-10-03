@@ -30,7 +30,14 @@ urlpatterns = patterns('labour.views',
     # 劳务统计
     url(r'^statistics/(?P<statis_type>\D+)/$', 'statistics'),
 
-    #历史劳务信息
+    # 历史劳务信息
     url(r'^history/$', 'labour_history'),
+
+    # 上传导入职员
+    url(r'^import/$', 'labour_import'),
+
+    # 导出职员信息
+    url(r'^export/$', 'labour_export'),
+
 
 )

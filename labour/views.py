@@ -2,15 +2,19 @@
 # -*- coding:utf-8 -*-
 
 import datetime
+import xlwt
+import xlrd
 
 from django.shortcuts import render
 from django.contrib import messages
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
 from labour.models import EmployeeProfile, UserProfile, CompanyProfile, Contract
-from labour.forms import HealthForm, BornForm, UnemployeedForm, ReservedForm, IndustrialForm, EndowmentForm
+from labour.forms import HealthForm, BornForm, UnemployeedForm, ReservedForm
+from labour.forms import LabourImportForm, IndustrialForm, EndowmentForm
 from utils import adjacent_paginator
 
 
@@ -195,17 +199,17 @@ def employees(request, template_name='labour/employees.html'):
     
     name = request.GET.get('name', None)
     id_no = request.GET.get('id_no', None)
-    health_no = request.GET.get('health_no', None)
+    health_card = request.GET.get('health_card', None)
     search = request.GET.get('search', None)
     search_dict = {}
 
     if search is not None:
-        if name is not None:
+        if name != '':
             search_dict['name__contains'] = name
-        if id_no is not None:
+        if id_no != '':
             search_dict['id_no__contains'] = id_no
-        if health_no is not None:
-            search_dict['health_no__contains'] = health_no
+        if health_card != '':
+            search_dict['health_card__contains'] = health_card
 
         employee_list = EmployeeProfile.objects.filter(**search_dict)
     else:
@@ -217,6 +221,9 @@ def employees(request, template_name='labour/employees.html'):
     return render(request, template_name, {
         'employees': employees,
         'user': request.user,
+        'name': name,
+        'id_no': id_no,
+        'health_card': health_card,
     })
 
 def company_employees(request, company_id, template_name='labour/company_employees.html'):
@@ -353,9 +360,9 @@ def labour_history(request, template_name='labour/labour_history.html'):
     search_dict = {}
 
     if search is not None:
-        if name is not None:
+        if name != '':
             search_dict['name__contains'] = name
-        if id_no is not None:
+        if id_no != '':
             search_dict['id_no__contains'] = id_no
         if company_id != '0':
             search_dict['company_id'] = company_id
@@ -371,7 +378,52 @@ def labour_history(request, template_name='labour/labour_history.html'):
         'employees': employees,
         'page_numbers': page_numbers,
         'companys': companys,
+        'name': name,
+        'id_no': id_no,
+        'company_id': company_id,
     })
+
+def labour_import(request, form_class=LabourImportForm, template_name='labour/labour_import.html'):
+    """ excel导入"""
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES)
+        if form.is_valid():
+            input_excel = request.FILES['labour_import']
+            data = xlrd.open_workbook(file_contents=input_excel.read())
+            table = data.sheets()[0]
+            nrows = table.nrows
+            for i in range(1, nrows):
+                print table.row_values(i)
+    else:
+        form = form_class()
+
+    return render(request, template_name, {
+        'form': form,
+    })
+
+
+def labour_export(request):
+    """ excel导出"""
+
+    export_type = request.GET.get('export_type', None)
+    company_id = request.GET.get('company_id', None)
+
+    book = xlwt.Workbook(encoding='utf-8')
+    ws = book.add_sheet('导出职员信息')
+    style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.name = 'SimSun'
+    style.font = font
+    ws.write(0, 0, "姓名", style)
+    ws.write(0, 1, "性别", style)
+    ws.write(0, 2, "出生日期", style)
+    ws.write(0, 3, "身份证号", style)
+    ws.write(0, 4, "医疗卡号", style)
+
+    response = HttpResponse(mimetype='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=劳务职员信息.xls'
+    book.save(response)
+    return response
 
 
 

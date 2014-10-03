@@ -3,8 +3,8 @@
         <div class="w-right">
                 <div class="th-input" style="width:42%">
                   <form action='.' method="get">
-                      <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name"/><br/>
-                      <span>身份证号：</span><input class="txt_input" type="text" name="id_no" /><br/>
+                      <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name" value="{{ name|default:''}}"/><br/>
+                      <span>身份证号：</span><input class="txt_input" type="text" name="id_no"  value="{{ id_no|default:''}}"/><br/>
                       <span>用工单位：</span>
                         <select name="company_id">
                           <option value="0">无</option>

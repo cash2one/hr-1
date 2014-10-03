@@ -1,10 +1,14 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+import os
+
 from django import forms
 from django.contrib.auth.models import User
 
 from labour.models import EmployeeProfile, Contract, CompanyProfile
+
+IMPORT_FILE_TYPES = ['.xls', ]
 
 class EmployeeProfileForm(forms.ModelForm):
     """ 公司员工信息表单"""
@@ -357,3 +361,18 @@ class ReservedForm(forms.ModelForm):
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
   
+class LabourImportForm(forms.Form):
+    """ 职员信息批量插入"""
+    labour_import = forms.FileField(required= True, label= u"Upload the Excel file to import to the system.")
+
+    def clean_input_excel(self):
+        input_excel = self.cleaned_data['labour_import']
+        extension = os.path.splitext( input_excel.name )[1]
+        if not (extension in IMPORT_FILE_TYPES):
+            raise forms.ValidationError("请输入正确的excel格式文件")
+        else:
+            return input_excel
+
+    def clean(self):
+        print self.errors
+        return self.cleaned_data

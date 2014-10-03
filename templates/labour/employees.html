@@ -5,9 +5,9 @@
         <div class="w-right">
                 <div class="th-input" style="width:42%">
                   <form action='.' method="get">
-                      <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name"/><br/>
-                      <span>身份证号：</span><input class="txt_input" type="text" name="id_no" /><br/>
-                      <span>医保卡号：</span><input class="txt_input" type="text" name="health_card" /><br/>
+                      <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name" value="{{ name|default:''}}"/><br/>
+                      <span>身份证号：</span><input class="txt_input" type="text" name="id_no" value="{{ id_no|default:''}}"/><br/>
+                      <span>医保卡号：</span><input class="txt_input" type="text" name="health_card" value="{{ health_card|default:''}}"/><br/>
                       <input type="hidden" value="0" name="search"/>
                       <button style="submit" class="make_sure" style="margin:10px 0px 0px 120px">查询</button>
                   </form>
@@ -32,7 +32,6 @@
                       <td> {{ employee.health_card|default:'无' }} </td>
                       <td> {{ employee.company.name|default:'无' }} </td>
                       <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">员工详情</button></a></td>
-
                   </tr>
                   {% endfor %}
                   {% if not employees %}
@@ -43,9 +42,49 @@
                 </table> 
                 <div class="pager">
                  <span class="fr">
-                     <button>导出</button>
+                     <a href="/labour/export/?name={{ name }}&id_no={{ id_no }}&company_id={{ company_id }}"><button>导出</button></a>
                      <button>缴费管理</button>
                  </span>
+                 <div class="pager">
+               {% if companys.paginator.num_pages > 1 %}
+               <div class="pagination" style="width: 452px">
+                    <ul class="clearfix">
+                        {% with distance=4 %}
+                        {% if companys.has_previous %}
+                        <li>
+                            <a href="?page={{ companys.previous_page_number }}">&lt;&lt;</a>
+                        </li>
+                        {% endif %}
+
+                        {% if companys.number > distance|add:1 %}
+                        <li><a href="?page=1">1</a></li>
+                        <li> . . . </li>
+                        {% endif %}
+
+                        {% for num in page_numbers %}
+                        {% if num ==  companys.number %}
+                        <li class="active"><a href="###">{{ companys.number }}</a></li>
+                        {% else %}
+                        <li><a href="?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if companys.paginator.num_pages > companys.number|add:distance %}
+                        <li> . . . </li>
+                        <li><a href="?page={{ companys.paginator.num_pages }}">{{ companys.paginator.num_pages }}</a></li>
+                        {% endif %}
+                        
+                        {% if companys.has_next %}
+                        <li class="last">
+                            <a href="?page={{ companys.next_page_number }}">&gt;&gt;</a>
+                        </li>
+                        {% endif %}
+                        {% endwith %}
+                    </ul>
+               </div>
+
+               {% endif %}
+            </div>   
                  <a href="#">【首页】</a>
                  <a href="#">【上一页】</a>
                  <a href="#">【下一页】</a>
