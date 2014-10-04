@@ -124,6 +124,14 @@ class ContractForm(forms.ModelForm):
         return self.cleaned_data['real_salary']
 
     def clean(self):
+        if self.cleaned_data['company_protocal_start'] > self.cleaned_data['company_protocal_end']:
+            raise forms.ValidationError('协议开始时间大于结束时间')
+        if self.cleaned_data['labour_contract_start'] > self.cleaned_data['labour_contract_end']:
+            raise forms.ValidationError('劳动合同开始时间大于结束时间')
+        if self.cleaned_data['probation_start'] > self.cleaned_data['probation_end']:
+            raise forms.ValidationError('实习开始时间大于结束时间')
+        
+        
         print self.errors
         return self.cleaned_data
 
