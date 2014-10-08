@@ -30,6 +30,12 @@
                       </div>
                     {% endfor %}
 
+                  {% elif form.email.errors %}
+                    {% for error in form.email.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
                   {% elif form.link_man.errors %}
                     {% for error in form.link_man.errors %}
                       <div class="alert alert-error">
@@ -73,6 +79,10 @@
                             <tr>
                               <td>公司地址:</td>
                               <td>{{ form.address }}</td>
+                            </tr>
+                            <tr>
+                              <td>邮&nbsp;&nbsp;箱&nbsp;&nbsp;:</td>
+                              <td>{{ form.email }}</td>
                             </tr>
                             <tr>
                               <td>联&nbsp;&nbsp;系&nbsp;&nbsp;人:</td>

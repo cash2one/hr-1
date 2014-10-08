@@ -156,9 +156,10 @@ class CompanyForm(forms.ModelForm):
 
     class Meta:
         model = CompanyProfile
-        fields = ['name', 'address', 'link_man', 'link_man_mobile', 'service_cost']
+        fields = ['name', 'address', 'email', 'link_man', 'link_man_mobile', 'service_cost']
 
     name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司名称', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司名称'})
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': '请输入公司邮箱', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司邮箱'})
     address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入公司地址', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入公司地址'})
     link_man = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入联系人'})
     link_man_mobile = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入联系人电话', 'class': 'txt_input', 'style': "margin-left:28px;width:205px;"}), error_messages={'required': '请输入联系人电话'})
