@@ -1,5 +1,4 @@
 {% extends 'base.html' %}  
-{% block search %} display:block {% endblock %} 
 {% block container %} 
         <div class="w-right">
         	<table class="reg-info">
@@ -33,9 +32,9 @@
                     <td><a href="/labour/statistics/reserved/"> <button>详情</button></a></td>
                 </tr>
                 <tr>
-                    <th class="reset_width bg-none">退休人员到期⼈人数</th>
-                    <td>无</td>
-                    <td><a href="#"> <button>详情</button></a></td>
+                    <th class="reset_width bg-none">退休人员到期人数</th>
+                    <td>{{ retire_count }}人</td>
+                    <td><a href="/labour/statistics/retire/"> <button>详情</button></a></td>
                 </tr>
                 <tr>
                     <th class="reset_width bg-none">单位协议到期人数</th>

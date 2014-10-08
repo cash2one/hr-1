@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import os
+import random
 
 from django import forms
 from django.contrib.auth.models import User
@@ -18,11 +19,11 @@ class EmployeeProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployeeProfile
-        fields = ['serial_id', 'birth', 'email', 'id_no','name', 'nation', 'graduate', 'profession', \
+        fields = ['birth', 'email', 'id_no','name', 'nation', 'graduate', 'profession', \
             'residence_type', 'residence_place', 'now_address', 'mobile', 'emergency_name',\
             'emergency_mobile', 'sex', 'edu_level', 'is_fired']
 
-    serial_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入序列号'}), error_messages={'required': '请输入序列号'})
+    #serial_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入序列号'}), error_messages={'required': '请输入序列号'})
     name = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入姓名'}), error_messages={'required': '请输入姓名'})
     email = forms.EmailField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入邮箱'}), error_messages={'required': '请输入邮箱'})
     nation = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入民族'}), required=False)
@@ -41,10 +42,10 @@ class EmployeeProfileForm(forms.ModelForm):
             raise forms.ValidationError("身份证输入错误")
         return self.cleaned_data['id_no']
 
-    def clean_serial_id(self):
-        if EmployeeProfile.objects.filter(serial_id=self.cleaned_data['serial_id']).exclude(id=self.instance.id).exists():
-            raise forms.ValidationError("序列号已存在")
-        return self.cleaned_data['serial_id']
+    #def clean_serial_id(self):
+    #    if EmployeeProfile.objects.filter(serial_id=self.cleaned_data['serial_id']).exclude(id=self.instance.id).exists():
+    #        raise forms.ValidationError("序列号已存在")
+    #    return self.cleaned_data['serial_id']
 
     def clean_birth(self):
         if not self.cleaned_data['birth']:
@@ -57,6 +58,14 @@ class EmployeeProfileForm(forms.ModelForm):
 
     def save(self, request, commit=True):
         m = super(EmployeeProfileForm, self).save(commit=False)
+        print m.serial_id
+        if m.serial_id is None or len(str(m.serial_id)) == 0:
+            count = EmployeeProfile.objects.all().count()
+            if count == 0:
+                m.serial_id = random.randint(100000, 900000)
+            else:
+                employee_last = EmployeeProfile.objects.all().order_by('-created')[0]
+                m.serial_id = str(int(employee_last.serial_id) + 1)
         fired_date = request.POST.get("fired_date")
         fired_reason = request.POST.get("fired_reason")
         is_fired = request.POST.get('is_fired')

@@ -307,6 +307,17 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         company_protocal_count = Contract.objects.filter(company_protocal_end__lt=today).count()
         labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today).count()
         probation_count = Contract.objects.filter(probation_end__lt=today).count()
+        employee_list = EmployeeProfile.objects.all()
+        year = datetime.datetime.now().year
+        retire_count = 0
+        for employee in employee_list:
+            id_no_year = int(employee.id_no[6:10])
+            if employee.sex == '女':
+                if year - id_no_year >= 50:
+                    retire_count = retire_count + 1
+            else:
+                if year - id_no_year >= 60:
+                    retire_count = retire_count + 1
 
         return render(request, template_name, {
             'endowment_count': endowment_count,
@@ -318,7 +329,9 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
             'company_protocal_count': company_protocal_count,
             'labour_contract_count': labour_contract_count,
             'probation_count': probation_count,
+            'retire_count': retire_count,
         })
+
     elif statis_type == 'endowment':
         profiles = EmployeeProfile.objects.filter(endowment_payment_end__lt=today)
     elif statis_type == 'health':
@@ -337,6 +350,20 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         profiles = Contract.objects.filter(labour_contract_end__lt=today)
     elif statis_type == 'probation':
         profiles = Contract.objects.filter(probation_end__lt=today)
+    elif statis_type == 'retire':
+        employee_list = EmployeeProfile.objects.all()
+        year = datetime.datetime.now().year
+        retire_id = []
+        for employee in employee_list:
+            id_no_year = int(employee.id_no[6:10])
+            if employee.sex == '女':
+                if year - id_no_year >= 50:
+                    retire_id.append(employee.id)
+            else:
+                if year - id_no_year >= 60:
+                    retire_id.append(employee.id)
+
+        profiles = EmployeeProfile.objects.filter(id__in=retire_id)
     else:
         return HttpResponseRedirect(reverse('labour.views.statistics'))
 

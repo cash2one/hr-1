@@ -12,13 +12,7 @@
                     {% endfor %}
                   {% endif %}
 
-                  {% if form.serial_id.errors %}
-                    {% for error in form.serial_id.errors %}
-                      <div class="alert alert-error">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% elif form.name.errors %}
+                  {% if form.name.errors %}
                     {% for error in form.name.errors %}
                       <div class="alert alert-error">
                         {{ error }}
@@ -85,7 +79,7 @@
                         <table>
                             <tr>
                                 <th>*序号：</th>
-                                <td><input type="text" name="serial_id" value="{{ employee.serial_id|default:'无' }}"/> </td>
+                                <td>{{ employee.serial_id|default:'无' }}</td>
                                 <th>*姓名：</th>
                                 <td> <input type="text" name="name" value="{{ employee.name|default:'无' }}"/> </td>
                                 <th>性别：</th>
@@ -163,7 +157,7 @@
                             {% if employee.is_fired == 0 %}
                               <font id="f1"> 无 </font>
                             {% endif %}
-                            <input type="text" class="txt calendar" id="startDate2" style="display:{% if employee.is_fired == 0 %}none{% else %}block{% endif %};" name="fired_date" value="{{ employee.fired_date|default:'无' }}"/>
+                            <input type="text" class="txt calendar" id="startDate2" style="display:{% if employee.is_fired == 0 %}none{% else %}block{% endif %};" value="{{ employee.fired_date|default:'无' }}"/>
                           </td>
                           <td>
                             {% if employee.is_fired == 0 %}
@@ -217,6 +211,7 @@
     $("#yes").click(function(){
       $("#f1").css("display", "none");
       $("#startDate2").css("display", "block");
+      $("#startDate2").attr("name", "fired_date");
       $("#reason").css("display", "block");
     });
 

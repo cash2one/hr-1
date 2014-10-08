@@ -37,7 +37,7 @@ $(document).ready(function() {
    * @return null
    */
   $("#code").click(function() {
-    createCode();
+    code = createCode();
   });
 
 });
