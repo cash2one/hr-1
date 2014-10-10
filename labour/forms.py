@@ -89,7 +89,6 @@ class ContractForm(forms.ModelForm):
 
     job_type = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '请输入工种类型', 'class': 'txt', 'style': "margin-left:28px;width:205px;"}),
             error_messages={'required': '请输入工种类型'})
-    
     company_protocal_start = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入单位协议开始时间', 'class': 'txt calendar', 'id': 'startDate1', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
             error_messages={'required': '请输入单位协议开始时间'})
     company_protocal_end = forms.DateTimeField(widget=forms.TextInput(attrs={'placeholder': '请输入单位协议结束时间', 'class': 'txt calendar','id': 'startDate2', 'style': "margin-left:28px;width:205px;margin-top:10px;"}),
@@ -133,15 +132,14 @@ class ContractForm(forms.ModelForm):
         return self.cleaned_data['real_salary']
 
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['company_protocal_start'] > self.cleaned_data['company_protocal_end']:
             raise forms.ValidationError('协议开始时间大于结束时间')
         if self.cleaned_data['labour_contract_start'] > self.cleaned_data['labour_contract_end']:
             raise forms.ValidationError('劳动合同开始时间大于结束时间')
         if self.cleaned_data['probation_start'] > self.cleaned_data['probation_end']:
             raise forms.ValidationError('实习开始时间大于结束时间')
-        
-        
-        print self.errors
         return self.cleaned_data
 
     def save(self, request=None, employee=None, commit=True):
@@ -185,6 +183,9 @@ class CompanyForm(forms.ModelForm):
         except:
             raise forms.ValidationError('电话格式错误')
         return self.cleaned_data['link_man_mobile']
+
+    def clean(self):
+        return self.cleaned_data
 
     def clean_service_cost(self):
         try:
@@ -238,6 +239,8 @@ class HealthForm(forms.ModelForm):
         return self.cleaned_data['health_payment_company']
    
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['health_payment_start'] > self.cleaned_data['health_payment_end']:
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
@@ -267,6 +270,8 @@ class EndowmentForm(forms.ModelForm):
         error_messages={'required': '请输入保险终止时间'})
    
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['endowment_payment_start'] > self.cleaned_data['endowment_payment_end']:
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
@@ -294,6 +299,8 @@ class BornForm(forms.ModelForm):
         error_messages={'required': '请输入保险终止时间'})
 
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['born_payment_start'] > self.cleaned_data['born_payment_end']:
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
@@ -321,6 +328,8 @@ class IndustrialForm(forms.ModelForm):
         error_messages={'required': '请输入保险终止时间'})
    
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['industrial_payment_start'] > self.cleaned_data['industrial_payment_end']:
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
@@ -348,6 +357,8 @@ class UnemployeedForm(forms.ModelForm):
         error_messages={'required': '请输入保险终止时间'})
 
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['unemployed_payment_start'] > self.cleaned_data['unemployed_payment_end']:
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
@@ -375,6 +386,8 @@ class ReservedForm(forms.ModelForm):
         error_messages={'required': '请输入终止时间'})
 
     def clean(self):
+        if self.errors:
+            return self.cleaned_data
         if self.cleaned_data['reserved_payment_start'] > self.cleaned_data['reserved_payment_end']:
             raise forms.ValidationError("起始日期不能大于结束日期")
         return self.cleaned_data
@@ -390,7 +403,3 @@ class LabourImportForm(forms.Form):
             raise forms.ValidationError("请输入正确的excel格式文件")
         else:
             return input_excel
-
-    def clean(self):
-        print self.errors
-        return self.cleaned_data

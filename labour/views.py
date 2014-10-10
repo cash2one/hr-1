@@ -296,6 +296,8 @@ def base_insurance(request, employee_id, form_class, template_name):
 def statistics(request, statis_type='all', template_name='labour/labour_statistics.html'):
     """ 劳务信息统计"""
     today = datetime.datetime.now()
+    is_contract = None
+    is_employee = None
 
     if statis_type == 'all':
         endowment_count = EmployeeProfile.objects.filter(endowment_payment_end__lt=today).count()
@@ -334,24 +336,34 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
 
     elif statis_type == 'endowment':
         profiles = EmployeeProfile.objects.filter(endowment_payment_end__lt=today)
+        is_employee = True
     elif statis_type == 'health':
         profiles = EmployeeProfile.objects.filter(health_payment_end__lt=today)
+        is_employee = True
     elif statis_type == 'born':
         profiles = EmployeeProfile.objects.filter(born_payment_end__lt=today)
+        is_employee = True
     elif statis_type == 'industrial':
         profiles = EmployeeProfile.objects.filter(industrial_payment_end__lt=today)
+        is_employee = True
     elif statis_type == 'unemployeed':
         profiles = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today)
+        is_employee = True
     elif statis_type == 'reserved':
         profiles = EmployeeProfile.objects.filter(reserved_payment_end__lt=today)
+        is_employee = True
     elif statis_type == 'company_protocal':
         profiles = Contract.objects.filter(company_protocal_end__lt=today)
+        is_contract = True
     elif statis_type == 'labour_contract':
         profiles = Contract.objects.filter(labour_contract_end__lt=today)
+        is_contract = True
     elif statis_type == 'probation':
         profiles = Contract.objects.filter(probation_end__lt=today)
+        is_contract = True
     elif statis_type == 'retire':
         employee_list = EmployeeProfile.objects.all()
+        is_employee = True
         year = datetime.datetime.now().year
         retire_id = []
         for employee in employee_list:
@@ -373,6 +385,8 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
     
     return render(request, template_name, {
         'employees': employees,
+        'is_contract': is_contract,
+        'is_employee': is_employee,
     })
 
 def labour_history(request, template_name='labour/labour_history.html'):

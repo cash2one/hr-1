@@ -17,12 +17,20 @@
                   {% for employee in employees %}
                   <tr>
                       <th><input type="checkbox" name="all_person" class="h37"></th>
+                      {% if is_contract == True %}
+                      <td> {{ employee.employee.name }} </td>
+                      <td> {{ employee.employee.sex }} </td>
+                      <td> {{ employee.employee.id_no }} </td>
+                      <td> {{ employee.employee.health_card|default:'无' }} </td>
+                      <td> {{ employee.employee.company.name|default:'无' }} </td>
+                      {% elif is_employee == True %}
                       <td> {{ employee.name }} </td>
                       <td> {{ employee.sex }} </td>
                       <td> {{ employee.id_no }} </td>
-                      <td> {{ employee.health_card }} </td>
-                      <td> {{ employee.company.name }} </td>
-                      <td><a href="/labour/employee/{{ employee.id }}/update/"><button type="button">员工详情</button></a></td>
+                      <td> {{ employee.health_card|default:'无' }} </td>
+                      <td> {{ employee.company.name|default:'无' }} </td>
+                      {% endif %}
+                      <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">员工详情</button></a></td>
 
                   </tr>
                   {% endfor %}

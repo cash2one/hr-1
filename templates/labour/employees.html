@@ -21,17 +21,17 @@
                       <td>身份证号</td>
                       <td>医保卡号</td>
                       <td>所属公司</td>
-                      <td>详情</td>
+                      <td>员工详情</td>
                   </tr>
                   {% for employee in employees %}
                   <tr>
-                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <th><input type="checkbox" name="all_person" class="h37" value="{{ emloyee.id }}"></th>
                       <td> {{ employee.name }} </td>
                       <td> {{ employee.sex|default:'无' }} </td>
                       <td> {{ employee.id_no|default:'无' }} </td>
                       <td> {{ employee.health_card|default:'无' }} </td>
                       <td> {{ employee.company.name|default:'无' }} </td>
-                      <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">员工详情</button></a></td>
+                      <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">详情</button></a></td>
                   </tr>
                   {% endfor %}
                   {% if not employees %}
@@ -41,55 +41,90 @@
                   {% endif %}
                 </table> 
                 <div class="pager">
-                 <span class="fr">
-                     <a href="/labour/export/?name={{ name }}&id_no={{ id_no }}&company_id={{ company_id }}"><button>导出</button></a>
-                     <button>缴费管理</button>
-                 </span>
-                 <div class="pager">
-               {% if companys.paginator.num_pages > 1 %}
-               <div class="pagination" style="width: 452px">
-                    <ul class="clearfix">
-                        {% with distance=4 %}
-                        {% if companys.has_previous %}
-                        <li>
-                            <a href="?page={{ companys.previous_page_number }}">&lt;&lt;</a>
-                        </li>
-                        {% endif %}
-
-                        {% if companys.number > distance|add:1 %}
-                        <li><a href="?page=1">1</a></li>
-                        <li> . . . </li>
-                        {% endif %}
-
-                        {% for num in page_numbers %}
-                        {% if num ==  companys.number %}
-                        <li class="active"><a href="###">{{ companys.number }}</a></li>
-                        {% else %}
-                        <li><a href="?page={{ num }}">{{ num }}</a></li>
-                        {% endif %}
-                        {% endfor %}
-
-                        {% if companys.paginator.num_pages > companys.number|add:distance %}
-                        <li> . . . </li>
-                        <li><a href="?page={{ companys.paginator.num_pages }}">{{ companys.paginator.num_pages }}</a></li>
-                        {% endif %}
-                        
-                        {% if companys.has_next %}
-                        <li class="last">
-                            <a href="?page={{ companys.next_page_number }}">&gt;&gt;</a>
-                        </li>
-                        {% endif %}
-                        {% endwith %}
-                    </ul>
-               </div>
-
-               {% endif %}
-            </div>   
-                 <a href="#">【首页】</a>
-                 <a href="#">【上一页】</a>
-                 <a href="#">【下一页】</a>
-                 <a href="#">【尾页】</a>
+                   <span class="fr">
+                       <!--<a href="/labour/export/?name={{ name }}&id_no={{ id_no }}&company_id={{ company_id }}" id="export"><button type="button">导出</button></a>-->
+                       <!--<button type="button" id="payment">缴费管理</button>-->
+                       <button type="button" id="export">导出</button>
+                   </span>
+                 
+                   <a href="#">【首页】</a>
+                   <a href="#">【上一页】</a>
+                   <a href="#">【下一页】</a>
+                   <a href="#">【尾页】</a>
                 </div>            
         </div>
+        <div class="colorbox">
+          <p>请选择截止日期和要修改的保险信息</p>
+          <br>
+          <form action="." method="post">
+              <input type="text" class="txt calendar" id="startDate" style="width:122px;margin-left:80px" name="end_date"/>
+              <input type="hidden" name="employees_id" id="select_id"/>
+              <select name="">
+                <option value="yliao">医疗保险信息</option>
+                <option value="syu">生育保险信息</option>
+                <option value="gshang">工伤保险信息</option>
+                <option value="sye">失业保险信息</option>
+                <option value="gjj">公积金保险信息</option>
+                <option value="ylao">养老保险信息</option>
+              </select>
+              <div class="colorbox_button" style="margin-top:20px">
+                  <a href="javascript:;" title="确认" id="sure" >确认</a>
+                  <a href="javascript:;" title="确认" id="close">关闭</a>
+              </div>
+              <div class="colorbox_delete"></div>
+          </form>
+        </div>
+
+        <div class="colorbox2">
+          <p>请选择截止日期和要修改的保险信息</p>
+          <br>
+          <form action="." method="post">
+              <input type="text" class="txt calendar" id="startDate" style="width:122px;margin-left:80px" name="end_date"/>
+              <input type="hidden" name="employees_id" id="select_id"/>
+              <select name="">
+                <option value="yliao">医疗保险信息</option>
+                <option value="syu">生育保险信息</option>
+                <option value="gshang">工伤保险信息</option>
+                <option value="sye">失业保险信息</option>
+                <option value="gjj">公积金保险信息</option>
+                <option value="ylao">养老保险信息</option>
+              </select>
+              <div class="colorbox_button2" style="margin-top:20px">
+                  <a href="javascript:;" title="确认" id="sure" >确认</a>
+                  <a href="javascript:;" title="确认" id="close">关闭</a>
+              </div>
+              <div class="colorbox_delete2"></div>
+          </form>
+        </div>
     </div><!--wrapper END-->
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript">
+        var height = document.documentElement.clientHeight;
+        //var mask = document.getElementById("mask");
+        //mask.style.height = height + 'px';
+        $("#payment").bind("click",function(){
+            //$("#mask").show();
+            $(".colorbox").show();
+        });
+        $(".colorbox_delete,#sure,#close").bind("click",function(){
+            //$("#mask").hide();
+            $(".colorbox").hide();
+        });
+
+        $("#export").bind("click",function(){
+            //$("#mask").show();
+        //    $(".colorbox2").show();
+          $("input[name=all_person]").each(function() {
+            if($(this).attr("checked")){
+              alert($(this).val());
+            }
+          });
+        });
+        //$(".colorbox_delete2,#sure,#close").bind("click",function(){
+            //$("#mask").hide();
+        //    $(".colorbox2").hide();
+        //});
+    </script>
 {% endblock %}
