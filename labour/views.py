@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
+
 
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
 from labour.models import EmployeeProfile, UserProfile, CompanyProfile, Contract
@@ -25,6 +27,7 @@ def index(request, template_name="labour/index.html"):
         'user': user,
     })
 
+@login_required
 def employee_add(request, form_class=EmployeeProfileForm, template_name='labour/employee_add.html'):
     """ 雇员信息添加"""
     employee = None
@@ -44,6 +47,7 @@ def employee_add(request, form_class=EmployeeProfileForm, template_name='labour/
         'employee': employee,
     })
 
+@login_required
 def employee_update(request, employee_id, form_class=EmployeeProfileForm, template_name="labour/employee_update.html"):
     """ 雇员信息修改"""
     try:
@@ -68,6 +72,7 @@ def employee_update(request, employee_id, form_class=EmployeeProfileForm, templa
         'form': form,
     })
 
+@login_required
 def contract_add(request, employee_id, form_class=ContractForm, template_name="labour/employee_contract_add.html"):
     """ 员工公司合同信息"""
     try:
@@ -99,6 +104,7 @@ def contract_add(request, employee_id, form_class=ContractForm, template_name="l
         'employee': employee,
     })
 
+@login_required
 def contract_update(request, contract_id, form_class=ContractForm, template_name='labour/employee_contract_update.html'):
     """ 合同信息修改"""
     try:
@@ -120,6 +126,7 @@ def contract_update(request, contract_id, form_class=ContractForm, template_name
         'employee': contract.employee,
     })
 
+@login_required
 def company_add(request, form_class=CompanyForm, template_name='labour/company_add.html'):
     """ 公司信息添加"""
     if request.method == "POST":
@@ -134,6 +141,7 @@ def company_add(request, form_class=CompanyForm, template_name='labour/company_a
         'form': form,
     })
 
+@login_required
 def company_update(request, company_id, form_class=CompanyForm, template_name='labour/company_update.html'):
     """ 公司信息修改"""
     try:
@@ -153,6 +161,7 @@ def company_update(request, company_id, form_class=CompanyForm, template_name='l
         'form': form,
     })
 
+@login_required
 def company_show(request, company_id, template_name='labour/company_show.html'):
     """ 公司信息show"""
     try:
@@ -166,6 +175,7 @@ def company_show(request, company_id, template_name='labour/company_show.html'):
         'user': request.user,
     })
 
+@login_required
 def employee_show(request, employee_id, template_name='labour/employee_show.html'):
     """ 员工信息show"""
     try:
@@ -179,6 +189,7 @@ def employee_show(request, employee_id, template_name='labour/employee_show.html
         'employee': employee,
     })
 
+@login_required
 def companys(request, template_name='labour/companys.html'):
     """ 全部公司信息"""
     search = request.GET.get('search', None)
@@ -194,6 +205,7 @@ def companys(request, template_name='labour/companys.html'):
         'page_numbers': page_numbers,
     })
 
+@login_required
 def employees(request, template_name='labour/employees.html'):
     """ 全部员工信息"""
     
@@ -238,6 +250,7 @@ def employees(request, template_name='labour/employees.html'):
         'health_card': health_card,
     })
 
+@login_required
 def company_employees(request, company_id, template_name='labour/company_employees.html'):
     """ 全部员工信息"""
     try:
@@ -256,6 +269,7 @@ def company_employees(request, company_id, template_name='labour/company_employe
         'company': company,
     })
 
+@login_required
 def insurance(request, employee_id, insurance):
     """ 保险信息分流"""
     if insurance == 'health':
@@ -282,6 +296,7 @@ def insurance(request, employee_id, insurance):
         return base_insurance(request, employee_id, ReservedForm, 'labour/reserved_insurance.html')
 
 
+@login_required
 def base_insurance(request, employee_id, form_class, template_name):
     """ 保险信息"""
     try:
@@ -305,6 +320,7 @@ def base_insurance(request, employee_id, form_class, template_name):
         'employee': employee,
     })
 
+@login_required
 def statistics(request, statis_type='all', template_name='labour/labour_statistics.html'):
     """ 劳务信息统计"""
     today = datetime.datetime.now()
@@ -401,6 +417,7 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         'is_employee': is_employee,
     })
 
+@login_required
 def labour_history(request, template_name='labour/labour_history.html'):
     """ 历史劳务信息"""
     employee_list = EmployeeProfile.objects.filter(is_fired=True)
@@ -436,6 +453,7 @@ def labour_history(request, template_name='labour/labour_history.html'):
         'company_id': company_id,
     })
 
+@login_required
 def labour_import(request, form_class=LabourImportForm, template_name='labour/labour_import.html'):
     """ excel导入"""
     if request.method == 'POST':
@@ -455,6 +473,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
     })
 
 
+@login_required
 def labour_export(request):
     """ excel导出"""
 
@@ -514,8 +533,6 @@ def labour_export(request):
 
             return y_count
                 
-        
-
         def select_insert_excel(insert_sign, x_count, y_count, style, employee):
             if 'serial_id' in items:
                 y_count = insert(insert_sign, x_count, y_count, '序号', employee.serial_id)
@@ -718,16 +735,7 @@ def labour_export(request):
             insert_sign = True
             x_count, y_count, ws = select_insert_excel(insert_sign, x_count, y_count, style, employee)
 
-
-
     response = HttpResponse(mimetype='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=劳务职员信息.xls'
     book.save(response)
     return response
-
-
-
-
-
-
-

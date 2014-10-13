@@ -26,3 +26,9 @@ def login(request, form_class=LoginForm, template_name='login.html'):
     return render(request, template_name, {
         'form': form,
     })
+
+def logout(request):
+    """ 退出"""
+    from django.contrib.auth import logout
+    logout(request)
+    return HttpResponseRedirect('/')

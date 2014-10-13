@@ -20,7 +20,7 @@ def generate_paginator(queryset, page):
 
     return paged_queryset
 
-def adjacent_paginator(queryset, page, page_num=1, adjacent_pages=2):
+def adjacent_paginator(queryset, page, page_num=20, adjacent_pages=2):
     """ 分页"""
     paginator = Paginator(queryset, page_num)
     try:

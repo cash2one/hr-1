@@ -51,9 +51,19 @@ class EmployeeProfileForm(forms.ModelForm):
         if not self.cleaned_data['birth']:
             raise forms.ValidationError("请输入出生日期")
         return self.cleaned_data['birth']
+   
+    #def clean_mobile(self):
+    #    try:
+    #        int(self.cleaned_data['mobile'])
+    #        if len(self.cleaned_data['mobile']) > 11:
+    #            return forms.ValidationError("手机号位数错误")
+    #    except ValueError:
+    #        return forms.ValidationError("手机号输入错误")
+    #    return self.cleaned_data['mobile']
 
     def clean(self):
-        print self.errors
+        if self.errors:
+            print self.errors
         return self.cleaned_data
 
     def save(self, request, commit=True):
