@@ -15,11 +15,11 @@ $(document).ready(function() {
   * return false or true
   */
     
-  $('form').submit(function(){
+  $('#login').submit(function(){
     var b = true;
     $("#verify").css("display", "none");
     $(".alert").css("display", "none");
-    if($( "#password").val().length == 0 ){
+    if($("#password").val().length == 0 ){
       $("#verify").html('<div class="alert alert-error">请输入密码!</div>').show();
       b = false;
     }else if( $("#vali").val() != code ){

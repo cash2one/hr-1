@@ -1,9 +1,11 @@
 {% extends 'base.html' %}  
+{% load staticfiles %}
 {% block container %} 
         <div class="w-right">
           <br>
           <h3 style="text-align:center">---到期人数列表---</h3>
           <br>
+          <div class="alert alert-error" id="error" style="display:none"></div>
               <table class="reg-info">
                   <tr>
                       <th><button style="margin:5px 0.1em 5px 0px;" class="select_second">全选</button></th>
@@ -16,7 +18,7 @@
                   </tr>
                   {% for employee in employees %}
                   <tr>
-                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <th><input type="checkbox" name="all_person" class="h37" value="{{ employee.id }}"></th>
                       {% if is_contract == True %}
                       <td> {{ employee.employee.name }} </td>
                       <td> {{ employee.employee.sex }} </td>
@@ -42,16 +44,71 @@
                 </table> 
                 <div class="pager">
                  <span class="fr">
-                     <button>导出</button>
-                     <button>缴费管理</button>
+                     <button type="button" id="export">导出</button>
+                     <!--<button>缴费管理</button>-->
                      <a href="/labour/statistics/all/" title="返回"><button type="button">返回</button></a>
 
                  </span>
-                 <a href="#">【首页】</a>
-                 <a href="#">【上一页】</a>
-                 <a href="#">【下一页】</a>
-                 <a href="#">【尾页】</a>
-                </div>            
+                  <a href="?page=1">【首页】</a>
+                  {% if employees.has_previous %}
+                      <a href="?page={{ employees.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if employees.has_next %}
+                      <a href="?page={{ employees.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ employees.paginator.num_pages }}">【尾页】</a>
+                   第{{ employees.number }}页/共{{ employees.paginator.num_pages }}页
+                </div>  
+                <div class="colorbox2">
+                  <p>请选择要导出的条目</p>
+                  <br>
+                  <form action="{% url 'labour.views.labour_export'%}?export=true" method="post" id="select_form">
+                    {% csrf_token %}
+                      <input type="hidden" name="employees_id" id="select_id"/>
+                      <input type="hidden" name="item" id="item_id"/>
+                      <input type="hidden" name="export" value="yes"/>
+                      <input type="checkbox" name="items" value='serial_id' style="margin-left:20px" checked/>序列号 
+                      <input type="checkbox" name="items" value='name' checked/>姓名 
+                      <input type="checkbox" name="items" value='id_no' checked/>身份证 
+                      <input type="checkbox" name="items" value='email'/>邮箱 
+                      <input type="checkbox" name="items" value='sex'/>性别 
+                      <input type="checkbox" name="items" value='birth'/>出生日期 
+                      <input type="checkbox" name="items" value='edu_level'/>文化程度 
+                      <input type="checkbox" name="items" value='graduate'/>毕业院校 
+                      <br>
+                      <input type="checkbox" name="items" value='profession' style="margin-left:20px"/>专业 
+                      <input type="checkbox" name="items" value='residence_type'/>户口类型 
+                      <input type="checkbox" name="items" value='residence_place'/>户籍行政区 
+                      <input type="checkbox" name="items" value='now_address'/>住址 
+                      <input type="checkbox" name="items" value='emergency_name'/>紧急联系人 
+                      <input type="checkbox" name="items" value='emergency_mobile'/>紧急联系人电话 
+                      <br><br>
+                      <input type="checkbox" name="items" value='fire' style="margin-left:20px"/>解雇信息 
+                      <input type="checkbox" name="items" value='contract'/>合同信息 
+                      <input type="checkbox" name="items" value='company'/>公司信息 
+                      <input type="checkbox" name="items" value='yliao'/>医疗保险信息 
+                      <input type="checkbox" name="items" value='syu'/>生育保险信息
+                      <br>
+                      <input type="checkbox" name="items" value='gshang' style="margin-left:20px"/>工伤保险信息 
+                      <input type="checkbox" name="items" value='sye'/>失业保险信息 
+                      <input type="checkbox" name="items" value='gjj'/>公积金保险信息 
+                      <input type="checkbox" name="items" value='ylao'/>养老保险信息 
+
+                      <div class="colorbox_button2" style="margin-top:20px">
+                          <a href="javascript:;" title="确认" id="sure" >确认</a>
+                          <a href="javascript:;" title="关闭" id="close">关闭</a>
+                      </div>
+                      <div class="colorbox_delete2"></div>
+                  </form>
+                </div>                    
         </div>
     </div><!--wrapper END-->
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript" src="{% static "script/export.js" %}"></script>
 {% endblock %}

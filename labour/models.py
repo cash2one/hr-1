@@ -68,7 +68,7 @@ class EmployeeProfile(SoftDeletionModel):
     profession = models.CharField('专业', max_length=20, default=None, null=True, blank=True)
     residence_type = models.CharField('户口类型', max_length=20, default=None, null=True, blank=True)
     residence_place = models.CharField('户籍行政区', max_length=100, default=None, null=True, blank=True)
-    now_address = models.CharField('先住址', max_length=100, default=None, null=True, blank=True)
+    now_address = models.CharField('现住址', max_length=100, default=None, null=True, blank=True)
     mobile = models.CharField('电话', max_length=15, default=None, null=True, blank=True)
     emergency_name = models.CharField('紧急联系人', max_length=15, default=None, null=True, blank=True)
     emergency_mobile = models.CharField('紧急联系人电话', max_length=15, default=None, null=True, blank=True)
@@ -136,7 +136,7 @@ class Contract(SoftDeletionModel):
     probation_start = models.DateTimeField('试用期开始时间', default=None, null=True)
     probation_end = models.DateTimeField('试用期结束时间', default=None, null=True)
     bank_no = models.CharField('银行卡号', max_length=20)
-    month_salary = models.CharField('实发工资', max_length=10)
+    month_salary = models.CharField('月工资', max_length=10)
     real_salary = models.CharField('实发工资', max_length=10)
     salary_provide = models.DateTimeField('工资发放时间', default=None, null=True)
 

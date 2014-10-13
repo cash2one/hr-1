@@ -115,8 +115,8 @@ a:hover.link-style1 { color:#fff; }
 .colorbox_button a#close{background:#b7b7b7;}
 .colorbox_delete{background: url("/static/images/colorbox_delete.png") no-repeat left top;width:10px;height: 11px;position: absolute;right: 25px;top:20px;cursor: pointer;}
 
-.colorbox2{display:none;width:500px;height:222px;position: fixed;top:30%;left: 50%;margin-left:-250px;z-index: 1000;background: url("/static/images/colorbox_bg.png") no-repeat left top;}
-.colorbox2 p{font-size: 16px;color:#000000;width:450px;margin: 40px auto 0px 150px;}
+.colorbox2{display:none;width:500px;height:242px;position: fixed;top:30%;left: 50%;margin-left:-250px;z-index: 1000;background: url("/static/images/colorbox_bg.png") no-repeat left top;}
+.colorbox2 p{font-size: 16px;color:#000000;width:450px;margin: 10px auto 0px 150px;}
 .colorbox_button2{width: 288px;height: 38px;margin: 60px auto 0px;}
 .colorbox_button2 a{display: inline-block;width: 92px;height:100%;line-height:38px;text-align: center;color: #fff;font-size: 18px;border-radius: 3px;-webkit-border-radius:3px;-moz-border-radius:3px;-ms-border-radius:3px;-o-border-radius:3px;}
 .colorbox_button2 a#sure{margin-right: 100px;background:#0090db;}

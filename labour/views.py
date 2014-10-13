@@ -201,6 +201,7 @@ def employees(request, template_name='labour/employees.html'):
     id_no = request.GET.get('id_no', None)
     health_card = request.GET.get('health_card', None)
     search = request.GET.get('search', None)
+    export = request.POST.get('export', None)
     search_dict = {}
 
     if search is not None:
@@ -214,6 +215,17 @@ def employees(request, template_name='labour/employees.html'):
         employee_list = EmployeeProfile.objects.filter(**search_dict)
     else:
         employee_list = EmployeeProfile.objects.all()
+
+    # 导出表格
+    if export is not None:
+        employees_id = request.POST.get('employees_id')
+        items = request.POST.get('item')
+        employees_arr = employees_id.split(',')
+        items_arr = items.split(',')
+        employee_export = EmployeeProfile.objects.filter(id__in=employees_arr)
+        excel_title = []
+        if 'name' in items:
+            excel_title.append('姓名')
 
 
     employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
@@ -446,31 +458,272 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
 def labour_export(request):
     """ excel导出"""
 
-    export_type = request.GET.get('export_type', None)
-    company_id = request.GET.get('company_id', None)
+    export = request.GET.get('export', None)
+    #company_id = request.GET.get('company_id', None)
 
-    book = xlwt.Workbook(encoding='utf-8')
-    ws = book.add_sheet('导出职员信息')
-    style = xlwt.XFStyle()
-    font = xlwt.Font()
-    font.name = 'SimSun'
-    style.font = font
-    ws.write(0, 0, "姓名", style)
-    ws.write(0, 1, "性别", style)
-    ws.write(0, 2, "出生日期", style)
-    ws.write(0, 3, "身份证号", style)
-    ws.write(0, 4, "医疗卡号", style)
+    if export is not None:
+        employees_id = request.POST.get('employees_id')
+        item = request.POST.get('item')
+        employees_arr = employees_id.split(',')
+        items = item.split(',')
+        employees_arr[0] = employees_arr[1]
+        employees = EmployeeProfile.objects.filter(id__in=employees_arr)
+        x_count = 0
+        y_count = 0
+        temp = 0
+        insert_sign = None
+
+        book = xlwt.Workbook(encoding='utf-8')
+        ws = book.add_sheet('导出职员信息')
+        style = xlwt.XFStyle()
+        font = xlwt.Font()
+        font.name = 'SimSun'
+        style.font = font
+
+        def insert(insert_sign, x, y, name, value):
+            if insert_sign is None:
+                ws.write(x, y, name, style)
+            else:
+                if value is None:
+                    ws.write(x, y, '无', style)
+                else:
+                    ws.write(x, y, value, style)
+            y += 1
+            return y
+
+        def insurance_base(insert_sign, x_count, y_count, name, value, card):
+            if insert_sign is None:
+                if card is not None:
+                    ws.write(x_count, y_count, '%s保险卡' % name, style)
+                    y_count += 1
+                ws.write(x_count, y_count, '%s缴费基数' % name, style)
+                y_count += 1
+                ws.write(x_count, y_count, '%s个人缴费' % name, style)
+                y_count += 1
+                ws.write(x_count, y_count, '%s公司缴费' % name, style)
+                y_count += 1
+                ws.write(x_count, y_count, '%s缴费起始时间' % name, style)
+                y_count += 1
+                ws.write(x_count, y_count, '%s缴费终止时间' % name, style)
+                y_count += 1
+            else:
+                if value is None or value == 'None':
+                    value = '无'
+                ws.write(x_count, y_count, value, style)
+                y_count += 1
+
+            return y_count
+                
+        
+
+        def select_insert_excel(insert_sign, x_count, y_count, style, employee):
+            if 'serial_id' in items:
+                y_count = insert(insert_sign, x_count, y_count, '序号', employee.serial_id)
+            if 'name' in items:
+                y_count = insert(insert_sign, x_count, y_count, '姓名', employee.name)
+            if 'email' in items:
+                y_count = insert(insert_sign, x_count, y_count, '邮箱', employee.email)
+            if 'sex' in items:
+                y_count = insert(insert_sign, x_count, y_count, '性别', employee.sex)
+            if 'id_no' in items:
+                y_count = insert(insert_sign, x_count, y_count, '身份证号', employee.id_no)
+            if 'nation' in items:
+                y_count = insert(insert_sign, x_count, y_count, '民族', employee.nation)
+            if 'birth' in items:
+                y_count = insert(insert_sign, x_count, y_count, '出生日期', str(employee.birth)[:10])
+            if 'edu_level' in items:
+                y_count = insert(insert_sign, x_count, y_count, '教育水平', employee.edu_level)
+            if 'graduate' in items:
+                y_count = insert(insert_sign, x_count, y_count, '毕业院校', employee.graduate)
+            if 'profession' in items:
+                y_count = insert(insert_sign, x_count, y_count, '专业', employee.profession)
+            if 'residence_type' in items:
+                y_count = insert(insert_sign, x_count, y_count, '户口类型', employee.residence_type)
+            if 'residence_place' in items:
+                y_count = insert(insert_sign, x_count, y_count, '户籍行政区', employee.residence_place)
+            if 'now_address' in items:
+                y_count = insert(insert_sign, x_count, y_count, '现在住址', employee.now_address)
+            if 'emergency_name' in items:
+                y_count = insert(insert_sign, x_count, y_count, '联系人姓名', employee.emergency_name)
+            if 'emergency_mobile' in items:
+                y_count = insert(insert_sign, x_count, y_count, '联系人电话', employee.emergency_mobile)
+            if 'fire' in items:
+                if insert_sign is None:
+                    ws.write(x_count, y_count, '是否解雇', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '解雇时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '解雇原因', style)
+                    y_count += 1
+                else:
+                    ws.write(x_count, y_count, employee.is_fired, style)
+                    y_count += 1
+                    ws.write(x_count, y_count, str(employee.fired_date)[:10], style)
+                    y_count += 1
+                    ws.write(x_count, y_count, employee.fired_reason, style)
+                    y_count += 1
+
+            if 'yliao' in items:
+                if insert_sign:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.health_card, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.health_payment_base, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.health_payment_self, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.health_payment_company, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.health_payment_start)[:10], 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.health_payment_end)[:10], 'yes')
+                else:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '医疗保险', '', 'yes')
+
+            if 'ylao' in items:
+                if insert_sign:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.endowment_card, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.endowment_payment_base, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.endowment_payment_self, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.endowment_payment_company, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.endowment_payment_start)[:10], 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.endowment_payment_end)[:10], 'yes')
+                else:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '养老保险', '', 'yes')
+
+            if 'syu' in items:
+                if insert_sign:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.born_payment_base, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.born_payment_self, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.born_payment_company, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.born_payment_start)[:10], 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.born_payment_end)[:10], 'yes')
+                else:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '生育保险', '', None)
+
+            if 'gshang' in items:
+                if insert_sign:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.industrial_payment_base, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.industrial_payment_self, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.industrial_payment_company, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.industrial_payment_start)[:10], 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.industrial_payment_end)[:10], 'yes')
+                else:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '工伤保险', '', None)
+
+            if 'sye' in items:
+                if insert_sign:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.unemployed_payment_base, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.unemployed_payment_self, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.unemployed_payment_company, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.unemployed_payment_start)[:10], 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.unemployed_payment_end)[:10], 'yes')
+                else:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '失业保险', '', None)
+
+            if 'gjj' in items:
+                if insert_sign:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.reserved_payment_base, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.reserved_payment_self, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', employee.reserved_payment_company, 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.reserved_payment_start)[:10], 'yes')
+                    y_count = insurance_base(insert_sign, x_count, y_count, '', str(employee.reserved_payment_end)[:10], 'yes')
+                else:
+                    y_count = insurance_base(insert_sign, x_count, y_count, '公积金', '', None)
+
+            if 'company' in items:
+                if insert_sign is None:
+                    ws.write(x_count, y_count, '公司名称', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '公司地址', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '公司邮箱', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '公司联系人', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '公司电话', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '服务费', style)
+                    y_count += 1
+                else:
+                    try:
+                        ws.write(x_count, y_count, employee.company.name, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.company.address, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.company.email, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.company.link_man, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.company.link_man_mobile, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.company.service_cost, style)
+                        y_count += 1
+                    except:
+                        ws.write_merge(x_count, x_count, y_count, y_count+5, u"无", style)
+                        y_count += 6
+            if 'contract' in items:
+                if insert_sign is None:
+                    ws.write(x_count, y_count, '工种', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '单位协议开始时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '单位协议结束时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '劳动合同开始时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '劳动合同结束时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '试用期开始时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '试用期结束时间', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '银行卡号', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '月工资', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '实发工资', style)
+                    y_count += 1
+                    ws.write(x_count, y_count, '工资发放时间', style)
+                    y_count += 1
+                else:
+                    try:
+                        ws.write(x_count, y_count, employee.contract.job_type, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.company_protocal_start)[:10], style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.company_protocal_end)[:10], style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.labour_contract_start)[:10], style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.labour_contract_end)[:10], style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.probation_start)[:10], style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.probation_end)[:10], style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.contract.bank_no, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.contract.month_salary, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, employee.contract.real_salary, style)
+                        y_count += 1
+                        ws.write(x_count, y_count, str(employee.contract.salary_provide)[:10], style)
+                        y_count += 1
+                    except:
+                        ws.write_merge(x_count, x_count, y_count, y_count+10, u"无", style)
+                        y_count += 1
+
+            x_count += 1
+            y_count = 0
+            return x_count, y_count, ws
+
+        for employee in employees:
+            if insert_sign is None:
+                x_count, y_count, ws = select_insert_excel(insert_sign, x_count, y_count, style, employee)
+            insert_sign = True
+            x_count, y_count, ws = select_insert_excel(insert_sign, x_count, y_count, style, employee)
+
+
 
     response = HttpResponse(mimetype='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=劳务职员信息.xls'
     book.save(response)
     return response
-
-
-
-
-
-
 
 
 
