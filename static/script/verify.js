@@ -7,7 +7,7 @@
 $(document).ready(function() {
 
   // 产生验证码
-  var code = createCode();
+  var code = createCode().toUpperCase();
 
   /**
   * 提交表单，验证验证码是否正确
@@ -22,7 +22,7 @@ $(document).ready(function() {
     if($("#password").val().length == 0 ){
       $("#verify").html('<div class="alert alert-error">请输入密码!</div>').show();
       b = false;
-    }else if( $("#vali").val() != code ){
+    }else if( $("#vali").val().toUpperCase() != code ){
       $("#verify").html('<div class="alert alert-error">验证码输入错误!</div>').show();
       b = false;
     }else{
@@ -72,7 +72,7 @@ function createCode() {
   for (var i = 0; i < code_length; i++) {
     code += character[parseInt(Math.random() * char_length)];
   };
-  $("#code").html(code);
+  $("#code").html(code.toUpperCase());
   //$("#vali").css('background': code);
   return code;
 }
