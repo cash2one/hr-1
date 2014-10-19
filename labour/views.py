@@ -503,7 +503,7 @@ def labour_export(request):
             if insert_sign is None:
                 ws.write(x, y, name, style)
             else:
-                if value is None:
+                if value is None or value == 'None' or len(value) == 0:
                     ws.write(x, y, '无', style)
                 else:
                     ws.write(x, y, value, style)
@@ -573,13 +573,21 @@ def labour_export(request):
                     ws.write(x_count, y_count, '解雇原因', style)
                     y_count += 1
                 else:
-                    ws.write(x_count, y_count, employee.is_fired, style)
+                    if employee.is_fired:
+                        ws.write(x_count, y_count, '是', style)
+                    else:
+                        ws.write(x_count, y_count, '否', style)
                     y_count += 1
-                    ws.write(x_count, y_count, str(employee.fired_date)[:10], style)
+                    if employee.fired_date is None:
+                        ws.write(x_count, y_count, '无', style)
+                    else:
+                        ws.write(x_count, y_count, str(employee.fired_date)[:10], style)
                     y_count += 1
-                    ws.write(x_count, y_count, employee.fired_reason, style)
+                    if employee.fired_reason is None or len(employee.fired_reason) == 0:
+                        ws.write(x_count, y_count, '无', style)
+                    else:
+                        ws.write(x_count, y_count, employee.fired_reason, style)
                     y_count += 1
-
             if 'yliao' in items:
                 if insert_sign:
                     y_count = insurance_base(insert_sign, x_count, y_count, '', employee.health_card, 'yes')

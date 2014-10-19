@@ -50,6 +50,12 @@
                         {{ error }}
                       </div>
                     {% endfor %}
+                  {% elif form.emergency_mobile.errors %}
+                    {% for error in form.emergency_mobile.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
 
                   {% endif %}
 

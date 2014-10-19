@@ -33,7 +33,7 @@ class EmployeeProfileForm(forms.ModelForm):
     profession = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入专业'}), required=False)
     residence_place = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': '请输入户籍行政区'}), required=False)
     now_address = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': '请输入地址', 'style': 'width:370px'}), required=False)
-    mobile = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入电话'}), error_messages={'required': '请输入电话'})
+    mobile = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入电话'}), error_messages={'required': '请输入电话'})
     emergency_name = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入紧急联系人'}), required=False)
     emergency_mobile = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入紧急联系人电话'}), required=False)
 
@@ -52,14 +52,25 @@ class EmployeeProfileForm(forms.ModelForm):
             raise forms.ValidationError("请输入出生日期")
         return self.cleaned_data['birth']
    
-    #def clean_mobile(self):
-    #    try:
-    #        int(self.cleaned_data['mobile'])
-    #        if len(self.cleaned_data['mobile']) > 11:
-    #            return forms.ValidationError("手机号位数错误")
-    #    except ValueError:
-    #        return forms.ValidationError("手机号输入错误")
-    #    return self.cleaned_data['mobile']
+    def clean_mobile(self):
+        mobile = self.cleaned_data['mobile']
+        try:
+            int(mobile)
+            if len(mobile) > 11:
+                raise forms.ValidationError("联系电话位数输入错误")
+        except Exception:
+            raise forms.ValidationError("联系电话输入错误")
+        return mobile
+
+    def clean_emergency_mobile(self):
+        emergency_mobile = self.cleaned_data['emergency_mobile']
+        try:
+            int(emergency_mobile)
+            if len(emergency_mobile) > 11:
+                raise forms.ValidationError("紧急联系人电话位数输入错误")
+        except Exception:
+            raise forms.ValidationError("紧急联系人电话输入错误")
+        return emergency_mobile
 
     def clean(self):
         if self.errors:
