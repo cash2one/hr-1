@@ -40,6 +40,13 @@ class EmployeeProfileForm(forms.ModelForm):
     def clean_id_no(self):
         if len(self.cleaned_data['id_no']) != 18:
             raise forms.ValidationError("身份证输入错误")
+        if self.instance is not None:
+            if EmployeeProfile.objects.filter(id_no=self.cleaned_data['id_no'], is_fired=False).exclude(id=self.instance.id).exists():
+                raise forms.ValidationError("身份证号已存在")
+        else:
+            if EmployeeProfile.objects.filter(id_no=self.cleaned_data['id_no'], is_fired=False).exists():
+                raise forms.ValidationError("身份证号已存在")
+
         return self.cleaned_data['id_no']
 
     #def clean_serial_id(self):
@@ -79,7 +86,6 @@ class EmployeeProfileForm(forms.ModelForm):
 
     def save(self, request, commit=True):
         m = super(EmployeeProfileForm, self).save(commit=False)
-        print m.serial_id
         if m.serial_id is None or len(str(m.serial_id)) == 0:
             count = EmployeeProfile.objects.all().count()
             if count == 0:
