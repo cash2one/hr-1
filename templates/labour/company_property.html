@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block property %}display:block {% endblock %} 
+{% block labour_none %}display:none {% endblock %} 
+{% block company_property %}display:block {% endblock %} 
+{% block container %} 
+        <div class="w-right">
+             <table class="reg-info">
+                <tr>
+                    <th class="reset_width bg-none">单位名称</th>
+                    <td>本月应到金额</td>
+                    <td>本月实到金额</td>
+                    <td>历史到账情况</td>
+                </tr>
+                {% for company in companys %}
+                <tr>
+                    <td class="reset_width bg-none">{{ company.name }}</td>
+                    <td>{{ company.money_sum }}</td>
+                    <td><span>{{ company.money_now }}</span></td>
+                    <td><button><a href="{% url "company.views.property_detail" %}" title="详情" style="color:#ffffff;">详情</a></button></td>
+                </tr>
+                {% endfor %}
+            </table>   
+            <div class="pager">
+                   <a href="?page=1">【首页】</a>
+                  {% if companys.has_previous %}
+                      <a href="?page={{ companys.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if companys.has_next %}
+                      <a href="?page={{ companys.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ companys.paginator.num_pages }}">【尾页】</a>
+                   第{{ companys.number }}页/共{{ companys.paginator.num_pages }}页
+                </div>                          
+        </div>
+{% endblock %}

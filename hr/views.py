@@ -21,6 +21,11 @@ def login(request, form_class=LoginForm, template_name='login.html'):
             level = request.user.account.level
             if level == UserProfile.ADMIN:
                 return HttpResponseRedirect(reverse('labour.views.index'))
+            elif level == UserProfile.MANAGER:
+                return HttpResponseRedirect(reverse('manager.views.update'))
+            elif level == UserProfile.COMPANY:
+                return HttpResponseRedirect(reverse('labour.views.index'))
+
     else:
         form = form_class(request)
     return render(request, template_name, {

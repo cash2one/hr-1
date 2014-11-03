@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>一达人力资源_管理系统</title>
+<link href="/static/style/reset.css" rel="stylesheet" type="text/css" />
+<link href="/static/style/style.css" rel="stylesheet" type="text/css" />
+<link href="/static/style/public.css" rel="stylesheet" type="text/css" />
+<link href="/static/style/lhgcalendar.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="top-area">
+            <div class="top">
+                <span class="rt" id="hl1"></span>           
+                <span id="hl2">
+                    Hi，{{ user.account.name }}&nbsp;&nbsp;&nbsp;角色：[{% if user.account.level == 0%}系统管理员{% elif user.account.level == 1%}公司用户{% elif user.account.level == 2%}后台管理员{% endif %}]&nbsp;&nbsp;<a href="/logout/">退出</a>
+                </span>
+            </div>
+    </div><!--top-area-->
+    
+    <div class="logo-area">
+        <div class="admin_logo"></div>
+    </div><!--logo-area-->
+    <div class="wrapper">   
+        <div class="w-left">
+            <ul>
+                <li title="账号管理">
+                    <a href="javascript:;" class="zhanghao_manage"><i></i>账号管理</a>
+                    <ul class="w-left-inner">
+                        <li class="left_inner"><a href="/manager/update/">账号管理</a></li>
+                        <li class="left_inner"><a href="/manager/add/">账号分配</a></li>
+                        <li class="left_inner"><a href="/manager/login_logs/">登录历史查询</a></li>
+                    </ul>
+                </li>
+                <li title="操作日志管理"><a href="/manager/user_action/" class="zhanghao_manage">操作日志管理</a></li>
+                <li title="邮件发送"><a href="/manager/send_email/" class="zhanghao_manage" id="send_mail">邮件发送</a></li>
+            </ul>
+        </div>
+        <div class="w-right">
+            <div>
+                <table class="reg-info">
+                    <tr>
+                        <th>权限</th>
+                        <td>账号用户名</td>
+                        <td>姓名</td>
+                        <td>重置密码</td>
+                        <td>删除账号</td>
+                        <td>禁用</td>
+                    </tr>
+                    {% for user in users %}
+                    <tr>
+                        <td>{% if user.account.level == 0 %}前台管理员{% elif user.account.level == 1 %}公司账号{% elif user.account.level == 2 %}后台管理员{% endif %}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.account.name }}</td>
+                        <td><button id="reset" name="{{ user.id }}">重置</button></td>
+                        <td><button id="useless" name="{{ user.id }}">禁用</button></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            
+                <div class="pager">
+                   <a href="?page=1">【首页】</a>
+                  {% if users.has_previous %}
+                      <a href="?page={{ users.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if users.has_next %}
+                      <a href="?page={{ users.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ users.paginator.num_pages }}">【尾页】</a>
+                   第{{ users.number }}页/共{{ users.paginator.num_pages }}页
+                </div>     
+            </div>   
+            <div style="display:none;">
+                <div class="th-input-manage">
+                  <span style="margin-right:23px;">姓名：</span><input class="txt_input" type="text" name="name"/><br/>
+                  <span>账号名称：</span><input class="txt_input" type="text" name="username"/><br/>
+                  <span>账号密码：</span><input class="txt_input" type="text" name="password" /><br/>
+                  <span>再次输入：</span><input class="txt_input" type="text" name="repeat" /><br/>
+                  <span>账号权限：</span>
+                  <input type="radio" name="manager" value="2" class="manager">
+                  <span>后台管理员</span>
+                  <input type="radio" name="admin" value="0" class="manager">
+                  <span>前台管理员</span>
+                  <input type="radio" name="company" value="1" class="manager">
+                  <span>企业人员</span>
+                  <br/>
+                  <button class="make_sure">确认添加</button>
+                </div>  
+            </div>
+            <div style="display:none;">
+                <div class="th-input" style="width:42%">
+                  <span>账号名称：</span><input class="txt_input" type="text" name="password" style="widthL170px;margin:7px 5px 10px;"/>
+                  <button class="make_sure" style="margin:0px;display:inline-block;">查询</button>
+                </div>  
+              <table class="reg-info">
+                  <tr>
+                      <th>用户名</th>
+                      <th>姓名</th>
+                      <td>登录时间</td>
+                      <td>登录外网ip</td>
+                      <td>登录内网ip</td>
+                  </tr>
+                  {% for log in login_logs %}
+                  <tr>
+                      <th>{{ log.user.username }}</th>
+                      <th>{{ log.user.account.name }}</th>
+                      <td>{{ log.created|date:'Y-m-d' }}</td>
+                      <td>{{ log.inner_ip }}</td>
+                      <td>{{ log.outer_ip }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+            </div>
+            <div id="operate" style="display:none;">
+                <table class="reg-info" style="clear:both;">
+                    <tr>
+                        <td>选择</td>
+                        <th>操作IP</th>
+                        <td>操作账号</td>
+                        <td>操作账号姓名</td>
+                        <td>操作内容</td>
+                        <td>操作时间</td>
+                    </tr>
+                    {% for action in actions %}
+                    <tr>
+                        <td><input type="checkbox" name="select_action"/></td>
+                        <td>{{ action.ip }}</td>
+                        <td>{{ action.user.username }}</td>
+                        <td>{{ action.user.account.name }}</td>
+                        <td>{{ action.table_name }}--{{ action.action }}</td>
+                        <td>{{ action.created|date:'Y-m-d' }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <button style="float:right;margin:0px 50px 10px 0px;">导出</button>
+                <div class="pager">
+                   <a href="?page=1">【首页】</a>
+                  {% if actions.has_previous %}
+                      <a href="?page={{ actions.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if actions.has_next %}
+                      <a href="?page={{ actions.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ actions.paginator.num_pages }}">【尾页】</a>
+                   第{{ actions.number }}页/共{{ actions.paginator.num_pages }}页
+                </div>   
+            </div>
+            <div id="send_email" style="display:none;margin-bottom:20px;">
+                <form id="email_content" action="javascript:;">
+                    <div class="emai_mainContent">
+                        <div class="emai_receive">
+                           <span class="receive_person">收件人：</span><input id="email_person" class="txt_input" type="text" name="name"/><a href="javascript:;" class="email_recipient"></a>
+                        </div>
+                        <div class="email_txt">
+                            <span>正文：</span>
+                            <div class="email_content">
+                               <textarea name="area" style="width: 640px;height:100px;">
+                                请在此处编辑您的正文内容
+                               </textarea>
+                            </div>
+                        </div>
+                        <button style="margin:10px 0px 0px 52px;color:#073D8F;">发送</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="mask"></div>
+        <div class="email_colorbox" style="display:none">
+            <div class="colorbox_send">
+                <table>
+                   <tr>
+                        <th><a href="javascript:;" class="email_all">全选</a></th>
+                        <th style="width:82%;"><span>收件人</span></th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                    <tr>
+                       <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                    <tr>
+                       <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                    <tr>
+                       <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                    <tr>
+                       <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                    <tr>
+                       <td><input type="checkbox" name="recipient" /></td>
+                        <td class="email_border">adminadmin</td>
+                    </tr>
+                </table>
+            </div>
+            <a href="javascript:;" class="email_sure">确认</a>
+            <div class="colorbox_delete"></div>
+        </div>
+    </div><!--wrapper END-->
+    <script src="/static/script/jquery.min.js"></script>
+    <script src="/static/script/lhgcalendar.min.js"></script>
+    <script src="/static/script/back.js"></script>
+    <script type="text/javascript">
+      bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+    </script>
+    <script type="text/javascript">
+        var height = document.documentElement.clientHeight;
+        var mask = document.getElementById("mask");
+        mask.style.height = height + 'px';
+        $(".email_recipient").bind("click",function(){
+            $("#mask").show();
+            $(".email_colorbox").show();
+        });
+        $(".colorbox_delete").bind("click",function(){
+            $("#mask").hide();
+            $(".email_colorbox").hide();
+        });
+        
+        $(".email_sure").bind("click",function(){
+            $("#mask").hide();
+            $(".email_colorbox").hide();
+            var receive_person = $(".receive_person") ;
+            var td =  $(".colorbox_send table tr td") ;
+            var result = [] ;
+            /*receive_person.text()*/
+           td.each(function(index,item){
+              if($(this).find("input[type='checkbox']").attr("checked") == true){
+                 result.push($(this).next().text()) ;
+              }
+           })
+           $("#email_person").val(result.join(" ;")) ;
+        });
+
+        $("#send_mail").click(function(){
+        });
+
+       
+    </script>
+</body>
+</html>

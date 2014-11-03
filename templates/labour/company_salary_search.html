@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block property %}display:block {% endblock %} 
+{% block labour_none %}display:none {% endblock %} 
+{% block company_property %}display:block {% endblock %} 
+{% block container %} 
+        <div class="w-right">
+              <div class="th-input" style="width:42%">
+                  <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name"/><br/>
+                  <select name="company_id">
+                    <option value="0">无</option>
+                    {% for company in companys %}
+                    <option value="{{ company.id }}">{{ company.name }}</option>
+                    {% endfor %}
+                    </select>
+                  <span>身份证号：</span><input class="txt_input" type="text" name="id_no" /><br/>
+                  <button class="make_sure" style="margin:10px 0px 0px 120px">查询</button>
+              </div>  
+              <div id="person_message">
+                  <table class="reg-info">
+                    <tr>
+                        <th>姓名</th>
+                        <td style="width:180px;">用工单位</td>
+                        <td>月工资</td>
+                        <td>实发工资</td>
+                        <td>养老保险</td>
+                        <td>医疗保险</td>
+                        <td>生育保险</td>
+                        <td>工伤保险</td>
+                        <td>实上保险</td>
+                        <td>公积金</td>
+                        <td>工资发放</td>
+                        <td>工资发放时间</td>
+                    </tr>
+                    {% for employee in employees %}
+                    <tr>
+                        <th>{{ employee.name }}</th>
+                        <td style="width:180px;">{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td>{{ employee.name }}</td>
+                        <td><button>发放工资</button></td>
+                        <td>&nbsp</td>
+                    </tr>
+                    {% endfor %}
+                  </table>     
+              </div>        
+        </div>
+{% endblock %}

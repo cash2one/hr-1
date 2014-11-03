@@ -1,0 +1,41 @@
+{% extends 'manager/base.html'%}
+{% block container %}
+        <div class="w-right">
+                <table class="reg-info" style="clear:both;">
+                    <tr>
+                        <td>选择</td>
+                        <th>操作IP</th>
+                        <td>操作账号</td>
+                        <td>操作账号姓名</td>
+                        <td>操作内容</td>
+                        <td>操作时间</td>
+                    </tr>
+                    {% for action in actions %}
+                    <tr>
+                        <td><input type="checkbox" name="select_action"/></td>
+                        <td>{{ action.ip }}</td>
+                        <td>{{ action.user.username }}</td>
+                        <td>{{ action.user.account.name }}</td>
+                        <td>{{ action.table_name }}--{{ action.action }}</td>
+                        <td>{{ action.created|date:'Y-m-d H:i:s' }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <button style="float:right;margin:0px 50px 10px 0px;">导出</button>
+                <div class="pager">
+                   <a href="?page=1">【首页】</a>
+                  {% if actions.has_previous %}
+                      <a href="?page={{ actions.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if actions.has_next %}
+                      <a href="?page={{ actions.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ actions.paginator.num_pages }}">【尾页】</a>
+                   第{{ actions.number }}页/共{{ actions.paginator.num_pages }}页
+                </div>   
+        </div>
+{% endblock %}

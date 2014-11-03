@@ -1,0 +1,90 @@
+{% extends 'manager/base.html'%}
+{% block container %}
+        <div class="w-right">
+            <div id="send_email" style="margin-bottom:20px;">
+                <form id="email_content" action="javascript:;">
+                    <div class="emai_mainContent">
+                        <Br/>
+                        <div class="emai_receive">
+                           <span class="receive_person">收件人：</span><a href="javascript:;" id="show_b" value="0">显示公司</a>
+                        </div>
+                        <div id="show_user" style="display:none;width:250px;">
+                            <table class="reg-info" style="clear:both;">
+                                <tr>
+                                    <td>全选<input type="checkbox" id="all"/></td>
+                                    <td>公司名称</td>
+                                    <td>邮箱</td>
+                                </tr>
+                                {% for company in companys %}
+                                <tr>
+                                    <td><input type="checkbox" name="company" value="{{ company.id }}"/></td>
+                                    <td>{{ company.name }}</td>
+                                    <td>{{ company.email }}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <br/>
+                        <div class="emai_receive">
+                           <span class="receive_person">标题:</span>
+                           <input type="text_input" style="margin-left:10px;" id="title"/>  
+                        </div>
+                        <div class="email_txt">
+                            <span>正文：</span>
+                               <textarea class="ckeditor" cols="80" id="editor1" name="content" rows="10"></textarea>
+                        </div>
+                        <button style="margin:10px 0px 0px 52px;color:#073D8F;" id="send">发送</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+       
+{% endblock %}
+
+{% block extra_script %}
+<script src="/static/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    $("#show_b").click(function(){
+        var num = parseInt($("#show_b").attr('value'));
+        if(num%2==0){
+            $("#show_b").html("隐藏公司").show();
+            $("#show_user").css("display", "block");
+            num = num + 1;
+            $("#show_b").attr("value", num);
+
+        }else{
+            $("#show_b").html("显示公司").show();
+            $("#show_user").css("display", "none");
+            num = num + 1;
+            $("#show_b").attr("value", num);
+        }
+    });
+
+    $("#send").click(function(){
+        var company_ids = "";
+        $("input[name=company]").each(function(){
+            if($(this).attr("checked")){
+                company_ids = company_ids + "," + $(this).val();
+            }
+        });
+        _data = {};
+        _data['companys'] = company_ids;
+        _data['content'] = $("#editor1").val();
+        _data['title'] = $("#title").val();
+        $("#send").css("background", "url(/static/images/load.gif) no-repeat");
+        $.ajax({
+                url: "/manager/send_email/",
+                type: "post",
+                dataType: "json",
+                data: _data,
+                success: function(Data){
+                    if(Data['result']){
+                        alert("发送成功!");
+                        location.reload();
+                    }
+                }
+        });
+
+    });
+</script>
+{% endblock %}

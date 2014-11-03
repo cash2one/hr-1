@@ -1,11 +1,13 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import datetime
 import xlwt
 import xlrd
 import random
 import time
+import logging
+
+from datetime import datetime
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -14,19 +16,26 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
-
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
 from labour.models import EmployeeProfile, UserProfile, CompanyProfile, Contract
 from labour.forms import HealthForm, BornForm, UnemployeedForm, ReservedForm
 from labour.forms import LabourImportForm, IndustrialForm, EndowmentForm
+from labour.models import UserAction
+
 from utils import adjacent_paginator
 
+INFO_LOG = logging.getLogger('info')
 
+@login_required
 def index(request, template_name="labour/index.html"):
     """ 管理员登陆页面"""
     user = request.user
+    inner_ip = request.META['REMOTE_ADDR']
+    login_time = datetime.now()
     return render(request, template_name, {
         'user': user,
+        'inner_ip': inner_ip,
+        'login_time': login_time,
     })
 
 @login_required
@@ -40,6 +49,16 @@ def employee_add(request, form_class=EmployeeProfileForm, template_name='labour/
         if form.is_valid():
             employee = form.save(request)
             messages.info(request, '添加成功', extra_tags='employee_add_succ')
+            UserAction(
+                user=user,
+                table_name='雇员信息表',
+                ip=request.META['REMOTE_ADDR'],
+                modified_type=2,
+                modified_id=employee.id,
+                action='添加',
+            ).save()
+            data = u'user=%s, modify_table=EmployeeProfile, action=添加, add_user_id=%d, add_user_name=%s' % (user.username, employee.id, employee.name)
+            INFO_LOG.info(data)
             return HttpResponseRedirect(reverse("labour.views.employee_update", args=(employee.id, )))
     else:
         form = form_class()
@@ -64,6 +83,16 @@ def employee_update(request, employee_id, form_class=EmployeeProfileForm, templa
         form = form_class(request, data=request.POST, instance=employee)
         if form.is_valid():
             employee = form.save(request)
+            UserAction(
+                user=user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='雇员信息表',
+                modified_type=2,
+                modified_id=employee.id,
+                action='修改',
+            ).save()
+            data = u'user=%s, modify_table=EmpolyeeProfile, action=修改, update_user_id=%d, update_user_name=%s' % (user.username, employee.id, employee.name)
+            INFO_LOG.info(data)
             messages.info(request, '修改成功', extra_tags='employee_update_succ')
     else:
         form = form_class(request, instance=employee)
@@ -96,6 +125,16 @@ def contract_add(request, employee_id, form_class=ContractForm, template_name="l
         if form.is_valid():
             c = form.save(request, employee)
             messages.info(request, '添加成功', extra_tags='contract_add_succ')
+            UserAction(
+                user=user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='雇员合同表',
+                modified_type=3,
+                modified_id=employee.id,
+                action='添加',
+            ).save()
+            data = u'user=%s, modify_table=Contract, action=添加, add_user_id=%d, add_user_name=%s' % (user.username, employee.id, employee.name)
+            INFO_LOG.info(data)
             return HttpResponseRedirect(reverse("labour.views.contract_update", args=(c.id, )))
     else:
         form = form_class()
@@ -119,6 +158,16 @@ def contract_update(request, contract_id, form_class=ContractForm, template_name
         form = form_class(request, data=request.POST, instance=contract)
         if form.is_valid():
             form.save(commit=True)
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='雇员合同信息表',
+                modified_type=3,
+                modified_id=contract.employee.id,
+                action='修改',
+            ).save()
+            data = u'user=%s, modify_table=Contract, action=修改, update_user_id=%d, update_user_name=%s' % (request.user.username, contract.employee.id, contract.employee.name)
+            INFO_LOG.info(data)
             messages.info(request, '修改成功', extra_tags='contract_update_succ')
     else:
         form = form_class(instance=contract)
@@ -131,11 +180,22 @@ def contract_update(request, contract_id, form_class=ContractForm, template_name
 @login_required
 def company_add(request, form_class=CompanyForm, template_name='labour/company_add.html'):
     """ 公司信息添加"""
+    user = request.user
     if request.method == "POST":
         form = form_class(request, data=request.POST)
         if form.is_valid():
             company = form.save(request)
             messages.info(request, '添加成功', extra_tags='company_add_succ')
+            UserAction(
+                user=user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='公司信息表',
+                modified_type=1,
+                modified_id=company.id,
+                action='添加',
+            ).save()
+            data = u'user=%s, modify_table=CompanyProfile, action=添加, add_company_id=%d, add_company_name=%s' % (user.username, company.id, company.name)
+            INFO_LOG.info(data)
             return HttpResponseRedirect(reverse("labour.views.company_update", args=(company.id, )))
     else:
         form = form_class()
@@ -146,6 +206,7 @@ def company_add(request, form_class=CompanyForm, template_name='labour/company_a
 @login_required
 def company_update(request, company_id, form_class=CompanyForm, template_name='labour/company_update.html'):
     """ 公司信息修改"""
+    user = request.user
     try:
         company = CompanyProfile.objects.get(id=company_id)
     except CompanyProfile.DoesNotExist:
@@ -157,6 +218,16 @@ def company_update(request, company_id, form_class=CompanyForm, template_name='l
         if form.is_valid():
             form.save(request)
             messages.info(request, '修改成功', extra_tags='company_update_succ')
+            UserAction(
+                user=user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='公司信息表',
+                modified_type=1,
+                modified_id=company.id,
+                action='添加',
+            ).save()
+            data = u'user=%s, modify_table=CompanyProfile, action=添加, add_user_id=%d, add_user_name=%s' % (user.username, company.id, company.name)
+            INFO_LOG.info(data)
     else:
         form = form_class(instance=company)
     return render(request, template_name, {
@@ -210,7 +281,7 @@ def companys(request, template_name='labour/companys.html'):
 @login_required
 def employees(request, template_name='labour/employees.html'):
     """ 全部员工信息"""
-    
+    user = request.user
     name = request.GET.get('name', None)
     id_no = request.GET.get('id_no', None)
     health_card = request.GET.get('health_card', None)
@@ -224,6 +295,17 @@ def employees(request, template_name='labour/employees.html'):
             search_dict['id_no__contains'] = id_no
         if health_card != '':
             search_dict['health_card__contains'] = health_card
+
+        UserAction(
+            user=user,
+            ip=request.META['REMOTE_ADDR'],
+            table_name='雇员信息表',
+            modified_type=2,
+            modified_id=None,
+            action='搜索',
+        ).save()
+        data = u'user=%s, search_table=EmployeeProfile,  action=搜索, search_name=%s, search_id_no=%s, search_health_card=%s' % (user.username, name, id_no, health_card)
+        INFO_LOG.info(data)
 
         employee_list = EmployeeProfile.objects.filter(**search_dict)
     else:
@@ -288,6 +370,7 @@ def insurance(request, employee_id, insurance):
 @login_required
 def base_insurance(request, employee_id, form_class, template_name):
     """ 保险信息"""
+    user = request.user
     try:
         employee = EmployeeProfile.objects.get(id=employee_id)
     except EmployeeProfile.DoesNotExist:
@@ -299,8 +382,28 @@ def base_insurance(request, employee_id, form_class, template_name):
             form.save(request)
             if employee is None:
                 messages.info(request, '添加成功', extra_tags='add_succ')
+                UserAction(
+                    user=user,
+                    ip=request.META['REMOTE_ADDR'],
+                    table_name='雇员信息表-保险',
+                    modified_type=2,
+                    modified_id=employee.id,
+                    action='添加',
+                ).save()
+                data = u'user=%s, modify_table=EmployeeProfile_%s,  action=添加, add_user_id=%d, add_user_name=%s' % (user.username, form_class, employee.id, employee.name)
+                INFO_LOG.info(data)
             else:
                 messages.info(request, '修改成功', extra_tags='update_succ')
+                UserAction(
+                    user=user,
+                    ip=request.META['REMOTE_ADDR'],
+                    table_name='雇员信息表-保险',
+                    modified_type=2,
+                    modified_id=employee.id,
+                    action='修改',
+                ).save()
+                data = u'user=%s, modify_table=EmployeeProfile_%s,  action=修改, add_user_id=%d, add_user_name=%s' % (user.username, form_class, employee.id, employee.name)
+                INFO_LOG.info(data)
     else:
         form = form_class(instance=employee)
     return render(request, template_name, {
@@ -312,7 +415,7 @@ def base_insurance(request, employee_id, form_class, template_name):
 @login_required
 def statistics(request, statis_type='all', template_name='labour/labour_statistics.html'):
     """ 劳务信息统计"""
-    today = datetime.datetime.now()
+    today = datetime.now()
     is_contract = None
     is_employee = None
 
@@ -327,16 +430,19 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today).count()
         probation_count = Contract.objects.filter(probation_end__lt=today).count()
         employee_list = EmployeeProfile.objects.all()
-        year = datetime.datetime.now().year
+        year = datetime.now().year
         retire_count = 0
         for employee in employee_list:
-            id_no_year = int(employee.id_no[6:10])
-            if employee.sex == '女':
-                if year - id_no_year >= 50:
-                    retire_count = retire_count + 1
-            else:
-                if year - id_no_year >= 60:
-                    retire_count = retire_count + 1
+            try:
+                id_no_year = int(employee.id_no[6:10])
+                if employee.sex == '女':
+                    if year - id_no_year >= 50:
+                        retire_count = retire_count + 1
+                else:
+                    if year - id_no_year >= 60:
+                        retire_count = retire_count + 1
+            except ValueError:
+                pass
 
         return render(request, template_name, {
             'endowment_count': endowment_count,
@@ -384,13 +490,16 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         year = datetime.datetime.now().year
         retire_id = []
         for employee in employee_list:
-            id_no_year = int(employee.id_no[6:10])
-            if employee.sex == '女':
-                if year - id_no_year >= 50:
-                    retire_id.append(employee.id)
-            else:
-                if year - id_no_year >= 60:
-                    retire_id.append(employee.id)
+            try:
+                id_no_year = int(employee.id_no[6:10])
+                if employee.sex == '女':
+                    if year - id_no_year >= 50:
+                        retire_id.append(employee.id)
+                else:
+                    if year - id_no_year >= 60:
+                        retire_id.append(employee.id)
+            except ValueError:
+                pass
 
         profiles = EmployeeProfile.objects.filter(id__in=retire_id)
     else:
@@ -409,6 +518,7 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
 @login_required
 def labour_history(request, template_name='labour/labour_history.html'):
     """ 历史劳务信息"""
+    user = request.user
     employee_list = EmployeeProfile.objects.filter(is_fired=True)
     companys = CompanyProfile.objects.all()
 
@@ -425,6 +535,17 @@ def labour_history(request, template_name='labour/labour_history.html'):
             search_dict['id_no__contains'] = id_no
         if company_id != '0':
             search_dict['company_id'] = company_id
+
+        UserAction(
+            user=user,
+            ip=request.META['REMOTE_ADDR'],
+            table_name='雇员信息表',
+            modified_type=2,
+            modified_id=None,
+            action='搜索',
+        ).save()
+        data = u'user=%s, search_table=EmployeeProfile,  action=搜索, search_name=%s, search_id_no=%s, search_company_id=%s' % (user.username, name, id_no, company_id)
+        INFO_LOG.info(data)
 
         employee_list = EmployeeProfile.objects.filter(is_fired=True, **search_dict)
     else:
@@ -467,9 +588,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 id_no = line[5]
                 if id_no == '':
                     continue
-                print "str_id_no", str(id_no)
                 if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
-                    print "aaaaaaaaaaaaaa"
                     name_id_no[id_no] = line[5]
                 else:
                     company_name = str(line[18])
@@ -512,6 +631,17 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         salary_provide=time.strftime('%Y-%m-%d', time.localtime(line[29])),
                     )
                     contract.save()
+
+                    UserAction(
+                        user=request.user,
+                        ip=request.META['REMOTE_ADDR'],
+                        table_name='雇员信息表',
+                        modified_type=2,
+                        modified_id=None,
+                        action='导入',
+                    ).save()
+                    data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
+                    INFO_LOG.info(data)
             #except:
             #    messages.error(request, '导入格式错误')
     else:
@@ -553,7 +683,6 @@ def labour_export(request):
         employees = EmployeeProfile.objects.filter(id__in=employees_arr)
         x_count = 0
         y_count = 0
-        temp = 0
         insert_sign = None
 
         book = xlwt.Workbook(encoding='utf-8')
@@ -806,6 +935,17 @@ def labour_export(request):
                 x_count, y_count, ws = select_insert_excel(insert_sign, x_count, y_count, style, employee)
             insert_sign = True
             x_count, y_count, ws = select_insert_excel(insert_sign, x_count, y_count, style, employee)
+
+    UserAction(
+        user=request.user,
+        ip=request.META['REMOTE_ADDR'],
+        table_name='雇员信息表',
+        modified_type=2,
+        modified_id=None,
+        action='导出',
+    ).save()
+    data = u'user=%s, export_table=EmployeeProfile, export_id=%s, export_params=%s, action=导出' % (request.user.username, employees_id, item)
+    INFO_LOG.info(data)
 
     response = HttpResponse(mimetype='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=劳务职员信息.xls'

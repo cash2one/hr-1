@@ -1,0 +1,119 @@
+{% extends 'manager/base.html'%}
+{% block account %}display:block{% endblock %}
+{% block update %}inner_on{% endblock %}
+{% block container %}
+        <div class="w-right">
+            <br>
+                <div id="msg" class="alert alert-success" style="display:none">
+
+                </div>
+                <table class="reg-info">
+                    <tr>
+                        <th>权限</th>
+                        <td>账号用户名</td>
+                        <td>姓名</td>
+                        <td>重置密码</td>
+                        <td>禁用</td>
+                    </tr>
+                    {% for user in users %}
+                    <tr>
+                        <td>{% if user.account.level == 0 %}前台管理员{% elif user.account.level == 1 %}公司账号{% elif user.account.level == 2 %}后台管理员{% endif %}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.account.name }}</td>
+                        <td><button name="reset" value="{{ user.id }}" >重置</button></td>
+                        {% if user.is_active %}
+                        <td><button name="disabled" value="{{ user.id }}">禁用</button></td>
+                        {% else %}
+                        <td><button name="active" value="{{ user.id }}" style="color:red">解禁</button></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            
+                <div class="pager">
+                   <a href="?page=1">【首页】</a>
+                  {% if users.has_previous %}
+                      <a href="?page={{ users.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if users.has_next %}
+                      <a href="?page={{ users.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ users.paginator.num_pages }}">【尾页】</a>
+                   第{{ users.number }}页/共{{ users.paginator.num_pages }}页
+                </div>     
+        </div>  
+{% endblock %}
+
+{% block extra_script %}
+  <script type="text/javascript">
+    $("td button").click(function(){
+      var _this = $(this);
+      var name = $(this).attr('name');
+      var user_id = $(this).attr('value');
+      if(name == 'reset'){
+        var b = confirm("是否确认修改密码？");
+        if(b){
+          _data = {};
+          _data['user_id'] = user_id;
+          _data['update_type'] = 'reset_pwd';
+          $.ajax({
+                url: "/manager/update/",
+                type: "post",
+                dataType: "json",
+                data: _data,
+                success: function(Data){
+                    if(Data['result']){
+                      $("#msg").html("用户" + Data['name'] + ",密码重置为六个1").show();
+                    }
+                }
+            });
+        }
+      }else if(name == "disabled"){
+        var b = confirm("是否确认禁用该用户？");
+        if(b){
+          _data = {};
+          _data['user_id'] = user_id;
+          _data['update_type'] = 'disabled_user';
+          $.ajax({
+                url: "/manager/update/",
+                type: "post",
+                dataType: "json",
+                data: _data,
+                success: function(Data){
+                    if(Data['result']){
+                      alert("用户" + Data['name'] + ",已禁用");
+                      location.reload();
+
+                    }
+                }
+            });
+        }
+      }else if(name == "active"){
+        var b = confirm("是否确认解禁该用户？");
+        if(b){
+          _data = {};
+          _data['user_id'] = user_id;
+          _data['update_type'] = 'active_user';
+          $.ajax({
+                url: "/manager/update/",
+                type: "post",
+                dataType: "json",
+                data: _data,
+                success: function(Data){
+                    if(Data['result']){
+                      alert("用户" + Data['name'] + ",已解禁");
+                      location.reload();
+
+                    }
+                }
+            });
+        }
+      }
+    });
+
+  </script>
+{% endblock %}

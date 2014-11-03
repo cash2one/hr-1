@@ -31,14 +31,41 @@ class UserProfile(SoftDeletionModel):
     """ 用户基本信息"""
     ADMIN = 0
     COMPANY = 1
+    MANAGER = 2
 
     LEVEL_CHOICES = (
-        (ADMIN, '管理员'),
+        (MANAGER, '后台管理员'),
+        (ADMIN, '普通管理员'),
         (COMPANY, '公司'),
     )
 
     user = models.OneToOneField(User, related_name='account')
-    level = models.IntegerField('用户权限', choices=LEVEL_CHOICES, default=0)
+    name = models.CharField('真实姓名', max_length=20)
+    level = models.IntegerField('用户权限', choices=LEVEL_CHOICES, default=1)
+
+
+class LoginLog(SoftDeletionModel):
+    """ 登录日志记录"""
+    user = models.ForeignKey(User, related_name='log')
+    inner_ip = models.CharField('内网地址', max_length=20, default=None, null=True)
+    outer_ip = models.CharField('外网地址', max_length=20, default=None, null=True)
+    result = models.CharField('登录结果', max_length=20, default=None, null=True)
+
+
+class UserAction(SoftDeletionModel):
+    """ 用户操作行为记录"""
+    MODIFIED_TYPE_CHOICES = (
+        (0, '账号'),
+        (1, '公司'),
+        (2, '雇员信息'),
+        (3, '雇员合同信息'),
+    )
+    user = models.ForeignKey(User, related_name='action')
+    ip = models.CharField('操作IP', max_length='20')
+    table_name = models.CharField('表格名称', max_length=20)
+    modified_type = models.IntegerField('被操作对象类型', choices=MODIFIED_TYPE_CHOICES, default=2)
+    modified_id = models.CharField('被操作对象id', max_length=20, default=None, null=True)
+    action = models.CharField('操作行为', max_length=20, default=None, null=True)
 
 
 class CompanyProfile(SoftDeletionModel):

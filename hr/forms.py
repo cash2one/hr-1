@@ -2,12 +2,16 @@
 #encoding:utf8
 
 import logging
+import re
+import urllib2
 
 from django import forms
 
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.contrib.auth import authenticate
+
+from labour.models import LoginLog
 
 from utils import generate_info_msg
 
@@ -32,7 +36,6 @@ class LoginForm(forms.Form):
     def login(self, request):
         user = authenticate(username=self.cleaned_data['username'], password=self.cleaned_data['password'])  
         login(request, user)
-        LOGIN_LOG.info(generate_info_msg(request, action=u'登录', level=user.account.level))
 
     def clean_username(self):
         try:
@@ -44,9 +47,45 @@ class LoginForm(forms.Form):
     def clean(self):
         if self.errors:
             return
+
+        inner_ip = self._request.META['REMOTE_ADDR']
+        outer_ip = re.search('\d+\.\d+\.\d+\.\d+',urllib2.urlopen("http://www.whereismyip.com").read()).group(0)
+            
         user = User.objects.get(username=self.cleaned_data['username'])
         if not user.check_password(self.cleaned_data['password']):
+            log = LoginLog(
+                user=user,
+                inner_ip=inner_ip,
+                outer_ip=outer_ip,
+                result=u'密码错误',
+                )
+            log.save()
+            data = u'user=%s, action=login, result=%s' % (user.username, log.result)
+            LOGIN_LOG.info(data)
             raise forms.ValidationError('您输入的用户名或密码错误!')
+        else:
+            if user.is_active:
+                log = LoginLog(
+                    user=user,
+                    inner_ip=inner_ip,
+                    outer_ip=outer_ip,
+                    result=u'成功',
+                )
+                log.save()
+                data = u'user=%s, action=login, result=%s' % (user.username, log.result)
+                LOGIN_LOG.info(data)
+            else:
+                log = LoginLog(
+                    user=user,
+                    inner_ip=inner_ip,
+                    outer_ip=outer_ip,
+                    result=u'账号冻结',
+                )
+                log.save()
+                data = u'user=%s, action=login, result=%s' % (user.username, log.result)
+                LOGIN_LOG.info(data)
+                raise forms.ValidationError('该账号已被冻结')
+            
         return self.cleaned_data
 
 class ChangePwdForm(forms.Form):

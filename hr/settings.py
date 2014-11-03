@@ -76,6 +76,15 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
+#SERVER_EMAIL = 'noreply@yida.com'
+SERVER_EMAIL = 'yida_hrsystem@163.com'
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'yida_hrsystem@163.com'
+EMAIL_HOST_PASSWORD = 'yidarenliziyuan'
+# EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'yida_hrsystem@163.com'
+
 LANGUAGE_CODE = 'zh-cn'
 
 TIME_ZONE = 'Asia/Chongqing'

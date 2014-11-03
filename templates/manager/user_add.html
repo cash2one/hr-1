@@ -1,0 +1,95 @@
+{% extends 'manager/base.html'%}
+{% block account %}display:block{% endblock %}
+{% block update %}inner_on{% endblock %}
+{% block container %}
+
+        <div class="w-right">   
+            <div class="th-input-manage" style="width:400px;">
+                  {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% elif form.username.errors %}
+                    {% for error in form.username.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+
+                  {% elif form.password.errors %}
+                    {% for error in form.password.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+
+                  {% elif form.confirm.errors %}
+                    {% for error in form.confirm.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+
+                  {% elif form.name.errors %}
+                    {% for error in form.password.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+
+                  {% for message in messages %}
+                    {% if 'user_add_succ' in message.tags %}
+                    <div class="alert alert-block alert-success">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+              <form action="." method="post">
+                {% csrf_token %}
+                <span style="margin-right:23px;">姓名：</span><input class="txt_input" type="text" name="name" value=""/><br/>
+                <span>账号名称：</span><input class="txt_input" type="text" name="username" value=""/><br/>
+                <span>账号密码：</span><input class="txt_input" type="password" name="pwd" value=""/><br/>
+                <span>再次输入：</span><input class="txt_input" type="password" name="confirm" value=""/><br/>
+                <span>账号权限：</span>
+
+                <input type="radio" name="level" value="2" class="manager" id="ht"  checked>
+                <span>管理员</span>
+
+                <input type="radio" name="level" value="0" class="manager" id="qt">
+                <span>前台管理员</span>
+
+                <input type="radio" name="level" value="1" class="manager" id="qy">
+                <span>企业人员</span>
+                <br/>
+                <div id="show_qy" style="display:none">
+                  <br/>
+                  <span>企业名称：</span>
+                  <select name="company_id">
+                    {% for company in companys %}
+                    <option value="{{ company.id }}">{{ company.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                
+                <button type="submit" class="make_sure">确认添加</button>
+              </form>
+            </div>  
+        </div>
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+  $("#ht").click(function(){
+    $("#show_qy").css('display', 'none');
+  });
+  $("#qt").click(function(){
+    $("#show_qy").css('display', 'none');
+  });
+  $("#qy").click(function(){
+    $("#show_qy").css('display', 'block');
+  });
+</script>
+{% endblock %}
