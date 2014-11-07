@@ -2,6 +2,8 @@
 # -*- coding:utf-8 -*-
 
 import simplejson as json
+import xlwt
+import logging
 
 from django.conf import settings
 from django.shortcuts import render
@@ -19,6 +21,8 @@ from labour.models import LoginLog, UserAction
 from manager.forms import UserAddForm
 from utils import adjacent_paginator
 
+INFO_LOG = logging.getLogger('info')
+
 @login_required
 def index(request, template_name="manager/index.html"):
     """ 后台管理员界面"""
@@ -35,6 +39,7 @@ def update(request, template_name="manager/index.html"):
     """ 账号管理"""
     user = request.user
     update_type = request.POST.get('update_type', None)
+    username = request.GET.get("username", '')
 
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
@@ -50,6 +55,16 @@ def update(request, template_name="manager/index.html"):
                 'result': True,
                 'name': update_user.username,
             }
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='User',
+                modified_type=0,
+                modified_id=update_user.id,
+                action='重置密码',
+            ).save()
+            data = u'user=%s, ModifyTable=User, action=重置密码, modified_username=%d'  % (request.user.username, update_user.username)
+            INFO_LOG.info(data)
             return HttpResponse(json.dumps(data))
         elif update_type == 'disabled_user':
             update_user.is_active = False
@@ -58,6 +73,16 @@ def update(request, template_name="manager/index.html"):
                 'result': True,
                 'name': update_user.username,
             }
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='User',
+                modified_type=0,
+                modified_id=update_user.id,
+                action='禁止用户',
+            ).save()
+            data = u'user=%s, ModifyTable=User, action=禁止用户, modified_username=%d'  % (request.user.username, update_user.username)
+            INFO_LOG.info(data)
             return HttpResponse(json.dumps(data))
         elif update_type == 'active_user':
             update_user.is_active = True
@@ -66,10 +91,24 @@ def update(request, template_name="manager/index.html"):
                 'result': True,
                 'name': update_user.username,
             }
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='User',
+                modified_type=0,
+                modified_id=update_user.id,
+                action='解禁用户',
+            ).save()
+            data = u'user=%s, ModifyTable=User, action=解禁用户, modified_username=%d'  % (request.user.username, update_user.username)
+            INFO_LOG.info(data)
         return HttpResponse(json.dumps(data))
 
     self_id = user.id
-    user_list = User.objects.all().exclude(id=self_id)
+    if username is None:
+        user_list = User.objects.all().exclude(id=self_id)
+    else:
+        user_list = User.objects.filter(username__contains=username).exclude(id=self_id)
+
     users, page_numbers = adjacent_paginator(user_list, request.GET.get('page', 1))
 
     return render(request, template_name, {
@@ -86,7 +125,6 @@ def add(request, form_class=UserAddForm, template_name='manager/user_add.html'):
     companys = CompanyProfile.objects.filter(profile=None)
 
     if request.method == 'POST':
-        print request.POST
         form = form_class(request, data=request.POST)
         if form.is_valid():
             form.save()
@@ -124,8 +162,65 @@ def login_log(request, template_name='manager/login_log.html'):
 def user_action(request, template_name='manager/action_log.html'):
     """ 用户行为记录"""
     user = request.user
+    export = request.GET.get('export', None)
+
     action_list = UserAction.objects.all()
     user_actions, page_numbers = adjacent_paginator(action_list, request.GET.get('page', 1))
+
+    if export:
+        book = xlwt.Workbook(encoding='utf-8')
+        ws = book.add_sheet('导出职员信息')
+        style = xlwt.XFStyle()
+        font = xlwt.Font()
+        font.name = 'SimSun'
+        style.font = font
+
+        x_count = 0
+        y_count = 0
+
+        ws.write(x_count, y_count, '操作IP', style)
+        y_count += 1
+        ws.write(x_count, y_count, '操作账号', style)
+        y_count += 1
+        ws.write(x_count, y_count, '操作者姓名', style)
+        y_count += 1
+        ws.write(x_count, y_count, '操作内容', style)
+        y_count += 1
+        ws.write(x_count, y_count, '操作时间', style)
+        y_count += 1
+
+        y_count = 0
+        x_count += 1
+        for action in action_list:
+            ws.write(x_count, y_count, action.ip, style)
+            y_count += 1
+            ws.write(x_count, y_count, action.user.username, style)
+            y_count += 1
+            ws.write(x_count, y_count, action.user.account.name, style)
+            y_count += 1
+            ws.write(x_count, y_count, "%s--%s" % (action.table_name, action.action), style)
+            y_count += 1
+            ws.write(x_count, y_count, str(action.created)[:10], style)
+            y_count += 1
+
+            x_count += 1
+            y_count = 0
+
+        response = HttpResponse(mimetype='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename=用户操作记录表.xls'
+        book.save(response)
+
+        UserAction(
+            user=request.user,
+            ip=request.META['REMOTE_ADDR'],
+            table_name='用户行为信息表',
+            modified_type=2,
+            modified_id=None,
+            action='导出',
+        ).save()
+        data = u'user=%s, Export_table=UserAction, action=导出' % (request.user.username)
+        INFO_LOG.info(data)
+        return response
 
     return render(request, template_name, {
         'user': user,
@@ -166,8 +261,19 @@ def send_email(request, template_name='manager/send_mail.html'):
             data = {
                 'result': False,
             }
-        
+
+        UserAction(
+            user=request.user,
+            ip=request.META['REMOTE_ADDR'],
+            table_name='无',
+            modified_type=2,
+            modified_id=None,
+            action='发送邮件',
+        ).save()
+        data = u'user=%s, action=发送邮件, mail_list=%s, content=%s '  % (request.user.username, str(mail_list), content)
+        INFO_LOG.info(data)
         return HttpResponse(json.dumps(data))
+
     return render(request, template_name, {
         'companys': companys,
     })

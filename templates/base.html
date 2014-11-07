@@ -25,7 +25,7 @@
         <div class="top">
             <span class="rt" id="hl1"></span>           
             <span id="hl2">
-                Hi，{{ user.account.name }}&nbsp;&nbsp;&nbsp;角色：[{% if user.account.level == 0%}系统管理员{% elif user.profile.level == 1%}公司用户{% elif user.profile.level == 2%}后台管理员{% endif %}]&nbsp;&nbsp;<a href="/logout/">退出</a>
+                Hi，{{ user.account.name }}&nbsp;&nbsp;&nbsp;角色：[{% if user.account.level == 0%}系统管理员{% elif user.account.level == 1%}公司用户{% elif user.account.level == 2%}后台管理员{% endif %}]&nbsp;&nbsp;<a href="/logout/">退出</a>
             </span>
         </div>
     </div><!--top-area-->
@@ -42,7 +42,9 @@
                         <li title="劳务信息登记">
                             <a href="javascript:;" class="small_txt"><i></i>劳务信息登记</a>
                             <ul class="w-left-inner" style="{% block add %}{% endblock %}" >
+                                {% if user.account.level != 1%}
                                 <li class="inner_txt {% block company_add %}{% endblock %}"><a href="{% url "labour.views.company_add" %}" title="公司录入" style="color:#222222;">公司录入</a></li>
+                                {% endif %}
                                 <li class="inner_txt {% block employee_add %}{% endblock %}"><a href="{% url "labour.views.employee_add" %}" title="手动录入" style="color:#222222;">员工录入</a></li>
                                 <li class="inner_txt {% block employee_import %}{% endblock %}"><a href="/labour/import/" title="批量录入" style="color:#222222;">批量录入</a></li>
                             </ul>
@@ -51,7 +53,9 @@
                         <li title="劳务信息查询">
                            <a href="javscript:;" class="small_txt"><i></i>劳务信息查询</a>
                            <ul class="w-left-inner" style="{% block search %}{% endblock %}">
+                                {% if user.account.level != 1%}
                                <li class="inner_txt {% block company_search %}{% endblock %}"><a href="{% url "labour.views.companys" %}" title="单位查询" style="color:#222222;">单位查询</a></li>
+                                {% endif %}
                                <li class="inner_txt {% block employee_search %}{% endblock %}"><a href="/labour/employees/" title="个人查询" style="color:#222222;">个人查询</a></li>
                            </ul>
                         </li>

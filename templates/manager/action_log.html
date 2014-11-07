@@ -21,7 +21,7 @@
                     </tr>
                     {% endfor %}
                 </table>
-                <button style="float:right;margin:0px 50px 10px 0px;">导出</button>
+                <button style="float:right;margin:0px 50px 10px 0px;" id="export">导出</button>
                 <div class="pager">
                    <a href="?page=1">【首页】</a>
                   {% if actions.has_previous %}
@@ -38,4 +38,11 @@
                    第{{ actions.number }}页/共{{ actions.paginator.num_pages }}页
                 </div>   
         </div>
+{% endblock %}
+{% block extra_script %}
+  <script type="text/javascript">
+    $("#export").click(function(){
+      window.location.href = '/manager/user_action/?export=true'
+    });
+  </script>
 {% endblock %}

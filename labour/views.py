@@ -106,6 +106,11 @@ def employee_update(request, employee_id, form_class=EmployeeProfileForm, templa
 @login_required
 def contract_add(request, employee_id, form_class=ContractForm, template_name="labour/employee_contract_add.html"):
     """ 员工公司合同信息"""
+    user = request.user
+    filter_company = {}
+    print user.account.id
+    if user.account.level == 1:
+        filter_company['profile'] = user.account
     try:
         employee = EmployeeProfile.objects.get(id=employee_id)
         if Contract.objects.filter(employee=employee, is_deleted=0).exists():
@@ -118,7 +123,7 @@ def contract_add(request, employee_id, form_class=ContractForm, template_name="l
         return HttpResponseRedirect(reverse("labour.views.employee_add"))
 
     user = request.user
-    companys = CompanyProfile.objects.all()
+    companys = CompanyProfile.objects.filter(**filter_company)
 
     if request.method == "POST":
         form = form_class(request, data=request.POST)
@@ -287,6 +292,13 @@ def employees(request, template_name='labour/employees.html'):
     health_card = request.GET.get('health_card', None)
     search = request.GET.get('search', None)
     search_dict = {}
+    extra_kwargs = {}
+
+    if user.account.level == 1:
+        extra_kwargs = {
+            'company': user.account.profile,
+        }
+        search_dict['company'] = user.account.profile
 
     if search is not None:
         if name != '':
@@ -309,7 +321,7 @@ def employees(request, template_name='labour/employees.html'):
 
         employee_list = EmployeeProfile.objects.filter(**search_dict)
     else:
-        employee_list = EmployeeProfile.objects.all()
+        employee_list = EmployeeProfile.objects.filter(**extra_kwargs)
 
     employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
 
@@ -415,21 +427,29 @@ def base_insurance(request, employee_id, form_class, template_name):
 @login_required
 def statistics(request, statis_type='all', template_name='labour/labour_statistics.html'):
     """ 劳务信息统计"""
+    user = request.user
     today = datetime.now()
     is_contract = None
     is_employee = None
+    extra_kwargs = {}
+    extra_kwargs_contract = {}
+    if user.account.level == 1:
+        extra_kwargs = {
+            'company': user.account.profile,
+        }
+        extra_kwargs_contract['employee__company'] = user.account.profile
 
     if statis_type == 'all':
-        endowment_count = EmployeeProfile.objects.filter(endowment_payment_end__lt=today).count()
-        health_count = EmployeeProfile.objects.filter(health_payment_end__lt=today).count()
-        born_count = EmployeeProfile.objects.filter(born_payment_end__lt=today).count()
-        industrial_count = EmployeeProfile.objects.filter(industrial_payment_end__lt=today).count()
-        unemployed_count = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today).count()
-        reserved_count = EmployeeProfile.objects.filter(reserved_payment_end__lt=today).count()
-        company_protocal_count = Contract.objects.filter(company_protocal_end__lt=today).count()
-        labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today).count()
-        probation_count = Contract.objects.filter(probation_end__lt=today).count()
-        employee_list = EmployeeProfile.objects.all()
+        endowment_count = EmployeeProfile.objects.filter(endowment_payment_end__lt=today, **extra_kwargs).count()
+        health_count = EmployeeProfile.objects.filter(health_payment_end__lt=today, **extra_kwargs).count()
+        born_count = EmployeeProfile.objects.filter(born_payment_end__lt=today, **extra_kwargs).count()
+        industrial_count = EmployeeProfile.objects.filter(industrial_payment_end__lt=today, **extra_kwargs).count()
+        unemployed_count = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today, **extra_kwargs).count()
+        reserved_count = EmployeeProfile.objects.filter(reserved_payment_end__lt=today, **extra_kwargs).count()
+        company_protocal_count = Contract.objects.filter(company_protocal_end__lt=today, **extra_kwargs_contract).count()
+        labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today, **extra_kwargs_contract).count()
+        probation_count = Contract.objects.filter(probation_end__lt=today, **extra_kwargs_contract).count()
+        employee_list = EmployeeProfile.objects.filter(**extra_kwargs)
         year = datetime.now().year
         retire_count = 0
         for employee in employee_list:
@@ -519,14 +539,22 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
 def labour_history(request, template_name='labour/labour_history.html'):
     """ 历史劳务信息"""
     user = request.user
-    employee_list = EmployeeProfile.objects.filter(is_fired=True)
-    companys = CompanyProfile.objects.all()
+    employee_filter = {}
+    company_filter = {}
+    search_dict = {}
+
+    if user.account.level == 1:
+        employee_filter['company'] = user.account.profile
+        company_filter['profile'] = user.account
+        search_dict['company'] = user.account.profile
+
+    employee_list = EmployeeProfile.objects.filter(is_fired=True, **employee_filter)
+    companys = CompanyProfile.objects.filter(**company_filter)
 
     name = request.GET.get('name', None)
     id_no = request.GET.get('id_no', None)
     company_id = request.GET.get('company_id', None)
     search = request.GET.get('search', None)
-    search_dict = {}
 
     if search is not None:
         if name != '':
@@ -549,8 +577,7 @@ def labour_history(request, template_name='labour/labour_history.html'):
 
         employee_list = EmployeeProfile.objects.filter(is_fired=True, **search_dict)
     else:
-        employee_list = EmployeeProfile.objects.filter(is_fired=True)
-
+        employee_list = EmployeeProfile.objects.filter(is_fired=True, **employee_filter)
 
     employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
 

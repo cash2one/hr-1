@@ -9,7 +9,9 @@
                       <span>身份证号：</span><input class="txt_input" type="text" name="id_no"  value="{{ id_no|default:''}}"/><br/>
                       <span>用工单位：</span>
                         <select name="company_id">
+                          {% if user.account.level != 1 %}
                           <option value="0">无</option>
+                          {% endif %}
                       {% for company in companys %}
                           <option value="{{ company.id }}">{{ company.name }}</option>
                       {% endfor %}

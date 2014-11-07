@@ -11,7 +11,7 @@
                         <div id="show_user" style="display:none;width:250px;">
                             <table class="reg-info" style="clear:both;">
                                 <tr>
-                                    <td>全选<input type="checkbox" id="all"/></td>
+                                    <td>全选<input type="checkbox" id="all" value="0"/></td>
                                     <td>公司名称</td>
                                     <td>邮箱</td>
                                 </tr>
@@ -85,6 +85,24 @@
                 }
         });
 
+    });
+    $("#all").click(function(){
+        var num = parseInt($("#all").val());
+        if(num%2==0){
+            $("input[name=company]").each(function(){
+                $(this).attr("checked", "on");            
+            });
+            num = num + 1;
+            $("#all").val(num);
+        }else{
+            $("input[name=company]").each(function(){
+                $(this).attr("checked", "");            
+            });
+            num = num + 1;
+            $("#all").val(num);
+        }
+
+        
     });
 </script>
 {% endblock %}

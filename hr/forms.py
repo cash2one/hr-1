@@ -40,6 +40,8 @@ class LoginForm(forms.Form):
     def clean_username(self):
         try:
             user = User.objects.get(username=self.cleaned_data['username'])
+            if not user.is_active:
+                raise forms.ValidationError('该用户已被禁用!')
         except User.DoesNotExist:
             raise forms.ValidationError('您输入的用户名不存在!')
         return self.cleaned_data['username']

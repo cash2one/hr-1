@@ -71,12 +71,13 @@ class EmployeeProfileForm(forms.ModelForm):
 
     def clean_emergency_mobile(self):
         emergency_mobile = self.cleaned_data['emergency_mobile']
-        try:
-            int(emergency_mobile)
-            if len(emergency_mobile) > 11:
-                raise forms.ValidationError("紧急联系人电话位数输入错误")
-        except Exception:
-            raise forms.ValidationError("紧急联系人电话输入错误")
+        if len(emergency_mobile) > 1:
+            try:
+                int(emergency_mobile)
+                if len(emergency_mobile) > 11:
+                    raise forms.ValidationError("紧急联系人电话位数输入错误")
+            except Exception:
+                raise forms.ValidationError("紧急联系人电话输入错误")
         return emergency_mobile
 
     def clean(self):
@@ -93,6 +94,8 @@ class EmployeeProfileForm(forms.ModelForm):
             else:
                 employee_last = EmployeeProfile.objects.all().order_by('-created')[0]
                 m.serial_id = str(int(employee_last.serial_id) + 1)
+        if self._request.user.account.level == 1:
+            m.company = self._request.user.account.profile
         fired_date = request.POST.get("fired_date")
         fired_reason = request.POST.get("fired_reason")
         is_fired = request.POST.get('is_fired')

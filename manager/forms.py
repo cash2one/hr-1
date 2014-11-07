@@ -58,7 +58,7 @@ class UserAddForm(forms.Form):
         profile.save()
         if level == '1':
             company = CompanyProfile.objects.get(id=self._request.POST.get('company_id'))
-            company.user = user
+            company.profile = user.account
             company.save()
 
         data = u'user=%s, modify_table=UserProfile, action=添加, add_user_id=%d, add_user_name=%s' % (self._request.user.username, user.id, profile.name)
