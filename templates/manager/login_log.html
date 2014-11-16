@@ -17,6 +17,7 @@
                       <td>登录时间</td>
                       <td>登录外网ip</td>
                       <td>登录内网ip</td>
+                      <td>登录状态</td>
                   </tr>
                   {% for log in login_logs %}
                   <tr>
@@ -25,22 +26,23 @@
                       <td>{{ log.created|date:'Y-m-d H:i:s' }}</td>
                       <td>{{ log.inner_ip }}</td>
                       <td>{{ log.outer_ip }}</td>
+                      <td>{{ log.result }}</td>
                   </tr>
                   {% endfor %}
               </table>
               <div class="pager">
-                   <a href="?page=1">【首页】</a>
+                   <a href="?page=1&username={{ username }}">【首页】</a>
                   {% if login_logs.has_previous %}
-                      <a href="?page={{ login_logs.previous_page_number }}">【上一页】</a>
+                      <a href="?page={{ login_logs.previous_page_number }}&username={{ username }}">【上一页】</a>
                   {% else %}
                       <font style="color:grey">【上一页】</font>
                   {% endif %}
                   {% if login_logs.has_next %}
-                      <a href="?page={{ login_logs.next_page_number }}">【下一页】</a>
+                      <a href="?page={{ login_logs.next_page_number }}&username={{ username }}">【下一页】</a>
                   {% else %}
                       <font style="color:grey">【下一页】</font>
                   {% endif %}
-                   <a href="?page={{ login_logs.paginator.num_pages }}">【尾页】</a>
+                   <a href="?page={{ login_logs.paginator.num_pages }}&username={{ username }}">【尾页】</a>
                    第{{ login_logs.number }}页/共{{ login_logs.paginator.num_pages }}页
                 </div>     
         </div>

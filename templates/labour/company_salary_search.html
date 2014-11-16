@@ -1,53 +1,102 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block property %}display:block {% endblock %} 
 {% block labour_none %}display:none {% endblock %} 
 {% block company_property %}display:block {% endblock %} 
 {% block container %} 
         <div class="w-right">
               <div class="th-input" style="width:42%">
-                  <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name"/><br/>
-                  <select name="company_id">
-                    <option value="0">无</option>
+                <form action='.' method='get' id="ff">
+                  <span class="ml24">姓名：</span>
+                  <input class="txt_input" type="text" name="name" value="{{ name|default:''}}"/>
+                  <input type="hidden" value="" name="export_s" id="export_sign"/><br/>
+                  <span>公司名称：</span><select name="company_id">
+                    <option value="">无</option>
                     {% for company in companys %}
-                    <option value="{{ company.id }}">{{ company.name }}</option>
+                    <option value="{{ company.id }}" {% if company.id == company_id %}selected{% endif %}>{{ company.name }}</option>
                     {% endfor %}
-                    </select>
-                  <span>身份证号：</span><input class="txt_input" type="text" name="id_no" /><br/>
-                  <button class="make_sure" style="margin:10px 0px 0px 120px">查询</button>
+                    </select><Br>
+                  <span>身份证号：</span><input class="txt_input" type="text" name="id_no" value="{{ id_no|default:''}}"/><br/>
+                  <button class="make_sure" style="margin:10px 0px 0px 120px" type="submit">查询</button>
+                </form>
               </div>  
+              <div class="alert alert-error" id="error" style="display:none"></div>
+
               <div id="person_message">
                   <table class="reg-info">
                     <tr>
+                        <th>
+                          全选
+                          <input type="checkbox" name="select_all" id="all" value="0"/>
+                        </th>
                         <th>姓名</th>
-                        <td style="width:180px;">用工单位</td>
-                        <td>月工资</td>
-                        <td>实发工资</td>
-                        <td>养老保险</td>
-                        <td>医疗保险</td>
-                        <td>生育保险</td>
-                        <td>工伤保险</td>
-                        <td>实上保险</td>
-                        <td>公积金</td>
-                        <td>工资发放</td>
-                        <td>工资发放时间</td>
+                        <th>用工单位</th>
+                        <th>月工资</th>
+                        <th>实发工资</th>
+                        <th>养老保险</th>
+                        <th>医疗保险</th>
+                        <th>生育保险</th>
+                        <th>工伤保险</th>
+                        <th>失业保险</th>
+                        <th>公积金</th>
+                        <th>工资发放</th>
+                        <th>工资发放时间</th>
                     </tr>
                     {% for employee in employees %}
                     <tr>
-                        <th>{{ employee.name }}</th>
-                        <td style="width:180px;">{{ employee.name }}</td>
+                        <td><input type="checkbox" name="ids" value="{{ employee.id }}"/></td>
                         <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td>{{ employee.name }}</td>
-                        <td><button>发放工资</button></td>
-                        <td>&nbsp</td>
+                        <td>{{ employee.company.name }}</td>
+                        <td>{{ employee.contract.month_salary|default:'无' }}</td>
+                        <td>{{ employee.contract.real_salary|default:'无' }}</td>
+                        <td>{{ employee.endowment_payment_self|default:'无' }}</td>
+                        <td>{{ employee.health_payment_self|default:'无' }}</td>
+                        <td>{{ employee.born_payment_self|default:'无' }}</td>
+                        <td>{{ employee.industrial_payment_self|default:'无' }}</td>
+                        <td>{{ employee.unemployed_payment_self|default:'无' }}</td>
+                        <td>{{ employee.reserved_payment_self|default:'无' }}</td>
+                        <td><button value="{{ employee.contract.id }}">发放工资</button></td>
+                        <td>{{ employee.contract.salary_provide|date:'Y-m-d' }}</td>
                     </tr>
                     {% endfor %}
-                  </table>     
+                  </table>  
+                  <div class="pager">
+                     <span class="fr">
+                         <button type="button" id="export_b">导出</button>
+                         <button type="button" id="salary_all">工资发放</button>
+                     </span>
+                     <a href="?page=1">【首页】</a>
+                    {% if employees.has_previous %}
+                        <a href="?page={{ employees.previous_page_number }}">【上一页】</a>
+                    {% else %}
+                        <font style="color:grey">【上一页】</font>
+                    {% endif %}
+                    {% if employees.has_next %}
+                        <a href="?page={{ employees.next_page_number }}">【下一页】</a>
+                    {% else %}
+                        <font style="color:grey">【下一页】</font>
+                    {% endif %}
+                     <a href="?page={{ employees.paginator.num_pages }}">【尾页】</a>
+                     第{{ employees.number }}页/共{{ employees.paginator.num_pages }}页
+                </div>     
               </div>        
         </div>
+
+        <div class="colorbox">
+          <p>请选择时间</p>
+          <br>
+          <form action='.' method="post" id="f_change">
+            {% csrf_token %}
+            <input type="text" class="txt calendar" id="startDate" style="width:122px;margin-left:150px" name="change_date"/><br/><br/>
+            <input type="hidden" name="select_ids" id="select_vals"/>
+          </form>
+          <div class="colorbox_button" style="margin-top:20px">
+              <a href="javascript:;" title="确认" id="sure" >确认</a>
+              <a href="javascript:;" title="关闭" id="close">关闭</a>
+          </div>
+          <div class="colorbox_delete"></div>
+        </div>
+{% endblock %}
+{% block extra_script %}
+<script type="text/javascript" src="{% static "script/salary_change.js" %}"></script>
 {% endblock %}

@@ -5,7 +5,12 @@
 {% block container %} 
         <div class="w-right">
             <div class="th-input" style="width:30%;">
-	            <span>年份：</span><input type="text" class="txt_input calendar" id="startDate">
+	            <span>年份：</span>
+                <select name="year" id="select_year">
+                    <option value="2013" {% if year == '2013' %}selected{% endif %}>2013</option>
+                    <option value="2014" {% if year == '2014' %}selected{% endif %}>2014</option>
+                    <option value="2015" {% if year == '2015' %}selected{% endif %}>2015</option>
+                </select>
             </div>
             <table class="reg-info">
                 <tr>
@@ -14,82 +19,32 @@
                     <td>实到金额</td>
                     <td>差额</td>
                 </tr>
+                {% for month in months %}
+                {% for record in records %}
+                {% if month == record.month %}
                 <tr>
-                    <th>1月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
+                    <td>{{ month }} 月份</td>
+                    <td>{{ record.deserve|default:'0' }}</td>
+                    <td>{{ record.actual|default:'0' }}</td>
+                    <td>{{ record.balance|default:'0' }}</td>
                 </tr>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
                 <tr>
-                    <th>2月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                <tr>
-                    <th>3月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
+                    <td>总计</td>
+                    <td>{{ deserve_sum }}</td>
+                    <td>{{ actual_sum }}</td>
+                    <td>{{ balance_sum }}</td>
                 </tr>
-                <tr>
-                    <th>4月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>5月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>6月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>7月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>8月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>9月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>10月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>11月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>12月</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
-                <tr>
-                    <th>总计</th>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                    <td>&nbsp</td>
-                </tr>
+            </table>
+            <a href="/company/property/" style="margin-left:600px;"><button>返回</button></a>
         </div>
+{% endblock %}
+{% block extra_script %}
+<script type="text/javascript">
+    $("#select_year").change(function(){
+        window.location.href = '/company/property/detail/?id={{ company_id }}&year=' + $(this).val();
+    });
+</script>
 {% endblock %}

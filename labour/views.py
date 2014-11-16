@@ -6,8 +6,7 @@ import xlrd
 import random
 import time
 import logging
-
-from datetime import datetime
+import datetime
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -31,7 +30,7 @@ def index(request, template_name="labour/index.html"):
     """ 管理员登陆页面"""
     user = request.user
     inner_ip = request.META['REMOTE_ADDR']
-    login_time = datetime.now()
+    login_time = datetime.datetime.now()
     return render(request, template_name, {
         'user': user,
         'inner_ip': inner_ip,
@@ -428,7 +427,7 @@ def base_insurance(request, employee_id, form_class, template_name):
 def statistics(request, statis_type='all', template_name='labour/labour_statistics.html'):
     """ 劳务信息统计"""
     user = request.user
-    today = datetime.now()
+    today = datetime.datetime.now()
     is_contract = None
     is_employee = None
     extra_kwargs = {}
@@ -450,7 +449,7 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today, **extra_kwargs_contract).count()
         probation_count = Contract.objects.filter(probation_end__lt=today, **extra_kwargs_contract).count()
         employee_list = EmployeeProfile.objects.filter(**extra_kwargs)
-        year = datetime.now().year
+        year = datetime.datetime.now().year
         retire_count = 0
         for employee in employee_list:
             try:
@@ -489,7 +488,7 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
     elif statis_type == 'industrial':
         profiles = EmployeeProfile.objects.filter(industrial_payment_end__lt=today)
         is_employee = True
-    elif statis_type == 'unemployeed':
+    elif statis_type == 'unemployed':
         profiles = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today)
         is_employee = True
     elif statis_type == 'reserved':

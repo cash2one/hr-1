@@ -17,7 +17,8 @@ class SoftDeletionModel(models.Model):
     updated = models.DateTimeField('更新时间', default=datetime.datetime.now()) 
 
     class Meta:
-        abstract = True 
+        abstract = True
+        ordering = ['-created']
 
     def save(self, *args, **kwargs):
         self.updated = datetime.datetime.now()
@@ -51,6 +52,9 @@ class LoginLog(SoftDeletionModel):
     outer_ip = models.CharField('外网地址', max_length=20, default=None, null=True)
     result = models.CharField('登录结果', max_length=20, default=None, null=True)
 
+    class Meta:
+        ordering = ['-created']
+
 
 class UserAction(SoftDeletionModel):
     """ 用户操作行为记录"""
@@ -67,7 +71,7 @@ class UserAction(SoftDeletionModel):
     modified_id = models.CharField('被操作对象id', max_length=20, default=None, null=True)
     action = models.CharField('操作行为', max_length=20, default=None, null=True)
 
-
+    
 class CompanyProfile(SoftDeletionModel):
     """ 公司信息"""
     profile = models.OneToOneField(UserProfile, related_name='profile', default=None, null=True)
@@ -167,10 +171,16 @@ class Contract(SoftDeletionModel):
     real_salary = models.CharField('实发工资', max_length=10)
     salary_provide = models.DateTimeField('工资发放时间', default=None, null=True)
 
-def ActionLog(SoftDeletionModel):
-    """ 行为日志"""
-    pass
 
+class MoneyRecord(SoftDeletionModel):
+    """ 工资管理"""
+    company = models.OneToOneField(CompanyProfile, related_name='money')
+    deserve = models.CharField('应得资金', max_length=10, default=0, null=True, blank=True)
+    actual = models.CharField('实际所得资金', max_length=10, default=0, null=True, blank=True)
+    balance = models.CharField('差额', max_length=10, default=None, null=True, blank=True)
+
+    year = models.IntegerField('年份', default=2014, null=True, blank=True)
+    month = models.IntegerField('月份', default=1, null=True, blank=True)
 
 
 

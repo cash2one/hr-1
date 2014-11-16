@@ -21,6 +21,7 @@
                         <td>姓名</td>
                         <td>重置密码</td>
                         <td>禁用</td>
+                        <td>删除</td>
                     </tr>
                     {% for user in users %}
                     <tr>
@@ -33,6 +34,7 @@
                         {% else %}
                         <td><button name="active" value="{{ user.id }}" style="color:red">解禁</button></td>
                         {% endif %}
+                        <td><button name="del" value="{{ user.id }}" >删除</button></td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -91,10 +93,12 @@
                 dataType: "json",
                 data: _data,
                 success: function(Data){
-                    if(Data['result']){
+                  alert(Data['result']);
+                  alert(Data['result'] == 'true');
+
+                    if(Data['result'] == 'true'){
                       alert("用户" + Data['name'] + ",已禁用");
                       location.reload();
-
                     }
                 }
             });
@@ -114,7 +118,25 @@
                     if(Data['result']){
                       alert("用户" + Data['name'] + ",已解禁");
                       location.reload();
-
+                    }
+                }
+            });
+        }
+      }else if(name == "del"){
+        var b = confirm("是否确认删除该用户？");
+        if(b){
+          _data = {};
+          _data['user_id'] = user_id;
+          _data['update_type'] = 'del_user';
+          $.ajax({
+                url: "/manager/update/",
+                type: "post",
+                dataType: "json",
+                data: _data,
+                success: function(Data){
+                    if(Data['result']){
+                      alert("用户" + Data['name'] + ",已删除");
+                      location.reload();
                     }
                 }
             });

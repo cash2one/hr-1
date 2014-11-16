@@ -13,10 +13,10 @@
                 </tr>
                 {% for company in companys %}
                 <tr>
-                    <td class="reset_width bg-none">{{ company.name }}</td>
-                    <td>{{ company.money_sum }}</td>
-                    <td><span>{{ company.money_now }}</span></td>
-                    <td><button><a href="{% url "company.views.property_detail" %}" title="详情" style="color:#ffffff;">详情</a></button></td>
+                    <td class="reset_width bg-none">{{ company.company.name }}</td>
+                    <td>{{ company.deserve|default:'0' }}</td>
+                    <td><span>{{ company.actual|default:'0' }}</span></td>
+                    <td><a href="{% url "company.views.property_detail" %}?id={{ company.company.id }}" title="详情" style="color:#ffffff;"><button>详情</button></a></td>
                 </tr>
                 {% endfor %}
             </table>   

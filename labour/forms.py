@@ -156,7 +156,7 @@ class ContractForm(forms.ModelForm):
 
     def clean_real_salary(self):
         try:
-            int(self.cleaned_data['real_salary'])
+            float(self.cleaned_data['real_salary'])
         except ValueError:
             raise forms.ValidationError("请输入正确的实际工资")
         return self.cleaned_data['real_salary']

@@ -3,7 +3,6 @@
         <div class="w-right">
                 <table class="reg-info" style="clear:both;">
                     <tr>
-                        <td>选择</td>
                         <th>操作IP</th>
                         <td>操作账号</td>
                         <td>操作账号姓名</td>
@@ -12,7 +11,6 @@
                     </tr>
                     {% for action in actions %}
                     <tr>
-                        <td><input type="checkbox" name="select_action"/></td>
                         <td>{{ action.ip }}</td>
                         <td>{{ action.user.username }}</td>
                         <td>{{ action.user.account.name }}</td>

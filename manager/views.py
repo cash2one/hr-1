@@ -51,7 +51,7 @@ def update(request, template_name="manager/index.html"):
         if update_type == 'reset_pwd':
             update_user.set_password('111111')
             update_user.save()
-            data = {
+            Data = {
                 'result': True,
                 'name': update_user.username,
             }
@@ -63,13 +63,13 @@ def update(request, template_name="manager/index.html"):
                 modified_id=update_user.id,
                 action='重置密码',
             ).save()
-            data = u'user=%s, ModifyTable=User, action=重置密码, modified_username=%d'  % (request.user.username, update_user.username)
+            data = u'user=%s, ModifyTable=User, action=重置密码, modified_username=%s'  % (request.user.username, update_user.username)
             INFO_LOG.info(data)
-            return HttpResponse(json.dumps(data))
+            return HttpResponse(json.dumps(Data))
         elif update_type == 'disabled_user':
             update_user.is_active = False
             update_user.save()
-            data = {
+            Data = {
                 'result': True,
                 'name': update_user.username,
             }
@@ -81,13 +81,39 @@ def update(request, template_name="manager/index.html"):
                 modified_id=update_user.id,
                 action='禁止用户',
             ).save()
-            data = u'user=%s, ModifyTable=User, action=禁止用户, modified_username=%d'  % (request.user.username, update_user.username)
+            data = u'user=%s, ModifyTable=User, action=禁止用户, modified_username=%s'  % (request.user.username, update_user.username)
             INFO_LOG.info(data)
-            return HttpResponse(json.dumps(data))
+            return HttpResponse(json.dumps(Data))
+        elif update_type == 'del_user':
+            try:
+                account = UserProfile.objects.get(user=update_user)
+                if account.level == 1:
+                    company = CompanyProfile.objects.get(profile=account)
+                    company.profile = None
+                    company.save()
+            except UserProfile.DoesNotExist:
+                pass
+            
+            update_user.delete()
+            Data = {
+                'result': True,
+                'name': update_user.username,
+            }
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='User',
+                modified_type=0,
+                modified_id=update_user.id,
+                action='删除用户',
+            ).save()
+            data = u'user=%s, ModifyTable=User, action=删除用户, modified_username=%s'  % (request.user.username, update_user.username)
+            INFO_LOG.info(data)
+            return HttpResponse(json.dumps(Data))
         elif update_type == 'active_user':
             update_user.is_active = True
             update_user.save()
-            data = {
+            Data = {
                 'result': True,
                 'name': update_user.username,
             }
@@ -99,9 +125,9 @@ def update(request, template_name="manager/index.html"):
                 modified_id=update_user.id,
                 action='解禁用户',
             ).save()
-            data = u'user=%s, ModifyTable=User, action=解禁用户, modified_username=%d'  % (request.user.username, update_user.username)
+            data = u'user=%s, ModifyTable=User, action=解禁用户, modified_username=%s'  % (request.user.username, update_user.username)
             INFO_LOG.info(data)
-        return HttpResponse(json.dumps(data))
+        return HttpResponse(json.dumps(Data))
 
     self_id = user.id
     if username is None:
@@ -142,9 +168,9 @@ def add(request, form_class=UserAddForm, template_name='manager/user_add.html'):
 def login_log(request, template_name='manager/login_log.html'):
     """ 登录日志查看"""
     user = request.user
-    username = request.GET.get('username', None)
+    username = request.GET.get('username', '')
 
-    if username is None :
+    if username == '':
         login_list = LoginLog.objects.all()
     else:
         user_list = User.objects.filter(username__contains=username)
@@ -155,6 +181,7 @@ def login_log(request, template_name='manager/login_log.html'):
         'user': user,
         'login_logs': login_logs,
         'page_numbers': page_numbers,
+        'username': username,
     })
 
 
