@@ -68,15 +68,16 @@
                         <li title="企业资金管理"><a href="/company/property/" class="small_txt_tongji" id="property_m">企业资金管理</a></li>
                         <li title="工资管理">
                             <a class="small_txt" style="text-indent:75px;"><i></i>工资管理</a>
-                            <ul class="w-left-inner">
-                                <li class="inner_txt"><a href="/company/salary/" title="查询" style="color:#222222;margin-left:15px;">查询</a></li>
-                                <li class="inner_txt"><a href="bulk_modify.html" title="批量修改" style="color:#222222;">批量修改</a></li>
+                            <ul class="w-left-inner" style="{% block salary_level_1 %}{% endblock %}">
+                                <li class="inner_txt {% block salary_search %}{% endblock %}"><a href="/company/salary/" title="查询" style="color:#222222;margin-left:15px;">查询</a></li>
+                                <li class="inner_txt {% block salary_change %}{% endblock %}"><a href="bulk_modify.html" title="批量修改" style="color:#222222;">批量修改</a></li>
                             </ul>
                         </li>
                         <li title="社保资金管理">
-                            <a href="javascript:;" class="small_txt">社保资金管理</a>
-                            <ul class="w-left-inner">
-                                <li class="inner_txt"><a href="bulk_modify.html" title="批量修改" style="color:#222222;">批量修改</a></li>
+                            <a href="javascript:;" class="small_txt"><i></i>社保资金管理</a>
+                            <ul class="w-left-inner" style="{% block insurance_level_1 %}{% endblock %}">
+                                <li class="inner_txt {% block insurance_search %}{% endblock %}"><a href="/company/insurance/" title="查询" style="color:#222222;">查询</a></li>
+                                <li class="inner_txt {% block insurance_change %}{% endblock %}"><a href="bulk_modify.html" title="批量修改" style="color:#222222;">批量修改</a></li>
                             </ul>
                         </li>   
                     </ul>

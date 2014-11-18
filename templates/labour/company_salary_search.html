@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block property %}display:block {% endblock %} 
-{% block labour_none %}display:none {% endblock %} 
 {% block company_property %}display:block {% endblock %} 
+{% block labour_none %}display:none {% endblock %} 
+{% block salary_level_1 %}display:block {% endblock %} 
+{% block salary_search %}inner_on{% endblock %} 
 {% block container %} 
         <div class="w-right">
               <div class="th-input" style="width:42%">
@@ -59,6 +60,11 @@
                         <td>{{ employee.contract.salary_provide|date:'Y-m-d' }}</td>
                     </tr>
                     {% endfor %}
+                    {% if not employees %}
+                    <tr>
+                      <td colspan='7' style="height:40px;color:red">未搜索到数据</td>
+                    </tr>
+                  {% endif %}
                   </table>  
                   <div class="pager">
                      <span class="fr">
