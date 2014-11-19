@@ -107,7 +107,6 @@ def contract_add(request, employee_id, form_class=ContractForm, template_name="l
     """ 员工公司合同信息"""
     user = request.user
     filter_company = {}
-    print user.account.id
     if user.account.level == 1:
         filter_company['profile'] = user.account
     try:

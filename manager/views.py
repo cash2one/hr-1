@@ -91,7 +91,7 @@ def update(request, template_name="manager/index.html"):
                     company = CompanyProfile.objects.get(profile=account)
                     company.profile = None
                     company.save()
-            except UserProfile.DoesNotExist:
+            except Exception:
                 pass
             
             update_user.delete()

@@ -5,6 +5,7 @@ import datetime
 import xlwt
 import xlrd
 import logging
+import simplejson as json
 
 from django.shortcuts import render
 from django.contrib import messages
@@ -12,6 +13,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum
 
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
@@ -25,39 +27,69 @@ from django.shortcuts import render
 
 INFO_LOG = logging.getLogger('info')
 
+@csrf_exempt
 @login_required
 def property(request, template_name='labour/company_property.html'):
     """ 企业资金管理"""
+    filter_company = {}
+    if request.user.account.level == 1:
+        filter_company['company'] = request.user.account.profile
+
     today = datetime.datetime.now()
     year = today.year
     month = today.month
 
-    if not MoneyRecord.objects.filter(year=year, month=month).exists():
-        company_list = CompanyProfile.objects.all()
-        for company in company_list:
-            employee_count = EmployeeProfile.objects.filter(company=company).count()
-            contracts = Contract.objects.filter(employee__company=company)
-            employee_salary_sum = 0.0
-            for contract in contracts:
-                employee_salary_sum = employee_salary_sum + float(contract.real_salary)
-            deserve = float(company.service_cost) * employee_count + employee_salary_sum
-            actual = 0.0
-            balance = 0.0
-            history_balance = MoneyRecord.objects.filter(company=company, year=year)
-            for history in history_balance:
-                balance = balance + float(history.balance)
-
-            balance = balance + actual - deserve
-            MoneyRecord(
-                company=company,
-                deserve=str(deserve),
-                actual=str(actual),
-                balance=str(balance),
-                year=year,
-                month=month,
+    if request.method == 'POST':
+        company_id = request.POST.get('company_id', None)
+        actual = request.POST.get('actual', None)
+        if company_id:
+            record = MoneyRecord.objects.get(company__id=company_id, year=year, month=month)
+            record.actual = actual
+            record.balance = str(float(record.actual) - float(record.deserve))
+            record.save()
+            Data = {
+                'result': True,
+            }
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='工资管理表',
+                modified_type=1,
+                modified_id=record.id,
+                action='公司实到金额',
             ).save()
+            data = u'操作员=%s, ModifyTable=MoneyRecord, action=公司实到金额, money=%s'  % (request.user.username, actual)
+            INFO_LOG.info(data)
 
-    money_list = MoneyRecord.objects.filter(year=year, month=month)
+            return HttpResponse(json.dumps(Data))
+
+    else:
+        if not MoneyRecord.objects.filter(year=year, month=month).exists():
+            company_list = CompanyProfile.objects.all()
+            for company in company_list:
+                employee_count = EmployeeProfile.objects.filter(company=company).count()
+                contracts = Contract.objects.filter(employee__company=company)
+                employee_salary_sum = 0.0
+                for contract in contracts:
+                    employee_salary_sum = employee_salary_sum + float(contract.real_salary)
+                deserve = float(company.service_cost) * employee_count + employee_salary_sum
+                actual = 0.0
+                balance = 0.0
+                history_balance = MoneyRecord.objects.filter(company=company, year=year)
+                for history in history_balance:
+                    balance = balance + float(history.balance)
+
+                balance = balance + actual - deserve
+                MoneyRecord(
+                    company=company,
+                    deserve=str(deserve),
+                    actual=str(actual),
+                    balance=str(balance),
+                    year=year,
+                    month=month,
+                ).save()
+
+    money_list = MoneyRecord.objects.filter(year=year, month=month, **filter_company)
 
     companys, page_numbers = adjacent_paginator(money_list, request.GET.get('page', 1))
 
@@ -103,6 +135,11 @@ def property_detail(request, template_name='labour/company_property_detail.html'
 def salary(request, template_name='labour/company_salary_search.html'):
     """ 个人工资搜索"""
     search_args = {}
+    filter_company = {}
+    if request.user.account.level == 1:
+        filter_company['pk'] = request.user.account.profile.id
+        search_args['company__id'] = request.user.account.profile.id
+
 
     name = request.GET.get('name', '')
     id_no = request.GET.get('id_no', '')
@@ -143,7 +180,7 @@ def salary(request, template_name='labour/company_salary_search.html'):
                 INFO_LOG.info(data)
 
     employee_list = EmployeeProfile.objects.filter(company__isnull=False, **search_args)
-    companys = CompanyProfile.objects.all()
+    companys = CompanyProfile.objects.filter(**filter_company)
     employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
 
     # 导出
@@ -235,6 +272,10 @@ def salary(request, template_name='labour/company_salary_search.html'):
 def insurance(request, template_name='labour/company_insurance_search.html'):
     """ 保险搜索"""
     search_args = {}
+    filter_company = {}
+    if request.user.account.level == 1:
+        filter_company['pk'] = request.user.account.profile.id
+        search_args['company__id'] = request.user.account.profile.id
 
     name = request.GET.get('name', '')
     id_no = request.GET.get('id_no', '')
@@ -287,7 +328,7 @@ def insurance(request, template_name='labour/company_insurance_search.html'):
                 INFO_LOG.info(data)
 
     employee_list = EmployeeProfile.objects.filter(company__isnull=False, **search_args)
-    companys = CompanyProfile.objects.all()
+    companys = CompanyProfile.objects.filter(**filter_company)
     employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
 
     # 导出

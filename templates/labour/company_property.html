@@ -6,17 +6,17 @@
         <div class="w-right">
              <table class="reg-info">
                 <tr>
-                    <th class="reset_width bg-none">单位名称</th>
+                    <th class="reset_width bg-none" style="width:20px;">单位名称</th>
                     <td>本月应到金额</td>
                     <td>本月实到金额</td>
                     <td>历史到账情况</td>
                 </tr>
-                {% for company in companys %}
+                {% for record in companys %}
                 <tr>
-                    <td class="reset_width bg-none">{{ company.company.name }}</td>
-                    <td>{{ company.deserve|default:'0' }}</td>
-                    <td><span>{{ company.actual|default:'0' }}</span></td>
-                    <td><a href="{% url "company.views.property_detail" %}?id={{ company.company.id }}" title="详情" style="color:#ffffff;"><button>详情</button></a></td>
+                    <td class="reset_width bg-none" >{{ record.company.name }}</td>
+                    <td>{{ record.deserve|default:'0' }}</td>
+                    <td><span>{{ record.actual|default:'0' }}</span><button style="margin-left:10px;" name="change" value="{{ record.company.id }}">修改</button></td>
+                    <td><a href="{% url "company.views.property_detail" %}?id={{ record.company.id }}" title="详情" style="color:#ffffff;"><button>详情</button></a></td>
                 </tr>
                 {% endfor %}
             </table>   
@@ -36,4 +36,35 @@
                    第{{ companys.number }}页/共{{ companys.paginator.num_pages }}页
                 </div>                          
         </div>
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+$(function(){
+    $("button[name=change]").click(function(){
+      var company_id = $(this).val();
+      $(this).parent().html("<input type='text' name='update' id='s'/>").show();
+      $(document).keyup(function(event){
+        if(event.keyCode ==13){
+          _data = {};
+          _data['company_id'] = company_id;
+          _data['actual'] = $("#s").attr('value');
+          $.ajax({
+                url: "/company/property/",
+                type: "post",
+                dataType: "json",
+                data: _data,
+                success: function(Data){
+                    if(Data['result']){
+                      alert("本月实到金额已保存");
+                      location.reload();
+                    }
+                }
+            });
+        }
+      });
+    });
+});
+
+</script>
 {% endblock %}
