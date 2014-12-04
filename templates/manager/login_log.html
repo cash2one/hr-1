@@ -24,8 +24,8 @@
                       <th>{{ log.user.username }}</th>
                       <td>{{ log.user.account.name }}</td>
                       <td>{{ log.created|date:'Y-m-d H:i:s' }}</td>
-                      <td>{{ log.inner_ip }}</td>
                       <td>{{ log.outer_ip }}</td>
+                      <td>{{ log.inner_ip }}</td>
                       <td>{{ log.result }}</td>
                   </tr>
                   {% endfor %}

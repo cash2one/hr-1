@@ -4,6 +4,7 @@
 import logging
 import re
 import urllib2
+import datetime
 
 from django import forms
 
@@ -49,10 +50,11 @@ class LoginForm(forms.Form):
     def clean(self):
         if self.errors:
             return
-
-        inner_ip = self._request.META['REMOTE_ADDR']
-        outer_ip = re.search('\d+\.\d+\.\d+\.\d+',urllib2.urlopen("http://www.whereismyip.com").read()).group(0)
-            
+        import socket
+        inner_ip = socket.gethostbyname(socket.gethostname())
+        # outer_ip = self._request.META['REMOTE_ADDR']
+        outer_ip = urllib2.urlopen('https://enabledns.com/ip').read()
+        # inner_ip = re.search('\d+\.\d+\.\d+\.\d+',urllib2.urlopen("http://www.whereismyip.com").read()).group(0)
         user = User.objects.get(username=self.cleaned_data['username'])
         if not user.check_password(self.cleaned_data['password']):
             log = LoginLog(
@@ -60,7 +62,8 @@ class LoginForm(forms.Form):
                 inner_ip=inner_ip,
                 outer_ip=outer_ip,
                 result=u'密码错误',
-                )
+                created=datetime.datetime.now(),
+            )
             log.save()
             data = u'user=%s, action=login, result=%s' % (user.username, log.result)
             LOGIN_LOG.info(data)

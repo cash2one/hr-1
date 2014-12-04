@@ -36,8 +36,8 @@ class UserProfile(SoftDeletionModel):
 
     LEVEL_CHOICES = (
         (MANAGER, '后台管理员'),
-        (ADMIN, '普通管理员'),
-        (COMPANY, '公司'),
+        (ADMIN, '一达员工'),
+        (COMPANY, '企业人员'),
     )
 
     user = models.OneToOneField(User, related_name='account')
