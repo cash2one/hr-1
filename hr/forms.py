@@ -77,6 +77,7 @@ class LoginForm(forms.Form):
                     inner_ip=inner_ip,
                     outer_ip=outer_ip,
                     result=u'成功',
+                    created=datetime.datetime.now(),
                 )
                 log.save()
                 data = u'user=%s, action=login, result=%s' % (user.username, log.result)
@@ -87,6 +88,7 @@ class LoginForm(forms.Form):
                     inner_ip=inner_ip,
                     outer_ip=outer_ip,
                     result=u'账号冻结',
+                    created=datetime.datetime.now(),
                 )
                 log.save()
                 data = u'user=%s, action=login, result=%s' % (user.username, log.result)
