@@ -14,6 +14,11 @@ from hr.forms import LoginForm
 
 def login(request, form_class=LoginForm, template_name='login.html'):
     """ 用户登录"""
+    if request.META.has_key('HTTP_X_FORWARDED_FOR'):  
+        ip =  request.META['HTTP_X_FORWARDED_FOR']  
+    else:
+        ip = request.META['REMOTE_ADDR']  
+    print ip
     if request.method == "POST":
         form = form_class(request, data=request.POST)
         if form.is_valid():

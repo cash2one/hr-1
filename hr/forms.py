@@ -57,7 +57,8 @@ class LoginForm(forms.Form):
         #outer_ip = ipgetter.myip()
         #outer_ip = urllib2.urlopen('https://enabledns.com/ip').read()
         # inner_ip = re.search('\d+\.\d+\.\d+\.\d+',urllib2.urlopen("http://www.whereismyip.com").read()).group(0)
-        outer_ip = urllib2.urlopen("http://myip.dnsdynamic.org/").read()
+        outer_ip = self._request.META['REMOTE_ADDR']
+        #outer_ip = urllib2.urlopen("http://myip.dnsdynamic.org/").read()
         user = User.objects.get(username=self.cleaned_data['username'])
         if not user.check_password(self.cleaned_data['password']):
             log = LoginLog(
