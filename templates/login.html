@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static "style/login_style.css" %}">
 	<link rel="stylesheet" type="text/css" href="{% static "style/bootstrap.min.css" %}">
 </head>
-<body>
+<body onload="detectBrowser()">
 	<div id="wrap">
 	  <div class="main">
 	  	 <img src="{% static "images/login_logo.png" %}" alt="一达人力资源" width="527" height="50" class="logo" />
@@ -56,5 +56,19 @@
 	</div>
 	<script type="text/javascript" src="{% static "script/jquery.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "script/verify.js" %}"></script>
+	<script type="text/javascript">
+		function detectBrowser(){
+          var browser=navigator.appName
+          var b_version=navigator.appVersion
+          var ua = navigator.userAgent.toLowerCase();
+          if (window.ActiveXObject)
+            var v = ua.match(/msie ([\d.]+)/)[1]
+            if(v=="6.0" || v == "7.0" | v == "8.0" | v == "9.0"){
+              alert("浏览器版本过低！")
+              window.location.href = "/chrome/"
+            }
+
+        }
+	</script>
 </body>
 </html>

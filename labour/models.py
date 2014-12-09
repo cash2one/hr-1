@@ -174,7 +174,7 @@ class Contract(SoftDeletionModel):
 
 class MoneyRecord(SoftDeletionModel):
     """ 工资管理"""
-    company = models.OneToOneField(CompanyProfile, related_name='money')
+    company = models.ForeignKey(CompanyProfile, related_name='money')
     deserve = models.CharField('应得资金', max_length=10, default=0, null=True, blank=True)
     actual = models.CharField('实际所得资金', max_length=10, default=0, null=True, blank=True)
     balance = models.CharField('差额', max_length=10, default=None, null=True, blank=True)

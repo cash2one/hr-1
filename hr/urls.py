@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^manager/', include('manager.urls')),
     
     url(r'^$', 'hr.views.login'),
+    url(r'^chrome/$', 'hr.views.test'),
     url(r'^logout/', 'hr.views.logout'),
 
 )

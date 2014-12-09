@@ -12,6 +12,11 @@ from django.contrib.auth.decorators import login_required
 from labour.models import UserProfile
 from hr.forms import LoginForm
 
+
+def test(request, template_name='test.html'):
+    return render(request, template_name)
+
+
 def login(request, form_class=LoginForm, template_name='login.html'):
     """ 用户登录"""
     if request.META.has_key('HTTP_X_FORWARDED_FOR'):  

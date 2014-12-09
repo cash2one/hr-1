@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ month }} 月份</td>
                     <td>{{ record.deserve|default:'0' }}</td>
-                    <td>{{ record.actual|default:'0' }}</td>
+                    <td>{{ record.actual|default:'0' }}<button style="margin-left:10px;" name="{{ year }}:{{ month }}" value="{{ record.company.id }}">修改</button></td>
                     <td>{{ record.balance|default:'0' }}</td>
                 </tr>
                 {% endif %}
@@ -45,6 +45,34 @@
 <script type="text/javascript">
     $("#select_year").change(function(){
         window.location.href = '/company/property/detail/?id={{ company_id }}&year=' + $(this).val();
+    });
+    $("button").click(function(){
+        var n = $(this).attr("name");
+        if(n.indexOf('{{year}}')!=-1){
+          var company_id = $(this).val();
+          var _date = $(this).attr("name");
+          $(this).parent().html("<input type='text' name='update' id='s'/>").show();
+          $(document).keyup(function(event){
+            if(event.keyCode ==13){
+              _data = {};
+              _data['company_id'] = company_id;
+              _data['date'] = _date;
+              _data['actual'] = $("#s").attr('value');
+              $.ajax({
+                    url: "/company/property/detail/?id={{ company_id }}&year={{year}}",
+                    type: "post",
+                    dataType: "json",
+                    data: _data,
+                    success: function(Data){
+                        if(Data['result']){
+                          alert("该月实到金额已保存");
+                          location.reload();
+                        }
+                    }
+                });
+            }
+          });
+      }
     });
 </script>
 {% endblock %}

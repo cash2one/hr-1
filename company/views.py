@@ -64,9 +64,10 @@ def property(request, template_name='labour/company_property.html'):
             return HttpResponse(json.dumps(Data))
 
     else:
-        if not MoneyRecord.objects.filter(year=year, month=month).exists():
-            company_list = CompanyProfile.objects.all()
-            for company in company_list:
+        company_list = CompanyProfile.objects.all()
+        for company in company_list:
+            if not MoneyRecord.objects.filter(year=year, month=month, company=company).exists():
+
                 employee_count = EmployeeProfile.objects.filter(company=company).count()
                 contracts = Contract.objects.filter(employee__company=company)
                 employee_salary_sum = 0.0
@@ -75,9 +76,9 @@ def property(request, template_name='labour/company_property.html'):
                 deserve = float(company.service_cost) * employee_count + employee_salary_sum
                 actual = 0.0
                 balance = 0.0
-                history_balance = MoneyRecord.objects.filter(company=company, year=year)
-                for history in history_balance:
-                    balance = balance + float(history.balance)
+                #history_balance = MoneyRecord.objects.filter(company=company, year=year)
+                #for history in history_balance:
+                #    balance = balance + float(history.balance)
 
                 balance = balance + actual - deserve
                 MoneyRecord(
@@ -98,7 +99,7 @@ def property(request, template_name='labour/company_property.html'):
         'page_numbers': page_numbers,
     })
 
-
+@csrf_exempt
 @login_required
 def property_detail(request, template_name='labour/company_property_detail.html'):
     """ 该公司资金详情"""
@@ -108,6 +109,34 @@ def property_detail(request, template_name='labour/company_property_detail.html'
         company = CompanyProfile.objects.get(pk=company_id)
     except CompanyProfile.DoesNotExist:
         return HttpResponseRedirect(reverse('company.views.property'))
+
+    if request.method == 'POST':
+        company_id = request.POST.get('company_id', None)
+        actual = request.POST.get('actual', None)
+        date = request.POST.get('date', None)
+        year = date.split(':')[0]
+        month = date.split(':')[1]
+        print year, month
+        if company_id:
+            record = MoneyRecord.objects.get(company__id=company_id, year=year, month=month)
+            record.actual = actual
+            record.balance = str(float(record.actual) - float(record.deserve))
+            record.save()
+            Data = {
+                'result': True,
+            }
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='工资管理表',
+                modified_type=1,
+                modified_id=record.id,
+                action='公司实到金额',
+            ).save()
+            data = u'操作员=%s, ModifyTable=MoneyRecord, action=公司实到金额, money=%s'  % (request.user.username, actual)
+            INFO_LOG.info(data)
+
+            return HttpResponse(json.dumps(Data))
 
     record_list = MoneyRecord.objects.filter(company=company, year=year)
     deserve_sum = 0.0
