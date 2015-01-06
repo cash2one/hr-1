@@ -163,7 +163,7 @@
                             {% if employee.is_fired == 0 %}
                               <font id="f1"> 无 </font>
                             {% endif %}
-                            <input type="text" class="txt calendar" id="startDate2" style="display:{% if employee.is_fired == 0 %}none{% else %}block{% endif %};" value="{{ employee.fired_date|default:'无' }}"/>
+                            <input type="text" class="txt calendar" id="startDate2" style="display:{% if employee.is_fired == 0 %}none{% else %}block{% endif %};" name="fired_date" value="{{ employee.fired_date|default:'无' }}"/>
                           </td>
                           <td>
                             {% if employee.is_fired == 0 %}

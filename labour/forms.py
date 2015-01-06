@@ -82,7 +82,7 @@ class EmployeeProfileForm(forms.ModelForm):
 
     def clean(self):
         if self.errors:
-            print self.errors
+            return
         return self.cleaned_data
 
     def save(self, request, commit=True):

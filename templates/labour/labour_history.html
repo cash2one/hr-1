@@ -36,7 +36,7 @@
                   </tr>
                   {% for employee in employees %}
                   <tr>
-                      <th><input type="checkbox" name="all_person" class="h37"></th>
+                      <th><input type="checkbox" name="all_person" class="h37" value="{{ employee.id }}"></th>
                       <td> {{ employee.name }} </td>
                       <td> {{ employee.id_no }} </td>
                       <td> {{ employee.company.name }} </td>

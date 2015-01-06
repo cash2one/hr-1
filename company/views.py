@@ -116,7 +116,6 @@ def property_detail(request, template_name='labour/company_property_detail.html'
         date = request.POST.get('date', None)
         year = date.split(':')[0]
         month = date.split(':')[1]
-        print year, month
         if company_id:
             record = MoneyRecord.objects.get(company__id=company_id, year=year, month=month)
             record.actual = actual
@@ -253,10 +252,16 @@ def salary(request, template_name='labour/company_salary_search.html'):
             y_count += 1
             ws.write(x_count, y_count, employee.company.name, style)
             y_count += 1
-            ws.write(x_count, y_count, employee.contract.month_salary, style)
-            y_count += 1
-            ws.write(x_count, y_count, employee.contract.real_salary, style)
-            y_count += 1
+            try:
+                ws.write(x_count, y_count, employee.contract.month_salary, style)
+                y_count += 1
+                ws.write(x_count, y_count, employee.contract.real_salary, style)
+                y_count += 1
+            except:
+                ws.write(x_count, y_count, '无', style)
+                y_count += 1
+                ws.write(x_count, y_count, '无', style)
+                y_count += 1
             ws.write(x_count, y_count, employee.endowment_payment_self, style)
             y_count += 1
             ws.write(x_count, y_count, employee.health_payment_self, style)
@@ -397,21 +402,17 @@ def insurance(request, template_name='labour/company_insurance_search.html'):
             y_count += 1
             ws.write(x_count, y_count, employee.company.name, style)
             y_count += 1
-            ws.write(x_count, y_count, employee.contract.month_salary, style)
+            ws.write(x_count, y_count, str(employee.endowment_payment_end)[:10], style)
             y_count += 1
-            ws.write(x_count, y_count, employee.contract.real_salary, style)
+            ws.write(x_count, y_count, str(employee.health_payment_end)[:10], style)
             y_count += 1
-            ws.write(x_count, y_count, employee.endowment_payment_self, style)
+            ws.write(x_count, y_count, str(employee.born_payment_end)[:10], style)
             y_count += 1
-            ws.write(x_count, y_count, employee.health_payment_self, style)
+            ws.write(x_count, y_count, str(employee.industrial_payment_end)[:10], style)
             y_count += 1
-            ws.write(x_count, y_count, employee.born_payment_self, style)
+            ws.write(x_count, y_count, str(employee.unemployed_payment_end)[:10], style)
             y_count += 1
-            ws.write(x_count, y_count, employee.industrial_payment_self, style)
-            y_count += 1
-            ws.write(x_count, y_count, employee.unemployed_payment_self, style)
-            y_count += 1
-            ws.write(x_count, y_count, employee.reserved_payment_self, style)
+            ws.write(x_count, y_count, str(employee.reserved_payment_end)[:10], style)
             y_count = 0
             x_count += 1
             
