@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from labour.models import EmployeeProfile, Contract, CompanyProfile
 
-IMPORT_FILE_TYPES = ['.xls', ]
+IMPORT_FILE_TYPES = ['.xls', '.xlsx']
 
 class EmployeeProfileForm(forms.ModelForm):
     """ 公司员工信息表单"""
@@ -424,12 +424,38 @@ class ReservedForm(forms.ModelForm):
   
 class LabourImportForm(forms.Form):
     """ 职员信息批量插入"""
-    labour_import = forms.FileField(required= True, label= u"Upload the Excel file to import to the system.")
+    labour_import = forms.FileField(required= True, error_messages={'required': '请选择文件'},label= u"Upload the Excel file to import to the system.")
 
-    def clean_input_excel(self):
+    def clean_labour_import(self):
         input_excel = self.cleaned_data['labour_import']
         extension = os.path.splitext( input_excel.name )[1]
         if not (extension in IMPORT_FILE_TYPES):
-            raise forms.ValidationError("请输入正确的excel格式文件")
+            raise forms.ValidationError("请输入正确的excel格式文件, xls、xlsx")
+        else:
+            return input_excel
+
+
+class SalaryImportForm(forms.Form):
+    """ 工资信息批量修改"""
+    salary_import = forms.FileField(required= True, error_messages={'required': '请选择文件'}, label= u"Upload the Excel file to import to the system.")
+
+    def clean_salary_import(self):
+        input_excel = self.cleaned_data['salary_import']
+        extension = os.path.splitext( input_excel.name )[1]
+        if not (extension in IMPORT_FILE_TYPES):
+            raise forms.ValidationError("请输入正确的excel格式文件, xls、xlsx")
+        else:
+            return input_excel
+
+
+class ShebaoImportForm(forms.Form):
+    """ 社保信息批量修改"""
+    shebao_import = forms.FileField(required= True, error_messages={'required': '请选择文件'}, label= u"Upload the Excel file to import to the system.")
+
+    def clean_shebao_import(self):
+        input_excel = self.cleaned_data['shebao_import']
+        extension = os.path.splitext( input_excel.name )[1]
+        if not (extension in IMPORT_FILE_TYPES):
+            raise forms.ValidationError("请输入正确的excel格式文件, xls、xlsx")
         else:
             return input_excel

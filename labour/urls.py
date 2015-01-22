@@ -35,6 +35,10 @@ urlpatterns = patterns('labour.views',
 
     # 上传导入职员
     url(r'^import/$', 'labour_import'),
+    # 批量修改工资
+    url(r'^salary/import/$', 'salary_import'),
+    # 批量修改社保
+    url(r'^shebao/import/$', 'shebao_import'),
 
     # 导出职员信息
     url(r'^export/$', 'labour_export'),

@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
 from labour.models import EmployeeProfile, UserProfile, CompanyProfile, Contract
 from labour.forms import HealthForm, BornForm, UnemployeedForm, ReservedForm
-from labour.forms import LabourImportForm, IndustrialForm, EndowmentForm
+from labour.forms import LabourImportForm, IndustrialForm, EndowmentForm, SalaryImportForm, ShebaoImportForm
 from labour.models import UserAction
 
 from utils import adjacent_paginator
@@ -976,3 +976,122 @@ def labour_export(request):
     response['Content-Disposition'] = 'attachment; filename=劳务职员信息.xls'
     book.save(response)
     return response
+
+
+@login_required
+def salary_import(request, form_class=SalaryImportForm, template_name='labour/salary_import.html'):
+    """ 工资批量修改"""
+    not_exist = {}
+    msg = None
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES)
+        if form.is_valid():
+            input_excel = request.FILES['salary_import']
+            data = xlrd.open_workbook(file_contents=input_excel.read())
+            table = data.sheets()[0]
+            nrows = table.nrows
+            for i in range(1, nrows):
+                line = table.row_values(i)
+                if not EmployeeProfile.objects.filter(name=line[0], id_no=line[1]).exists():
+                    not_exist[line[1]] = line[0]
+            if len(not_exist) == 0 :
+                for i in range(1, nrows):
+                    e = EmployeeProfile.objects.get(name=line[0], id_no=line[1])
+                    try:
+                        print line[3]
+                        print line[4]
+                        e.contract.month_salary = str(line[3])
+                        e.contract.real_salary = str(line[4])
+                        e.contract.save()
+                    except:
+                        not_exist[line[1]] = line[0] + u"(不存在工资信息)"
+                        break
+                msg = '导入成功'
+
+
+    else:
+        form = form_class()
+    return render(request, template_name, {
+        'form': form,
+        'not_exist': not_exist,
+        'msg': msg
+    })
+
+
+@login_required
+def shebao_import(request, form_class=ShebaoImportForm, template_name='labour/shebao_import.html'):
+    """ 社保批量修改"""
+    not_exist = {}
+    msg = None
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES)
+        if form.is_valid():
+            input_excel = request.FILES['shebao_import']
+            data = xlrd.open_workbook(file_contents=input_excel.read())
+            table = data.sheets()[0]
+            nrows = table.nrows
+            print nrows
+            for i in range(1, nrows):
+                line = table.row_values(i)
+                print line
+                if not EmployeeProfile.objects.filter(name=line[0], id_no=int(line[1]), health_card=int(line[2])).exists():
+                    not_exist[int(line[1])] = str(line[0]) + str(int(line[2]))
+                    print not_exist
+            if len(not_exist) == 0:
+                for i in range(1, nrows):
+                    e = EmployeeProfile.objects.get(name=line[0], id_no=int(line[1]), health_card=int(line[2]))
+                    # 医疗
+                    if line[3]:
+                        e.health_payment_base = str(int(line[3]))
+                    if line[4]:
+                        e.health_payment_company = str(int(line[4]))
+                    if line[5]:
+                        e.health_payment_self = str(int(line[5]))
+                    # 生育
+                    if line[6]:
+                        e.born_payment_base = str(int(line[6]))
+                    if line[7]:
+                        e.born_payment_company = str(int(line[7]))
+                    if line[8]:
+                        e.born_payment_self = str(int(line[8]))
+                    # 工伤
+                    if line[9]:
+                        e.industrial_payment_base = str(int(line[9]))
+                    if line[10]:
+                        e.industrial_payment_company = str(int(line[10]))
+                    if line[11]:
+                        e.industrial_payment_self = str(int(line[11]))
+                    # 失业
+                    if line[12]:
+                        e.unemployed_payment_base = str(int(line[12]))
+                    if line[13]:
+                        e.unemployed_payment_company = str(int(line[13]))
+                    if line[14]:
+                        e.unemployed_payment_self = str(int(line[14]))
+                    # 公积金
+                    if line[15]:
+                        e.reserved_payment_base = str(int(line[15]))
+                    if line[16]:
+                        e.reserved_payment_company = str(int(line[16]))
+                    if line[17]:
+                        e.reserved_payment_self = str(int(line[17]))
+                    # 养老
+                    if line[18]:
+                        e.endowment_payment_base = str(int(line[18]))
+                    if line[19]:
+                        e.endowment_payment_company = str(int(line[19]))
+                    if line[20]:
+                        e.endowment_payment_self = str(int(line[20]))
+                    msg = '导入成功'
+                    e.save()
+    else:
+        form = form_class()
+    return render(request, template_name, {
+        'form': form,
+        'not_exist': not_exist,
+        'msg': msg
+    })
+

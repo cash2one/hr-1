@@ -78,7 +78,7 @@ a:hover.link-style1 { color:#fff; }
 	.w-left a.small_txt_tongji:hover{color:#ffffff; background-color:#369;}
 
     
-	.w-right{ float:left; width:800px;border-left:#e2e2e2 1px solid;}
+	.w-right{ float:left; width:800px;border-left:#e2e2e2 1px solid;height: 800px;}
 	.w-right .th-y{ width:97%; margin:10px auto 0;border:#b6c0c9 1px solid; padding-bottom:5px;}
 	.w-right .th-y h5{ background:#D3D3D3; :#222222; text-align:center; font-size:15px; padding:5px 0;}
 	.w-right .th-button{ text-align:center; width:100%; margin:10px 0;}

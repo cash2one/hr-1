@@ -1,0 +1,46 @@
+{% extends 'base.html' %}  
+{% block company_property %}display:block {% endblock %} 
+{% block labour_none %}display:none {% endblock %} 
+{% block salary_level_1 %}display:block {% endblock %} 
+{% block salary_import %}inner_on{% endblock %} 
+{% block container %} 
+        <div class="w-right" style="margin-top:-200px;">
+            <div class="bulk_reset">
+                {% for error in form.salary_import.errors %}
+                <div class="alert alert-block alert-error">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                {% if msg %}
+                <div class="alert alert-block alert-info">
+                    {{ msg }}
+                </div>
+                {% endif %}
+                <p>请按照正确格式进行批量录入</p>
+                <form action="." method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="salary_import"/>
+                    <button type="submit">批量录入</button>
+                </form>
+                <br>
+                {% if not_exist %}
+                <h4 style="color:red">不存在的职员</h4>
+                <br>
+                <table border="1">
+                    <tr>
+                        <th>姓名</th>
+                        <th>身份证号</th>
+                    </tr>
+                    {% for key, value in not_exist.items %}
+                    <tr>
+                        <td>{{ value }}</td>
+                        <td>{{ key }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                {% endif %}
+                <a href="/static/excel/工资批量修改模板.xls" style="margin-left:150px;">工资批量管理模板下载</a>
+            </div>
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}
