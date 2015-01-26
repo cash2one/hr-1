@@ -45,6 +45,7 @@ def employee_add(request, form_class=EmployeeProfileForm, template_name='labour/
 
     if request.method == "POST":
         form = form_class(request, data=request.POST)
+        print form.is_valid()
         if form.is_valid():
             employee = form.save(request)
             messages.info(request, '添加成功', extra_tags='employee_add_succ')

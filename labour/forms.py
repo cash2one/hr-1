@@ -38,6 +38,7 @@ class EmployeeProfileForm(forms.ModelForm):
     emergency_mobile = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '请输入紧急联系人电话'}), required=False)
 
     def clean_id_no(self):
+        print self.cleaned_data['id_no']
         if len(self.cleaned_data['id_no']) != 18:
             raise forms.ValidationError("身份证输入错误")
         if self.instance is not None:
@@ -49,10 +50,10 @@ class EmployeeProfileForm(forms.ModelForm):
 
         return self.cleaned_data['id_no']
 
-    #def clean_serial_id(self):
-    #    if EmployeeProfile.objects.filter(serial_id=self.cleaned_data['serial_id']).exclude(id=self.instance.id).exists():
-    #        raise forms.ValidationError("序列号已存在")
-    #    return self.cleaned_data['serial_id']
+    def clean_name(self):
+        if len(self.cleaned_data['name']) == 0:
+            raise forms.ValidationError("请输入姓名")
+        return self.cleaned_data['name']
 
     def clean_birth(self):
         if not self.cleaned_data['birth']:
@@ -82,7 +83,7 @@ class EmployeeProfileForm(forms.ModelForm):
 
     def clean(self):
         if self.errors:
-            return
+            return self.errors
         return self.cleaned_data
 
     def save(self, request, commit=True):
