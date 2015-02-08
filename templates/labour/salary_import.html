@@ -17,12 +17,16 @@
                 </div>
                 {% endif %}
                 <p>请按照正确格式进行批量录入</p>
-                <form action="." method="post" enctype="multipart/form-data">
+                <form action="." method="post" enctype="multipart/form-data" id="form_id">
                     {% csrf_token %}
                     <input type="file" name="salary_import"/>
-                    <button type="submit">批量录入</button>
+                    <button type="button" id="import" style="margin-top:20px;">批量录入</button>
+                    <button type="button" id="test" style="margin-left:220px;margin-top:-25px;">数据检测</button>
                 </form>
+                <a href="/static/excel/工资批量修改模板.xls" style="margin-left:150px;">工资批量管理模板下载</a>
+
                 <br>
+                <center>
                 {% if not_exist %}
                 <h4 style="color:red">不存在的职员</h4>
                 <br>
@@ -39,8 +43,21 @@
                     {% endfor %}
                 </table>
                 {% endif %}
-                <a href="/static/excel/工资批量修改模板.xls" style="margin-left:150px;">工资批量管理模板下载</a>
+                </center>
             </div>
         </div>
     </div><!--wrapper END-->
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+    $("#import").click(function(){
+        $("#form_id").attr('action', '.?sign=import');
+        $("#form_id").submit();
+    });
+    $("#test").click(function(){
+        $("#form_id").attr('action', '.?sign=test');
+        $("#form_id").submit();
+    });
+</script>
 {% endblock %}

@@ -51,6 +51,7 @@
                            
                         </li>
                         <li title="邮件发送"><a href="{% url "manager.views.send_email" %}" class="small_txt_tongji">邮件发送</a></li>
+                        <li title="修改密码"><a href="{% url "hr.views.reset_pwd" %}?role=0" class="small_txt_tongji">修改密码</a></li>
                     </ul>
         </div>
         {% block container %}

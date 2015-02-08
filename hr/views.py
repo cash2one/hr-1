@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
 from labour.models import UserProfile
-from hr.forms import LoginForm
+from hr.forms import LoginForm, ChangePwdForm
 
 
 def test(request, template_name='test.html'):
@@ -47,3 +47,24 @@ def logout(request):
     from django.contrib.auth import logout
     logout(request)
     return HttpResponseRedirect('/')
+
+
+@login_required
+def reset_pwd(request, form_class=ChangePwdForm, template_name='reset_pwd.html'):
+    """ 重置密码"""
+    msg = None
+    role = request.GET.get('role')
+    if role == '0':
+        template_name = 'reset_pwd_manager.html'
+    if request.method == 'POST':
+        form = form_class(request, data=request.POST)
+        if form.is_valid():
+            msg = '重置密码成功'
+            form.save()
+    else:
+        form = form_class(request)
+    return render(request, template_name, {
+        'form': form,
+        'msg': msg,
+        'role': role,
+    })

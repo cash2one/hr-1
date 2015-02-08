@@ -9,16 +9,19 @@
                     {{ message }}
                 </div>
                 {% endfor %}
-	            <p>请按照正确格式进行批量录入</p>
+	            <p>请按照正确格式进行批量录入, 需录入所有数据</p>
                 <form action="." method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="file" name="labour_import"/>
                     <button type="submit">批量录入</button>
                 </form>
+                <a href="/static/excel/导入模板.xlsx" style="margin-left:200px;">导入模板下载</a>
+                
                 <br>
                 {% if name_id_no %}
                 <h3 style="color:red">已存在的职员</h3>
                 <br>
+                <center>
                 <table border="1">
                     <tr>
                         <th>姓名</th>
@@ -31,8 +34,8 @@
                     </tr>
                     {% endfor %}
                 </table>
+                </center>
                 {% endif %}
-                <a href="/static/excel/导入模板.xlsx" style="margin-left:200px;">导入模板下载</a>
             </div>
         </div>
     </div><!--wrapper END-->

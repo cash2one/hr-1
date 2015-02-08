@@ -1,0 +1,49 @@
+{% extends 'manager/base.html' %}
+{% block container %}
+
+        <div class="w-right">   
+            <div class="th-input-manage" style="width:400px;">
+                  {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% elif form.old_pwd.errors %}
+                    {% for error in form.old_pwd.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+
+                  {% elif form.new_pwd.errors %}
+                    {% for error in form.new_pwd.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+
+                  {% elif form.confirm_pwd.errors %}
+                    {% for error in form.confirm_pwd.errors %}
+                      <div class="alert alert-error">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+
+                  {% if msg %}
+                    <div class="alert alert-block alert-success">
+                        {{ msg }}
+                    </div>
+                  {% endif %}
+              <form action=".?role=0" method="post">
+                {% csrf_token %}
+                <span>旧&nbsp;密&nbsp;码&nbsp;</span><input class="txt_input" type="password" name="old_pwd" value=""/><br/>
+                <span>新&nbsp;密&nbsp;码&nbsp;</span><input class="txt_input" type="password" name="new_pwd" value=""/><br/>
+                <span>再次输入</span><input class="txt_input" type="password" name="confirm_pwd" value=""/><br/>
+                
+                <button type="submit" class="make_sure">修改</button>
+              </form>
+            </div>  
+        </div>
+{% endblock %}

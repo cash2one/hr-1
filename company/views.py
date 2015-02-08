@@ -103,7 +103,9 @@ def property(request, template_name='labour/company_property.html'):
 @login_required
 def property_detail(request, template_name='labour/company_property_detail.html'):
     """ 该公司资金详情"""
-    year = request.GET.get('year', '2014')
+
+    year = request.GET.get('year', str(datetime.datetime.now().year))
+    print year
     company_id = request.GET.get('id')
     try:
         company = CompanyProfile.objects.get(pk=company_id)

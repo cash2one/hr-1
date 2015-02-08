@@ -425,7 +425,7 @@ class ReservedForm(forms.ModelForm):
   
 class LabourImportForm(forms.Form):
     """ 职员信息批量插入"""
-    labour_import = forms.FileField(required= True, error_messages={'required': '请选择文件'},label= u"Upload the Excel file to import to the system.")
+    labour_import = forms.FileField(required= True, error_messages={'required': '请选择文件'})
 
     def clean_labour_import(self):
         input_excel = self.cleaned_data['labour_import']

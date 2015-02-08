@@ -117,7 +117,7 @@ class ChangePwdForm(forms.Form):
 
     def clean(self):
         if self.errors:
-            return
+            return self.cleaned_data
         new_pwd = self.cleaned_data['new_pwd']
         confirm_pwd = self.cleaned_data['confirm_pwd']
         if len(new_pwd) == 0 or len(confirm_pwd) == 0:

@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'^$', 'hr.views.login'),
     url(r'^chrome/$', 'hr.views.test'),
     url(r'^logout/', 'hr.views.logout'),
+    url(r'^reset_pwd/', 'hr.views.reset_pwd'),
 
 )

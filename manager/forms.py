@@ -37,7 +37,9 @@ class UserAddForm(forms.Form):
             raise forms.ValidationError('请再次输入密码')
         elif name is None:
             raise forms.ValidationError('请输入姓名')
-        
+        elif len(pwd) < 6:
+            raise forms.ValidationError('密码最少为六位')
+
         if pwd != confirm:
             raise forms.ValidationError('两次输入的密码不同')
         return self.cleaned_data
