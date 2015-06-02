@@ -702,7 +702,7 @@ def format_value(value):
 def format_date(value):
     """ 格式化日期"""
     if value == 'None' or value == '':
-        return time.strftime('9999-01-01')
+        return time.strftime('2020-01-01')
     else:
         return time.strftime('%Y-%m-%d', time.localtime(value))
 
