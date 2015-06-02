@@ -602,73 +602,75 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             table = data.sheets()[0]
             nrows = table.nrows
             # 获取最大的id
-            if EmployeeProfile.objects.all().exists():
+            if not EmployeeProfile.objects.all().exists():
                 serial_id = random.randint(100000, 200000)
             else:
                 employee_last = EmployeeProfile.objects.all().order_by('-created')[0]
-                serial_id = str(int(employee_last.serial_id) + 1)
-            try:
-                for i in range(1, nrows):
-                    line = table.row_values(i)
-                    id_no = line[5]
-                    if id_no == '':
-                        continue
-                    if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
-                        name_id_no[id_no] = line[5]
+                serial_id = int(employee_last.serial_id) + 1
+            #try:
+            for i in range(1, nrows):
+                line = table.row_values(i)
+                id_no = line[5]
+                if id_no == '':
+                    continue
+                if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
+                    name_id_no[id_no] = line[5]
+                else:
+                    company_name = str(line[18].encode("utf-8"))
+                    if CompanyProfile.objects.filter(name=company_name).exists():
+                        company = CompanyProfile.objects.get(name=company_name)
                     else:
-                        company_name = str(line[18])
-                        if CompanyProfile.objects.filter(name=company_name).exists():
-                            company = CompanyProfile.objects.get(name=company_name)
-                        else:
-                            company = CompanyProfile(
-                                name=company_name
-                            )
-                            company.save()
-
-                        employee = EmployeeProfile(
-                            company=company, serial_id=serial_id,
-                            name=format_value(line[0]), email=format_value(line[1]), sex=format_value(line[2]), nation=format_value(line[3]), birth=time.strftime('%Y-%m-%d', time.localtime(line[4])),
-                            id_no=format_value(line[5]), edu_level=format_value(line[6]), graduate=format_value(line[7]), profession=format_value(line[8]),
-                            residence_type=format_value(line[9]), residence_place=format_value(line[10]), now_address=format_value(line[11]),
-                            mobile=format_value(line[12]), emergency_name=format_value(line[13]), emergency_mobile=format_value(line[14]),
-                            is_fired=format_value(line[15]), fired_date=time.strftime('%Y-%m-%d', time.localtime(line[16])), fired_reason=format_value(line[17]),
-                            health_card=format_value(line[30]), health_payment_base=format_value(line[31]), health_payment_self=format_value(line[32]),
-                            health_payment_company=format_value(line[33]), health_payment_start=time.strftime('%Y-%m-%d', time.localtime(line[34])), health_payment_end=time.strftime('%Y-%m-%d', time.localtime(line[35])),
-                            born_payment_base=format_value(line[36]), born_payment_self=format_value(line[37]), born_payment_company=format_value(line[38]),
-                            born_payment_start=time.strftime('%Y-%m-%d', time.localtime(line[39])), born_payment_end=time.strftime('%Y-%m-%d', time.localtime(line[40])),
-                            industrial_payment_base=format_value(line[41]), industrial_payment_self=format_value(line[42]),
-                            industrial_payment_company=format_value(line[43]), industrial_payment_start=time.strftime('%Y-%m-%d', time.localtime(line[44])), industrial_payment_end=time.strftime('%Y-%m-%d', time.localtime(line[45])),
-                            unemployed_payment_base=format_value(line[46]), unemployed_payment_self=format_value(line[47]), unemployed_payment_company=format_value(line[48]),
-                            unemployed_payment_start=time.strftime('%Y-%m-%d', time.localtime(line[49])), unemployed_payment_end=time.strftime('%Y-%m-%d', time.localtime(line[50])),
-                            reserved_payment_base=format_value(line[51]), reserved_payment_self=format_value(line[52]), reserved_payment_company=format_value(line[53]),
-                            reserved_payment_start=time.strftime('%Y-%m-%d', time.localtime(line[54])), reserved_payment_end=time.strftime('%Y-%m-%d', time.localtime(line[55])),
-                            endowment_card=format_value(line[56]), endowment_payment_base=format_value(line[57]), endowment_payment_self=format_value(line[58]),
-                            endowment_payment_company=format_value(line[59]), endowment_payment_start=time.strftime('%Y-%m-%d', time.localtime(line[60])), endowment_payment_end=time.strftime('%Y-%m-%d', time.localtime(line[61])),
+                        company = CompanyProfile(
+                            name=company_name
                         )
-                        serial_id += 1
-                        employee.save()
+                        company.save()
+                    print line[4]
+                    employee = EmployeeProfile(
+                        company=company, serial_id=serial_id,
+                        name=format_value(line[0]), email=format_value(line[1]), sex=format_value(line[2]), nation=format_value(line[3]), birth=format_date(line[4]),
+                        id_no=format_value(line[5]), edu_level=format_value(line[6]), graduate=format_value(line[7]), profession=format_value(line[8]),
+                        residence_type=format_value(line[9]), residence_place=format_value(line[10]), now_address=format_value(line[11]),
+                        mobile=format_value(line[12]), emergency_name=format_value(line[13]), emergency_mobile=format_value(line[14]),
+                        is_fired=format_value(line[15]),
+                        fired_date=format_date(line[16]),
+                        fired_reason=format_value(line[17]),
+                        health_card=format_value(line[30]), health_payment_base=format_value(line[31]), health_payment_self=format_value(line[32]),
+                        health_payment_company=format_value(line[33]), health_payment_start=format_date(line[34]), health_payment_end=format_date(line[35]),
+                        born_payment_base=format_value(line[36]), born_payment_self=format_value(line[37]), born_payment_company=format_value(line[38]),
+                        born_payment_start=format_date(line[39]), born_payment_end=format_date(line[40]),
+                        industrial_payment_base=format_value(line[41]), industrial_payment_self=format_value(line[42]),
+                        industrial_payment_company=format_value(line[43]), industrial_payment_start=format_date(line[44]), industrial_payment_end=format_date(line[45]),
+                        unemployed_payment_base=format_value(line[46]), unemployed_payment_self=format_value(line[47]), unemployed_payment_company=format_value(line[48]),
+                        unemployed_payment_start=format_date(line[49]), unemployed_payment_end=format_date(line[50]),
+                        reserved_payment_base=format_value(line[51]), reserved_payment_self=format_value(line[52]), reserved_payment_company=format_value(line[53]),
+                        reserved_payment_start=format_date(line[54]), reserved_payment_end=format_date(line[55]),
+                        endowment_card=format_value(line[56]), endowment_payment_base=format_value(line[57]), endowment_payment_self=format_value(line[58]),
+                        endowment_payment_company=format_value(line[59]), endowment_payment_start=format_date(line[60]), endowment_payment_end=format_date(line[61]),
+                    )
+                    serial_id += 1
+                    employee.save()
 
-                        contract = Contract(
-                            employee=employee, job_type=format_value(line[19]), company_protocal_start=time.strftime('%Y-%m-%d', time.localtime(line[20])), company_protocal_end=time.strftime('%Y-%m-%d', time.localtime(line[21])),
-                            labour_contract_start=time.strftime('%Y-%m-%d', time.localtime(line[22])), labour_contract_end=time.strftime('%Y-%m-%d', time.localtime(line[23])),
-                            probation_start=time.strftime('%Y-%m-%d', time.localtime(line[24])), probation_end=time.strftime('%Y-%m-%d', time.localtime(line[25])),
-                            bank_no=format_value(line[26]), month_salary=format_value(line[27]), real_salary=format_value(line[28]),
-                            salary_provide=time.strftime('%Y-%m-%d', time.localtime(line[29])),
-                        )
-                        contract.save()
+                    contract = Contract(
+                        employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
+                        labour_contract_start=format_date(line[22]), labour_contract_end=format_date(line[23]),
+                        probation_start=format_date(line[24]), probation_end=format_date(line[25]),
+                        bank_no=format_value(line[26]), month_salary=format_value(line[27]), real_salary=format_value(line[28]),
+                        salary_provide=format_date(line[29]),
+                    )
+                    contract.save()
 
-                        UserAction(
-                            user=request.user,
-                            ip=request.META['REMOTE_ADDR'],
-                            table_name='雇员信息表',
-                            modified_type=2,
-                            modified_id=None,
-                            action='导入',
-                        ).save()
-                        data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
-                        INFO_LOG.info(data)
-            except:
-                messages.error(request, '导入格式错误, 需填写所有数据')
+                    UserAction(
+                        user=request.user,
+                        ip=request.META['REMOTE_ADDR'],
+                        table_name='雇员信息表',
+                        modified_type=2,
+                        modified_id=None,
+                        action='导入',
+                    ).save()
+                    data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
+                    INFO_LOG.info(data)
+            #except:
+            #    messages.error(request, '导入格式错误, 需填写所有数据')
     else:
         form = form_class()
 
@@ -690,7 +692,20 @@ def format_value(value):
         elif value.encode('utf-8') == '否':
             return False
         else:
-            return value
+            try:
+                int(value)
+                return value[0:18]
+            except:
+                return value
+
+
+def format_date(value):
+    """ 格式化日期"""
+    if value == 'None' or value == '':
+        return time.strftime('9999-01-01')
+    else:
+        return time.strftime('%Y-%m-%d', time.localtime(value))
+
 
 @login_required
 def labour_export(request):
