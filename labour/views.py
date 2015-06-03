@@ -591,6 +591,40 @@ def labour_history(request, template_name='labour/labour_history.html'):
 @login_required
 def labour_import(request, form_class=LabourImportForm, template_name='labour/labour_import.html'):
     """ excel导入"""
+    def format_value(value):
+        """ 将导入的excel数据格式化"""
+        if value == 'None' or value == '':
+            return '无'
+        else:
+            if isinstance(value, float):
+                return str(value)
+            elif value.encode('utf-8') == '是':
+                return True
+            elif value.encode('utf-8') == '否':
+                return False
+            else:
+                try:
+                    int(value)
+                    return value[0:18]
+                except:
+                    return value
+
+    def format_date(value):
+        """ 格式化日期"""
+        if value == 'None' or value == '':
+            year = int(line[5][6:10])
+            month = int(line[5][10:12])
+            day = int(line[5][12:14])
+            is_man = int(line[5][-2])
+            if is_man % 2 == 0:
+                ages = 60
+            else:
+                ages = 50
+            return datetime.date(year+ages, month, day)
+        else:
+            start = datetime.date(1900, 1, 1)
+            return start + datetime.timedelta(int(value)-2)
+
     # 已存在的人员字典
     name_id_no = {} 
 
@@ -668,6 +702,8 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                     ).save()
                     data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
                     INFO_LOG.info(data)
+
+                    
             #except:
             #    messages.error(request, '导入格式错误, 需填写所有数据')
     else:
@@ -677,34 +713,6 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
         'form': form,
         'name_id_no': name_id_no,
     })
-
-
-def format_value(value):
-    """ 将导入的excel数据格式化"""
-    if value == 'None' or value == '':
-        return '无'
-    else:
-        if isinstance(value, float):
-            return str(value)
-        elif value.encode('utf-8') == '是':
-            return True
-        elif value.encode('utf-8') == '否':
-            return False
-        else:
-            try:
-                int(value)
-                return value[0:18]
-            except:
-                return value
-
-
-def format_date(value):
-    """ 格式化日期"""
-    if value == 'None' or value == '':
-        return time.strftime('2020-01-01')
-    else:
-        start = datetime.date(1900, 1, 1)
-        return start + datetime.timedelta(int(value)-2)
 
 
 @login_required
