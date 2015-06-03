@@ -624,7 +624,6 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                             name=company_name
                         )
                         company.save()
-                    print line[4]
                     employee = EmployeeProfile(
                         company=company, serial_id=serial_id,
                         name=format_value(line[0]), email=format_value(line[1]), sex=format_value(line[2]), nation=format_value(line[3]), birth=format_date(line[4]),
@@ -704,7 +703,8 @@ def format_date(value):
     if value == 'None' or value == '':
         return time.strftime('2020-01-01')
     else:
-        return time.strftime('%Y-%m-%d', time.localtime(value))
+        start = datetime.date(1900, 1, 1)
+        return start + datetime.timedelta(int(value)-2)
 
 
 @login_required
