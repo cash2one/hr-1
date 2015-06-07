@@ -5,7 +5,11 @@
 {% block container %} 
         <div class="w-right">
               <br>
-              <center><h3>-----{{ company.name }}员工信息----</h3></center>
+              <form action=".?export=all">
+                {% csrf_token %}
+                <center><h3>-----{{ company.name }}员工信息----</h3></center>
+                <input type="hidden" name="company_name" value="{{ company.name }}"/>
+              </form>
               <br>
               <div class="alert alert-error" id="error" style="display:none"></div>
               <table class="reg-info">
@@ -26,7 +30,12 @@
                       <td> {{ employee.id_no|default:'无' }} </td>
                       <td> {{ employee.health_card|default:'无' }} </td>
                       <td> {{ employee.company.name|default:'无' }} </td>
-                      <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">员工详情</button></a></td>
+                      <td>
+                      {% if employee.is_active %}<a href="/labour/employee/{{ employee.id }}/show/"><button type="button">员工详情</button></a>
+                      {% else %}
+                      未通过审核
+                      {% endif %}
+                      </td>
 
                   </tr>
                   {% endfor %}
@@ -39,6 +48,7 @@
                 <div class="pager">
                  <span class="fr">
                      <button type="button" id="export">导出</button>
+                     <button type="button" id="cancel_contract">解除合同</button>
                      <!--<button>缴费管理</button>-->
                     <a href="/labour/companys/" title="返回"><button type="button">返回</button></a>
 

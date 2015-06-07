@@ -304,3 +304,21 @@ def send_email(request, template_name='manager/send_mail.html'):
     return render(request, template_name, {
         'companys': companys,
     })
+
+
+@login_required
+@csrf_exempt
+def employee_audit(request, template_name='manager/employee_audit.html'):
+    """ 企业人员导入，人员审核"""
+    if request.method == 'POST':
+        employees_id = request.POST.get('employees_id')
+        id_arr = employees_id.lstrip(',').split(',')
+        EmployeeProfile.objects.filter(id__in=id_arr).update(is_active=True)
+        return HttpResponse(json.dumps({'result': True}))
+
+    empoyees_list = EmployeeProfile.objects.filter(is_active=False)
+    empoyees, page_numbers = adjacent_paginator(empoyees_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'employees': empoyees,
+    })

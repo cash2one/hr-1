@@ -9,14 +9,15 @@
                     {{ message }}
                 </div>
                 {% endfor %}
-	            <p>请按照正确格式进行批量录入, 需录入所有数据</p>
+                <p>请按照正确格式进行批量录入, 需录入所有数据</p>
                 <form action="." method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="file" name="labour_import"/>
                     <button type="submit">批量录入</button>
                 </form>
                 <a href="/static/excel/导入模板.xlsx" style="margin-left:200px;">导入模板下载</a>
-                
+                <p style="color:red">注意事项：1.日期不填写的条目，则根据年龄计算退休日期默认保存。</p>
+                <p style="color:red">2.姓名，身份证号为必填项；身份证必须为18位。</p>
                 <br>
                 {% if name_id_no %}
                 <h3 style="color:red">已存在的职员</h3>

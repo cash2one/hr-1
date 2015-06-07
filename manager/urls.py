@@ -11,4 +11,8 @@ urlpatterns = patterns('manager.views',
     url(r'^login_log/$', 'login_log'),
     url(r'^user_action/$', 'user_action'),
     url(r'^send_email/$', 'send_email'),
+
+    # 人员审核
+    url(r'^audit/$', 'employee_audit'),
+
 )

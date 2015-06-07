@@ -7,12 +7,14 @@ import random
 import time
 import logging
 import datetime
+import simplejson as json
 
 from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 
 from labour.forms import EmployeeProfileForm, ContractForm, CompanyForm
@@ -702,8 +704,6 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                     ).save()
                     data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
                     INFO_LOG.info(data)
-
-                    
             #except:
             #    messages.error(request, '导入格式错误, 需填写所有数据')
     else:
@@ -724,11 +724,17 @@ def labour_export(request):
 
     if export is not None:
         employees_id = request.POST.get('employees_id')
+        if employees_id == "all":
+            company_id = request.POST.get('company_id')
+            employees = EmployeeProfile.objects.filter(company_id=company_id)
+        else:
+            employees_arr = employees_id.split(',')
+            employees_arr[0] = employees_arr[1]
+            employees = EmployeeProfile.objects.filter(id__in=employees_arr)
+
         item = request.POST.get('item')
-        employees_arr = employees_id.split(',')
         items = item.split(',')
-        employees_arr[0] = employees_arr[1]
-        employees = EmployeeProfile.objects.filter(id__in=employees_arr)
+
         x_count = 0
         y_count = 0
         insert_sign = None
@@ -1010,7 +1016,7 @@ def salary_import(request, form_class=SalaryImportForm, template_name='labour/sa
     if sign == 'test':
         book = xlwt.Workbook(encoding='utf-8')
         ws = book.add_sheet('数据测试')
-        styleRedBkg = xlwt.easyxf('pattern: pattern solid, fore_colour red; font: bold on;');
+        styleRedBkg = xlwt.easyxf('pattern: pattern solid, fore_colour red; font: bold on;')
         style = xlwt.XFStyle()
         font = xlwt.Font()
         font.name = 'SimSun'
@@ -1237,6 +1243,34 @@ def shebao_import(request, form_class=ShebaoImportForm, template_name='labour/sh
         'not_exist': not_exist,
         'msg': msg
     })
+
+
+@login_required
+@csrf_exempt
+def employee_cancel_contract(request):
+    """ 解除劳务合同"""
+    if request.method == 'POST':
+        employees_id = request.POST.get('employees_id')
+        id_arr = employees_id.lstrip(',').split(',')
+        print id_arr
+        employees = EmployeeProfile.objects.filter(id__in=id_arr)
+        for employee in employees:
+            employee.is_fired = True
+            employee.fired_date = datetime.datetime.now()
+            employee.fired_reason = '批量解除劳务合同'
+
+            employee.health_payment_end = datetime.datetime.now()
+            employee.endowment_payment_end = datetime.datetime.now()
+            employee.born_payment_end = datetime.datetime.now()
+            employee.industrial_payment_end = datetime.datetime.now()
+            employee.unemployed_payment_end = datetime.datetime.now()
+            employee.reserved_payment_end = datetime.datetime.now()
+
+            employee.save()
+
+        return HttpResponse(json.dumps({'result': True}))
+
+    return HttpResponse(json.dumps({'result': False}))
 
 
 def check_exists(obj, name, new):

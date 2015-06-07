@@ -42,6 +42,7 @@
                             <ul class="w-left-inner" style="{% block account %}{% endblock %}">
                                 <li class="inner_txt {% block update %}{% endblock %}"><a href="{% url "manager.views.update" %}" title="账号管理" style="color:#222222;">账号管理</a></li>
                                 <li class="inner_txt {% block add %}{% endblock %}"><a href="{% url "manager.views.add" %}" title="账号分配" style="color:#222222;">账号分配</a></li>
+                                <li class="inner_txt {% block audit %}{% endblock %}"><a href="{% url "manager.views.employee_audit" %}" title="人员审核" style="color:#222222;">人员审核</a></li>
                                 <li class="inner_txt {% block login %}{% endblock %}"><a href="{% url "manager.views.login_log" %}" title="登录历史" style="color:#222222;">登录历史</a></li>
                             </ul>
                         </li>
@@ -56,8 +57,13 @@
         </div>
         {% block container %}
         {% endblock %}
+        
     </div><!--wrapper-->
-    
+    <footer style="background-color:white;margin-bottom:1%">
+        <br>
+        <center>@copyright 一达人力资源 &nbsp;&nbsp;&nbsp;&nbsp;@技术支持 qq:356615636</center>
+        <br>
+    </footer>
 {% block script %}    
 <script type="text/javascript" src="{% static "script/jquery.min.js" %}"></script>
 <script type="text/javascript" src="{% static "script/lhgcalendar.min.js" %}"></script>

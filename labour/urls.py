@@ -12,8 +12,9 @@ urlpatterns = patterns('labour.views',
     url(r'^employee/(?P<employee_id>\d+)/update/$', 'employee_update'),
     url(r'^employee/(?P<employee_id>\d+)/show/$', 'employee_show'),
     url(r'^(?P<company_id>\d+)/employees/$', 'company_employees'),
+    url(r'^employee/cancel_contract/$', 'employee_cancel_contract'),
     url(r'^employees/$', 'employees'),
-    
+
     # 公司信息
     url(r'^company/add/$', 'company_add'),
     url(r'^company/(?P<company_id>\d+)/update/$', 'company_update'),

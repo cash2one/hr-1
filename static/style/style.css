@@ -78,7 +78,7 @@ a:hover.link-style1 { color:#fff; }
 	.w-left a.small_txt_tongji:hover{color:#ffffff; background-color:#369;}
 
     
-	.w-right{ float:left; width:800px;border-left:#e2e2e2 1px solid;height: 800px;}
+	.w-right{ float:left; width:800px;border-left:#e2e2e2 1px solid;height: 80%;}
 	.w-right .th-y{ width:97%; margin:10px auto 0;border:#b6c0c9 1px solid; padding-bottom:5px;}
 	.w-right .th-y h5{ background:#D3D3D3; :#222222; text-align:center; font-size:15px; padding:5px 0;}
 	.w-right .th-button{ text-align:center; width:100%; margin:10px 0;}
@@ -122,6 +122,14 @@ a:hover.link-style1 { color:#fff; }
 .colorbox_button2 a#sure{margin-right: 100px;background:#0090db;}
 .colorbox_button2 a#close{background:#b7b7b7;}
 .colorbox_delete2{background: url("/static/images/colorbox_delete.png") no-repeat left top;width:10px;height: 11px;position: absolute;right: 25px;top:20px;cursor: pointer;}
+
+.colorbox3{display:none;width:500px;height:242px;position: fixed;top:30%;left: 50%;margin-left:-250px;z-index: 1000;background: url("/static/images/colorbox_bg.png") no-repeat left top;}
+.colorbox3 p{font-size: 16px;color:#000000;width:450px;margin: 10px auto 0px 150px;}
+.colorbox_button3{width: 288px;height: 38px;margin: 60px auto 0px;}
+.colorbox_button3 a{display: inline-block;width: 92px;height:100%;line-height:38px;text-align: center;color: #fff;font-size: 18px;border-radius: 3px;-webkit-border-radius:3px;-moz-border-radius:3px;-ms-border-radius:3px;-o-border-radius:3px;}
+.colorbox_button3 a#company_export_sure{margin-right: 100px;background:#0090db;}
+.colorbox_button3 a#close{background:#b7b7b7;}
+.colorbox_delete3{background: url("/static/images/colorbox_delete.png") no-repeat left top;width:10px;height: 11px;position: absolute;right: 25px;top:20px;cursor: pointer;}
 
 #mask{
   background-color: #000000 ;

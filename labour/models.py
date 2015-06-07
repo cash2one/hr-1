@@ -104,6 +104,8 @@ class EmployeeProfile(SoftDeletionModel):
     emergency_name = models.CharField('紧急联系人', max_length=15, default=None, null=True, blank=True)
     emergency_mobile = models.CharField('紧急联系人电话', max_length=15, default=None, null=True, blank=True)
 
+    is_active = models.BooleanField('是否通过审核', default=False, blank=True)
+
     is_fired = models.BooleanField('是否解除劳动关系', default=False, blank=True)
     fired_date = models.DateTimeField('解除时间', default=None, null=True, blank=True)
     fired_reason = models.CharField('解除原因', max_length=100, default=None, null=True, blank=True)

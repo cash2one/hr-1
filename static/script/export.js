@@ -42,7 +42,61 @@ $("#sure").click(function(){
   }
 });
 
-$(".colorbox_delete2,#sure,#close").bind("click",function(){
+$(".colorbox_delete2, .colorbox_delete2, #sure, #close").bind("click",function(){
     //$("#mask").hide();
-    $(".colorbox2").hide();
+    $(".colorbox2, .colorbox3").hide();
+});
+
+// 单位查询一键导出员工, 导出项提示框
+$(".company_export").click(function(){
+    $(".colorbox3").show();
+    $("#export_company_id").val($(this).attr('value'));
+});
+
+$("#company_export_sure").click(function(){
+  var items_str = ''
+  $("input[name=items]").each(function() {
+    if($(this).attr("checked")){
+      items_str = items_str + "," + $(this).val();
+    }
+  });
+  if(items_str.length == 0){
+      $("#error").html("请选择要导出的条目").show();
+  }else{
+      $("#item_id").val(items_str);
+      $("#select_id").val('all');
+      $("#select_form").submit();
+  }
+});
+
+// 解除劳务合同
+$("#cancel_contract").click(function(){
+  var all_person = ''
+  $("input[name=all_person]").each(function() {
+    if($(this).attr("checked")){
+      all_person = all_person + "," + $(this).val();
+    }
+  });
+  if(all_person.length == 0){
+      $("#error").html("请选择要解除合同的人员").show();
+  }else{
+    var b = confirm('确认解除合同?');
+    if(b){
+        _data = {};
+        _data['employees_id'] = all_person;
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            data: _data,
+            url: '/labour/employee/cancel_contract/',
+            success: function(Data) {
+              if(Data['result']){
+                alert('已解除成功');
+              }else{
+                alert('解除失败');
+              }
+            }
+        });
+    }
+  }
 });

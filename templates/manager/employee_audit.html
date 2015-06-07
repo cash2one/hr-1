@@ -1,0 +1,55 @@
+{% extends 'manager/base.html'%}
+{% load staticfiles %}
+{% block account %}display:block{% endblock %}
+{% block audit %}inner_on{% endblock %}
+{% block container %} 
+        <div class="w-right">
+            <div class="alert alert-error" id="error" style="display:none"></div>
+            <table class="reg-info">
+                <tr>
+                    <th><button style="margin:5px 0.1em 5px 0px;" class="select_second">全选</button></th>
+                    <td>姓名</td>
+                    <td>性别</td>
+                    <td>身份证号</td>
+                    <td>所属公司</td>
+                </tr>
+                {% for employee in employees %}
+                <tr>
+                    <th><input type="checkbox" name="all_person" class="h37" value="{{ employee.id }}"/></th>
+                    <td> {{ employee.name }} </td>
+                    <td> {{ employee.sex|default:'无' }} </td>
+                    <td> {{ employee.id_no|default:'无' }} </td>
+                    <td> {{ employee.company.name|default:'无' }} </td>
+                </tr>
+                {% endfor %}
+                {% if not employees %}
+                  <tr>
+                    <td colspan='7' style="height:40px;color:red">未搜索到数据</td>
+                  </tr>
+                {% endif %}
+              </table> 
+              <div class="pager">
+                <span class="fr">
+                     <button type="button" id="audit">通过审核</button>
+                 </span>
+                <a href="?page=1">【首页】</a>
+                {% if employees.has_previous %}
+                    <a href="?page={{ employees.previous_page_number }}">【上一页】</a>
+                {% else %}
+                    <font style="color:grey">【上一页】</font>
+                {% endif %}
+                {% if employees.has_next %}
+                    <a href="?page={{ employees.next_page_number }}">【下一页】</a>
+                {% else %}
+                    <font style="color:grey">【下一页】</font>
+                {% endif %}
+                 <a href="?page={{ employees.paginator.num_pages }}">【尾页】</a>
+                 第{{ employees.number }}页/共{{ employees.paginator.num_pages }}页
+              </div>  
+
+  </div><!--wrapper END-->
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript" src="{% static "script/audit.js" %}"></script>
+{% endblock %}

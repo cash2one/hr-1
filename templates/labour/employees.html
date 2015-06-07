@@ -34,7 +34,12 @@
                       <td> {{ employee.id_no|default:'无' }} </td>
                       <td> {{ employee.health_card|default:'无' }} </td>
                       <td> {{ employee.company.name|default:'无' }} </td>
-                      <td><a href="/labour/employee/{{ employee.id }}/show/"><button type="button">详情</button></a></td>
+                      <td>
+                      {% if employee.is_active %}
+                        <a href="/labour/employee/{{ employee.id }}/show/"><button type="button">详情</button></a>
+                      {% else %}
+                      未通过审核
+                      {% endif %}
                   </tr>
                   {% endfor %}
                   {% if not employees %}
@@ -46,6 +51,7 @@
                 <div class="pager">
                    <span class="fr">
                        <button type="button" id="export">导出</button>
+                        <button type="button" id="cancel_contract">解除合同</button>
                    </span>
                    <a href="?page=1">【首页】</a>
                   {% if employees.has_previous %}
