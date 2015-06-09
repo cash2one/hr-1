@@ -683,7 +683,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         endowment_payment_company=format_value(line[59]), endowment_payment_start=format_date(line[60]), endowment_payment_end=format_date(line[61]),
                     )
                     serial_id += 1
-                    if request.user.account in (0, 1):
+                    if request.user.account.level in (0, 1):
                         employee.is_active = 1
                     employee.save()
 
