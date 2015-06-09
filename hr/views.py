@@ -42,6 +42,7 @@ def login(request, form_class=LoginForm, template_name='login.html'):
         'form': form,
     })
 
+
 def logout(request):
     """ 退出"""
     from django.contrib.auth import logout
@@ -68,3 +69,9 @@ def reset_pwd(request, form_class=ChangePwdForm, template_name='reset_pwd.html')
         'msg': msg,
         'role': role,
     })
+
+
+def log(request, template_name="develop_log.html"):
+    return render(request, template_name)
+
+

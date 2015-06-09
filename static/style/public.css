@@ -305,3 +305,44 @@ a:active {text-decoration: none;}	/* 选定的链接 */
 .alert-block p + p {
   margin-top: 5px;
 }
+
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: white;
+    border-color: green;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px 1px 1px 5px;
+    margin: 20px 0;
+    padding: 20px;
+    margin-left: 20px;
+}
+
+.label-success {
+    background-color: #5cb85c;
+}
+.label-default {
+    background-color: blue;
+}
+.label-danger {
+    background-color: red;
+}
+.label {
+    border-radius: 0.25em;
+    color: #fff;
+    display: inline;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0.2em 0.6em 0.3em;
+    text-align: center;
+    vertical-align: baseline;
+    white-space: nowrap;
+}

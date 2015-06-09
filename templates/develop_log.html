@@ -1,0 +1,79 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>一达人力资源_管理系统</title>
+
+<link href="{% static "style/reset.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "style/style.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "style/public.css" %}" rel="stylesheet" type="text/css" />
+<link href="{% static "style/lhgcalendar.css" %}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="top-area">
+        <div class="top">
+            <span class="rt" id="hl1"></span>           
+            <span id="hl2">
+                Hi，{{ user.account.name }}&nbsp;&nbsp;&nbsp;角色：[{% if user.account.level == 0%}系统管理员{% elif user.account.level == 1%}公司用户{% elif user.account.level == 2%}后台管理员{% endif %}]&nbsp;&nbsp;<a href="/logout/">退出</a>
+            </span>
+        </div>
+    </div><!--top-area-->
+    
+    <div class="logo-area">
+        <div class="logo"></div>
+    </div><!--logo-area-->
+
+    <div class="wrapper">   
+        <a href="javascript:;" onclick="javascript:history.go(-1)">返回主页</a>
+
+        <div class="bs-callout bs-callout-info">
+            <span class="label label-success" target="_blank">2015-06-06 22:15:17</span>
+            <span class="label label-default" target="_blank">完成</span>
+            企业账号权限，只能查看本企业人员！
+        </div>
+
+        <div class="bs-callout bs-callout-info">
+            <span class="label label-success" target="_blank">2015-06-06 22:15:17</span>
+            <span class="label label-default" target="_blank">完成</span>
+            在【单位查询】中增加一键导出 
+        </div>
+
+        <div class="bs-callout bs-callout-info">
+            <span class="label label-success" target="_blank">2015-06-06 22:15:17</span>
+            <span class="label label-default" target="_blank">完成</span>
+            所有页面增加批量解除劳务合同按钮
+        </div>
+
+        <div class="bs-callout bs-callout-info">
+            <span class="label label-success" target="_blank">2015-06-06 22:15:17</span>
+            <span class="label label-default" target="_blank">完成</span>
+            企业批量添加人员后 导入的人员要后台人员审批后才能入库。
+        </div>
+
+        <div class="bs-callout bs-callout-info">
+            <span class="label label-success" target="_blank">2015-06-06 22:15:17</span>
+            <span class="label label-default" target="_blank">完成</span>
+            企业批量添加人员后 导入的人员要后台人员审批后才能入库。
+        </div>
+
+        <div class="bs-callout bs-callout-info">
+            <span class="label label-success" target="_blank">2015-06-06 22:15:17</span>
+            <span class="label label-danger" target="_blank">未完成</span>
+            企业账号有导出操作时,系统自动给一达的邮箱发一份
+        </div>
+        
+    </div><!--wrapper END-->
+    <footer style="background-color:white;height:150px;">
+            <br>
+            <br>
+            <br>
+            <center>@copyright 一达人力资源 &nbsp;&nbsp;&nbsp;&nbsp;@技术支持 qq:356615636&nbsp;&nbsp;&nbsp;&nbsp;@<a href="/log/">开发日志</a></center>
+            <br>
+            <br>
+        </footer>
+
+</body>
+</html>
