@@ -25,7 +25,7 @@ a:hover.link-style1 { color:#fff; }
 .logo {margin:0 auto; width:895px; height:90px; background:url('/static/images/logo.png') no-repeat;}
 .admin_logo{margin:0 auto; width:899px; height:98px; background:url('/static/images/admin_logo.png') no-repeat;}
 /*整体*/
-.wrapper { width:980px; margin:20px auto 10px; overflow:hidden; background:#ffffff; }
+.wrapper { width:980px; margin:20px auto 10px; overflow:hidden; background:#ffffff;}
 	.w-left{ float:left; width:179px; height:100%;}
 	.w-left ul{width: 100%;}
 	.w-left li a.big_txt{font-size:18px;position:relative;display:inline-block;*display:block;width:100%;color:#222222; padding:8px 0px; cursor:pointer;border-bottom: 1px solid #e2e2e2;text-indent: 40px;text-align: left;}
@@ -104,7 +104,7 @@ a:hover.link-style1 { color:#fff; }
 .pager{ width:97%; margin:0 auto 10px;}
 .pager a{ color:#222222;}
 .pager a:hover{ color:red;}
-.bulk_reset{width:312px;margin: 0 auto;position: absolute;left:35%;top:50%;margin-left: -30px;margin-top: -30px;}
+.bulk_reset{width:312px;margin: 0 auto;position: absolute;left:35%;top:50%;margin-left: -30px;margin-top: -30px;height: 120px;}
 .bulk_reset button{display: block;margin: 0 auto;}
 .bulk_reset p{text-align: center;font-size: 14px;margin-bottom: 10px;color:#A9A9A9;}
 .colorbox{display:none;width:500px;height:222px;position: fixed;top:30%;left: 50%;margin-left:-250px;z-index: 1000;background: url("/static/images/colorbox_bg.png") no-repeat left top;}

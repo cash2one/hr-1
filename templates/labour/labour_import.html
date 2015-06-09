@@ -2,7 +2,7 @@
 {% block add %} display:block {% endblock %} 
 {% block employee_import %} inner_on {% endblock %} 
 {% block container %} 
-        <div class="w-right" style="height:260px;position:relative;">
+        <div class="w-right" style="position:relative;margin-top:-180px;height:500px;">
             <div class="bulk_reset">
                 {% for message in messages %}
                 <div class="alert alert-block alert-error">
@@ -20,22 +20,10 @@
                 <p style="color:red">2.姓名，身份证号为必填项；身份证必须为18位。</p>
                 <br>
                 {% if name_id_no %}
-                <h3 style="color:red">已存在的职员</h3>
-                <br>
-                <center>
-                <table border="1">
-                    <tr>
-                        <th>姓名</th>
-                        <th>身份证号</th>
-                    </tr>
+                <h3 style="color:red">已存在的职员身份证号</h3>
                     {% for key, value in name_id_no.items %}
-                    <tr>
-                        <td>{{ key }}</td>
-                        <td>{{ value }}</td>
-                    </tr>
+                        {{ value }},
                     {% endfor %}
-                </table>
-                </center>
                 {% endif %}
             </div>
         </div>
