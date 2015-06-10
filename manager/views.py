@@ -191,7 +191,7 @@ def user_action(request, template_name='manager/action_log.html'):
     user = request.user
     export = request.GET.get('export', None)
 
-    action_list = UserAction.objects.all()
+    action_list = UserAction.objects.all().order_by("-created")
     user_actions, page_numbers = adjacent_paginator(action_list, request.GET.get('page', 1))
 
     if export:

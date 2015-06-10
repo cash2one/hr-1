@@ -25,7 +25,7 @@ a:hover.link-style1 { color:#fff; }
 .logo {margin:0 auto; width:895px; height:90px; background:url('/static/images/logo.png') no-repeat;}
 .admin_logo{margin:0 auto; width:899px; height:98px; background:url('/static/images/admin_logo.png') no-repeat;}
 /*整体*/
-.wrapper { width:980px; margin:20px auto 10px; overflow:hidden; background:#ffffff;}
+.wrapper { width:980px; margin:20px auto 10px; overflow:hidden; background:#ffffff;min-height:100%;}
 	.w-left{ float:left; width:179px; height:100%;}
 	.w-left ul{width: 100%;}
 	.w-left li a.big_txt{font-size:18px;position:relative;display:inline-block;*display:block;width:100%;color:#222222; padding:8px 0px; cursor:pointer;border-bottom: 1px solid #e2e2e2;text-indent: 40px;text-align: left;}

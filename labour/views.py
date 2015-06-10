@@ -593,10 +593,10 @@ def labour_history(request, template_name='labour/labour_history.html'):
 @login_required
 def labour_import(request, form_class=LabourImportForm, template_name='labour/labour_import.html'):
     """ excel导入"""
-    def format_value(value):
+    def format_value(value, default='无'):
         """ 将导入的excel数据格式化"""
         if value == 'None' or value == '':
-            return '无'
+            return default
         else:
             if isinstance(value, float):
                 return str(value)
@@ -657,7 +657,8 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         company = CompanyProfile.objects.get(name=company_name)
                     else:
                         company = CompanyProfile(
-                            name=company_name
+                            name=company_name,
+                            service_cost=0,
                         )
                         company.save()
                     employee = EmployeeProfile(
@@ -691,21 +692,21 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
                         labour_contract_start=format_date(line[22]), labour_contract_end=format_date(line[23]),
                         probation_start=format_date(line[24]), probation_end=format_date(line[25]),
-                        bank_no=format_value(line[26]), month_salary=format_value(line[27]), real_salary=format_value(line[28]),
+                        bank_no=format_value(line[26]), month_salary=format_value(line[27], default=0), real_salary=format_value(line[28], default=0),
                         salary_provide=format_date(line[29]),
                     )
                     contract.save()
 
-                    UserAction(
-                        user=request.user,
-                        ip=request.META['REMOTE_ADDR'],
-                        table_name='雇员信息表',
-                        modified_type=2,
-                        modified_id=None,
-                        action='导入',
-                    ).save()
-                    data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
-                    INFO_LOG.info(data)
+            UserAction(
+                user=request.user,
+                ip=request.META['REMOTE_ADDR'],
+                table_name='雇员信息表',
+                modified_type=2,
+                modified_id=None,
+                action='导入',
+            ).save()
+            data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
+            INFO_LOG.info(data)
             #except:
             #    messages.error(request, '导入格式错误, 需填写所有数据')
     else:
