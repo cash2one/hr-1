@@ -82,6 +82,9 @@ class CompanyProfile(SoftDeletionModel):
     link_man_mobile = models.CharField('联系人电话', max_length=20)
     service_cost = models.CharField('服务费', max_length=20)
 
+    def get_employee_count(self):
+        return EmployeeProfile.objects.filter(company=self).count()
+
 
 class EmployeeProfile(SoftDeletionModel):
     """ 员工基本信息"""

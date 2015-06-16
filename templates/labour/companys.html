@@ -18,7 +18,7 @@
                 </thead>
                 {% for company in companys %}
             	<tr >
-                    <td style="height:40px">{{ company.name }}</td>
+                    <td style="height:40px">{{ company.name }}(共{{ company.get_employee_count }}人)</td>
                     <td>{{ company.address|slice:':6'|default:'无' }}...</td>
                     <td>
                         <a href="/labour/company/{{company.id}}/show/"><button type="button">公司详情</button></a>
