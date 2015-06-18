@@ -14,12 +14,14 @@
                 <thead>
                     <th>公司名称</th>
                     <th>地址</th>
+                    <th>员工总数(人)</th>
                     <th>详情</th>
                 </thead>
                 {% for company in companys %}
             	<tr >
-                    <td style="height:40px">{{ company.name }}(共{{ company.get_employee_count }}人)</td>
-                    <td>{{ company.address|slice:':6'|default:'无' }}...</td>
+                    <td style="height:40px;width:20%">{{ company.name }}</td>
+                    <td style="width:25%">{{ company.address|slice:':6'|default:'无' }}...</td>
+                    <td style="width:15%">{{ company.get_employee_count }}</td>
                     <td>
                         <a href="/labour/company/{{company.id}}/show/"><button type="button">公司详情</button></a>
                         <a href="/labour/{{company.id}}/employees/"><button type="button">员工详情</button></a>

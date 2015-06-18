@@ -15,6 +15,7 @@
               <table class="reg-info">
                   <tr>
                       <th><button style="margin:5px 0.1em 5px 0px;" class="select_second">全选</button></th>
+                      <td>列号</td>
                       <td>姓名</td>
                       <td>性别</td>
                       <td>身份证号</td>
@@ -25,6 +26,7 @@
                   {% for employee in employees %}
                   <tr>
                       <th><input type="checkbox" name="all_person" class="h37" value="{{ employee.id }}"/></th>
+                      <td>{{ forloop.counter }}</td>
                       <td> {{ employee.name }} </td>
                       <td> {{ employee.sex|default:'无' }} </td>
                       <td> {{ employee.id_no|default:'无' }} </td>
