@@ -622,7 +622,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 ages = 60
             else:
                 ages = 50
-            return datetime.date(year+ages, month, day)
+            return datetime.datetime(year+ages, month, day, 0, 1, 1)
         else:
             start = datetime.date(1900, 1, 1)
             return start + datetime.timedelta(int(value)-2) + datetime.timedelta(hours=1)
