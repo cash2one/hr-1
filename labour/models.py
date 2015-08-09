@@ -6,6 +6,7 @@ import datetime
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class SoftDeletionModel(models.Model):
     DELETE_STATUS_CHOICES = (
         (0, '正常'),
@@ -71,7 +72,7 @@ class UserAction(SoftDeletionModel):
     modified_id = models.CharField('被操作对象id', max_length=20, default=None, null=True)
     action = models.CharField('操作行为', max_length=20, default=None, null=True)
 
-    
+
 class CompanyProfile(SoftDeletionModel):
     """ 公司信息"""
     profile = models.OneToOneField(UserProfile, related_name='profile', default=None, null=True)
@@ -91,7 +92,7 @@ class EmployeeProfile(SoftDeletionModel):
     company = models.ForeignKey(CompanyProfile, default=None, null=True)
     serial_id = models.CharField('序号', max_length=20, default=None)
     name = models.CharField('姓名', max_length=10)
-    email = models.EmailField('邮箱', max_length=20)
+    email = models.CharField('邮箱', max_length=20, null=True)
     sex = models.CharField('性别', max_length=2)
     nation = models.CharField('民族', max_length=10, default=None, null=True, blank=True)
     birth = models.DateTimeField('出生日期', default=None, null=True, blank=True)

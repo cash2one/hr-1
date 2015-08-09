@@ -25,7 +25,7 @@ class EmployeeProfileForm(forms.ModelForm):
 
     #serial_id = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入序列号'}), error_messages={'required': '请输入序列号'})
     name = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入姓名'}), error_messages={'required': '请输入姓名'})
-    email = forms.EmailField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入邮箱'}), error_messages={'required': '请输入邮箱'})
+    email = forms.CharField(max_length=20, widget=forms.TextInput(attrs={'placeholder': '请输入邮箱'}), error_messages={'required': '请输入邮箱'})
     nation = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'placeholder': '请输入民族'}), required=False)
     id_no = forms.CharField(max_length=18, widget=forms.TextInput(attrs={'placeholder': '请输入身份证号'}), error_messages={'required': '请输入身份证号'})
 
@@ -60,16 +60,6 @@ class EmployeeProfileForm(forms.ModelForm):
             raise forms.ValidationError("请输入出生日期")
         return self.cleaned_data['birth']
    
-    def clean_mobile(self):
-        mobile = self.cleaned_data['mobile']
-        try:
-            int(mobile)
-            if len(mobile) > 11:
-                raise forms.ValidationError("联系电话位数输入错误")
-        except Exception:
-            raise forms.ValidationError("联系电话输入错误")
-        return mobile
-
     def clean_emergency_mobile(self):
         emergency_mobile = self.cleaned_data['emergency_mobile']
         if len(emergency_mobile) > 1:

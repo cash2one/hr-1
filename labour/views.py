@@ -440,16 +440,16 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         extra_kwargs_contract['employee__company'] = user.account.profile
 
     if statis_type == 'all':
-        endowment_count = EmployeeProfile.objects.filter(endowment_payment_end__lt=today, **extra_kwargs).count()
-        health_count = EmployeeProfile.objects.filter(health_payment_end__lt=today, **extra_kwargs).count()
-        born_count = EmployeeProfile.objects.filter(born_payment_end__lt=today, **extra_kwargs).count()
-        industrial_count = EmployeeProfile.objects.filter(industrial_payment_end__lt=today, **extra_kwargs).count()
-        unemployed_count = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today, **extra_kwargs).count()
-        reserved_count = EmployeeProfile.objects.filter(reserved_payment_end__lt=today, **extra_kwargs).count()
-        company_protocal_count = Contract.objects.filter(company_protocal_end__lt=today, **extra_kwargs_contract).count()
-        labour_contract_count = Contract.objects.filter(labour_contract_end__lt=today, **extra_kwargs_contract).count()
-        probation_count = Contract.objects.filter(probation_end__lt=today, **extra_kwargs_contract).count()
-        employee_list = EmployeeProfile.objects.filter(**extra_kwargs)
+        endowment_count = EmployeeProfile.objects.filter(is_fired=False, endowment_payment_end__lt=today, **extra_kwargs).count()
+        health_count = EmployeeProfile.objects.filter(is_fired=False, health_payment_end__lt=today, **extra_kwargs).count()
+        born_count = EmployeeProfile.objects.filter(is_fired=False, born_payment_end__lt=today, **extra_kwargs).count()
+        industrial_count = EmployeeProfile.objects.filter(is_fired=False, industrial_payment_end__lt=today, **extra_kwargs).count()
+        unemployed_count = EmployeeProfile.objects.filter(is_fired=False, unemployed_payment_end__lt=today, **extra_kwargs).count()
+        reserved_count = EmployeeProfile.objects.filter(is_fired=False, reserved_payment_end__lt=today, **extra_kwargs).count()
+        company_protocal_count = Contract.objects.filter(employee__is_fired=False, company_protocal_end__lt=today, **extra_kwargs_contract).count()
+        labour_contract_count = Contract.objects.filter(employee__is_fired=False, labour_contract_end__lt=today, **extra_kwargs_contract).count()
+        probation_count = Contract.objects.filter(employee__is_fired=False, probation_end__lt=today, **extra_kwargs_contract).count()
+        employee_list = EmployeeProfile.objects.filter(is_fired=False, **extra_kwargs)
         year = datetime.datetime.now().year
         retire_count = 0
         for employee in employee_list:
@@ -628,7 +628,8 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             return start + datetime.timedelta(int(value)-2)
 
     # 已存在的人员字典
-    name_id_no = {} 
+    name_id_no = {}
+    err_info = {}
 
     if request.method == 'POST':
         form = form_class(request.POST, request.FILES)
@@ -650,7 +651,11 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 if id_no == '':
                     continue
                 if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
-                    name_id_no[id_no] = line[5]
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'身份证已存在'
+                elif line[4] == '':
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'出生日期错误'
                 else:
                     company_name = str(line[18].encode("utf-8"))
                     if CompanyProfile.objects.filter(name=company_name).exists():
@@ -707,6 +712,40 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             ).save()
             data = u'user=%s, import_table=EmployeeProfile, action=导入' % (request.user.username)
             INFO_LOG.info(data)
+
+            # 反馈错误信息
+            book = xlwt.Workbook(encoding='utf-8')
+            ws = book.add_sheet('导入错误职员信息')
+            style = xlwt.XFStyle()
+            font = xlwt.Font()
+            font.name = 'SimSun'
+            style.font = font
+
+            ws.write(0, 0, '姓名', style)
+            ws.write(0, 1, '身份证号', style)
+            ws.write(0, 2, '错误信息', style)
+            ws.write(0, 3, '导入时间', style)
+
+            x, y = 1, 0
+            for k, v in name_id_no.items():
+                ws.write(x, y, v, style)
+                y += 1
+                ws.write(x, y, k, style)
+                y += 1
+                ws.write(x, y, err_info[k], style)
+                y += 1
+                ws.write(x, y, str(datetime.datetime.now())[:19], style)
+
+                x += 1
+                y = 0
+
+            print len(name_id_no)
+
+            response = HttpResponse(mimetype='application/vnd.ms-excel')
+            response['Content-Disposition'] = 'attachment; filename=导入职员错误信息.xls'
+            book.save(response)
+            return response
+
             #except:
             #    messages.error(request, '导入格式错误, 需填写所有数据')
     else:
