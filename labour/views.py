@@ -625,7 +625,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             return datetime.date(year+ages, month, day)
         else:
             start = datetime.date(1900, 1, 1)
-            return start + datetime.timedelta(int(value)-2)
+            return start + datetime.timedelta(int(value)-2) + datetime.timedelta(hours=1)
 
     # 已存在的人员字典
     name_id_no = {}
@@ -691,7 +691,11 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                     serial_id += 1
                     if request.user.account.level in (0, 1):
                         employee.is_active = 1
-                    employee.save()
+                    try:
+                        employee.save()
+                    except pytz.NonExistentTimeError:
+
+
 
                     contract = Contract(
                         employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
