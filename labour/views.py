@@ -653,6 +653,9 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
                     name_id_no[id_no] = line[0]
                     err_info[id_no] = u'身份证已存在'
+                elif str(id_no) > 18:
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'身份证位数错误'
                 elif line[4] == '':
                     name_id_no[id_no] = line[0]
                     err_info[id_no] = u'出生日期错误'
