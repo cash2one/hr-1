@@ -644,74 +644,77 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             else:
                 employee_last = EmployeeProfile.objects.all().order_by('-created')[0]
                 serial_id = int(employee_last.serial_id) + 1
-                for i in range(1, nrows):
-                    line = table.row_values(i)
-                    id_no = line[5]
-                    if id_no == '':
-                        continue
-                    if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
-                        name_id_no[id_no] = line[0]
-                        err_info[id_no] = u'身份证已存在'
-                    elif len(str(id_no).strip()) > 18:
-                        name_id_no[id_no] = line[0]
-                        err_info[id_no] = u'身份证位数错误'
-                    elif line[4] == '':
-                        name_id_no[id_no] = line[0]
-                        err_info[id_no] = u'出生日期未填写'
-                    else:
-                        company_name = str(line[18].encode("utf-8"))
-                        if CompanyProfile.objects.filter(name=company_name).exists():
-                            company = CompanyProfile.objects.get(name=company_name)
-                        else:
-                            company = CompanyProfile(
-                                name=company_name,
-                                service_cost=0,
-                            )
-                            company.save()
-                        employee = EmployeeProfile(
-                            company=company, serial_id=serial_id,
-                            name=format_value(line[0]), email=format_value(line[1]), sex=format_value(line[2]), nation=format_value(line[3]), birth=format_date(line[4]),
-                            id_no=format_value(line[5]), edu_level=format_value(line[6]), graduate=format_value(line[7]), profession=format_value(line[8]),
-                            residence_type=format_value(line[9]), residence_place=format_value(line[10]), now_address=format_value(line[11]),
-                            mobile=format_value(line[12]), emergency_name=format_value(line[13]), emergency_mobile=format_value(line[14]),
-                            is_fired=format_value(line[15]),
-                            fired_date=format_date(line[16]),
-                            fired_reason=format_value(line[17]),
-                            health_card=format_value(line[30]), health_payment_base=format_value(line[31]), health_payment_self=format_value(line[32]),
-                            health_payment_company=format_value(line[33]), health_payment_start=format_date(line[34]), health_payment_end=format_date(line[35]),
-                            born_payment_base=format_value(line[36]), born_payment_self=format_value(line[37]), born_payment_company=format_value(line[38]),
-                            born_payment_start=format_date(line[39]), born_payment_end=format_date(line[40]),
-                            industrial_payment_base=format_value(line[41]), industrial_payment_self=format_value(line[42]),
-                            industrial_payment_company=format_value(line[43]), industrial_payment_start=format_date(line[44]), industrial_payment_end=format_date(line[45]),
-                            unemployed_payment_base=format_value(line[46]), unemployed_payment_self=format_value(line[47]), unemployed_payment_company=format_value(line[48]),
-                            unemployed_payment_start=format_date(line[49]), unemployed_payment_end=format_date(line[50]),
-                            reserved_payment_base=format_value(line[51]), reserved_payment_self=format_value(line[52]), reserved_payment_company=format_value(line[53]),
-                            reserved_payment_start=format_date(line[54]), reserved_payment_end=format_date(line[55]),
-                            endowment_card=format_value(line[56]), endowment_payment_base=format_value(line[57]), endowment_payment_self=format_value(line[58]),
-                            endowment_payment_company=format_value(line[59]), endowment_payment_start=format_date(line[60]), endowment_payment_end=format_date(line[61]),
-                        )
-                        serial_id += 1
-                        if request.user.account.level in (0, 1):
-                            employee.is_active = 1
-                            
-                        try:
-                            employee.save()
-                        except:
-                            year = int(line[5][6:10])
-                            month = int(line[5][10:12])
-                            day = int(line[5][12:14])
-                            print year, month, day
-                            employee.birth = datetime.datetime(year, month, day)
-                            employee.save()
 
-                        contract = Contract(
-                            employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
-                            labour_contract_start=format_date(line[22]), labour_contract_end=format_date(line[23]),
-                            probation_start=format_date(line[24]), probation_end=format_date(line[25]),
-                            bank_no=format_value(line[26]), month_salary=format_value(line[27], default=0), real_salary=format_value(line[28], default=0),
-                            salary_provide=format_date(line[29]),
+            for i in range(1, nrows):
+                line = table.row_values(i)
+                id_no = line[5]
+                if id_no == '':
+                    continue
+                if EmployeeProfile.objects.filter(id_no=str(id_no), is_fired=False).exists():
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'身份证已存在'
+                elif len(str(id_no).strip()) > 18:
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'身份证位数错误'
+                elif line[4] == '':
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'出生日期未填写'
+                else:
+                    company_name = str(line[18].encode("utf-8"))
+                    if CompanyProfile.objects.filter(name=company_name).exists():
+                        company = CompanyProfile.objects.get(name=company_name)
+                    else:
+                        company = CompanyProfile(
+                            name=company_name,
+                            service_cost=0,
                         )
-                        contract.save()
+                        company.save()
+                    employee = EmployeeProfile(
+                        company=company, serial_id=serial_id,
+                        name=format_value(line[0]), email=format_value(line[1]), sex=format_value(line[2]), nation=format_value(line[3]), birth=format_date(line[4]),
+                        id_no=format_value(line[5]), edu_level=format_value(line[6]), graduate=format_value(line[7]), profession=format_value(line[8]),
+                        residence_type=format_value(line[9]), residence_place=format_value(line[10]), now_address=format_value(line[11]),
+                        mobile=format_value(line[12]), emergency_name=format_value(line[13]), emergency_mobile=format_value(line[14]),
+                        is_fired=format_value(line[15]),
+                        fired_date=format_date(line[16]),
+                        fired_reason=format_value(line[17]),
+                        health_card=format_value(line[30]), health_payment_base=format_value(line[31]), health_payment_self=format_value(line[32]),
+                        health_payment_company=format_value(line[33]), health_payment_start=format_date(line[34]), health_payment_end=format_date(line[35]),
+                        born_payment_base=format_value(line[36]), born_payment_self=format_value(line[37]), born_payment_company=format_value(line[38]),
+                        born_payment_start=format_date(line[39]), born_payment_end=format_date(line[40]),
+                        industrial_payment_base=format_value(line[41]), industrial_payment_self=format_value(line[42]),
+                        industrial_payment_company=format_value(line[43]), industrial_payment_start=format_date(line[44]), industrial_payment_end=format_date(line[45]),
+                        unemployed_payment_base=format_value(line[46]), unemployed_payment_self=format_value(line[47]), unemployed_payment_company=format_value(line[48]),
+                        unemployed_payment_start=format_date(line[49]), unemployed_payment_end=format_date(line[50]),
+                        reserved_payment_base=format_value(line[51]), reserved_payment_self=format_value(line[52]), reserved_payment_company=format_value(line[53]),
+                        reserved_payment_start=format_date(line[54]), reserved_payment_end=format_date(line[55]),
+                        endowment_card=format_value(line[56]), endowment_payment_base=format_value(line[57]), endowment_payment_self=format_value(line[58]),
+                        endowment_payment_company=format_value(line[59]), endowment_payment_start=format_date(line[60]), endowment_payment_end=format_date(line[61]),
+                    )
+                    serial_id += 1
+                    if request.user.account.level in (0, 1):
+                        employee.is_active = 1
+                    else:
+                        employee.is_active = 0
+
+                    try:
+                        employee.save()
+                    except:
+                        year = int(line[5][6:10])
+                        month = int(line[5][10:12])
+                        day = int(line[5][12:14])
+                        print "year", year, month, day
+                        employee.birth = datetime.datetime(year, month, day)
+                        employee.save()
+
+                    contract = Contract(
+                        employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
+                        labour_contract_start=format_date(line[22]), labour_contract_end=format_date(line[23]),
+                        probation_start=format_date(line[24]), probation_end=format_date(line[25]),
+                        bank_no=format_value(line[26]), month_salary=format_value(line[27], default=0), real_salary=format_value(line[28], default=0),
+                        salary_provide=format_date(line[29]),
+                    )
+                    contract.save()
 
             UserAction(
                 user=request.user,
@@ -725,37 +728,36 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             INFO_LOG.info(data)
 
             # 反馈错误信息
-            book = xlwt.Workbook(encoding='utf-8')
-            ws = book.add_sheet('导入错误职员信息')
-            style = xlwt.XFStyle()
-            font = xlwt.Font()
-            font.name = 'SimSun'
-            style.font = font
+            if name_id_no:
+                book = xlwt.Workbook(encoding='utf-8')
+                ws = book.add_sheet('导入错误职员信息')
+                style = xlwt.XFStyle()
+                font = xlwt.Font()
+                font.name = 'SimSun'
+                style.font = font
 
-            ws.write(0, 0, '姓名', style)
-            ws.write(0, 1, '身份证号', style)
-            ws.write(0, 2, '错误信息', style)
-            ws.write(0, 3, '导入时间', style)
+                ws.write(0, 0, '姓名', style)
+                ws.write(0, 1, '身份证号', style)
+                ws.write(0, 2, '错误信息', style)
+                ws.write(0, 3, '导入时间', style)
 
-            x, y = 1, 0
-            for k, v in name_id_no.items():
-                ws.write(x, y, v, style)
-                y += 1
-                ws.write(x, y, k, style)
-                y += 1
-                ws.write(x, y, err_info[k], style)
-                y += 1
-                ws.write(x, y, str(datetime.datetime.now())[:19], style)
+                x, y = 1, 0
+                for k, v in name_id_no.items():
+                    ws.write(x, y, v, style)
+                    y += 1
+                    ws.write(x, y, k, style)
+                    y += 1
+                    ws.write(x, y, err_info[k], style)
+                    y += 1
+                    ws.write(x, y, str(datetime.datetime.now())[:19], style)
 
-                x += 1
-                y = 0
+                    x += 1
+                    y = 0
 
-            print len(name_id_no)
-
-            response = HttpResponse(mimetype='application/vnd.ms-excel')
-            response['Content-Disposition'] = 'attachment; filename=导入职员错误信息.xls'
-            book.save(response)
-            return response
+                response = HttpResponse(mimetype='application/vnd.ms-excel')
+                response['Content-Disposition'] = 'attachment; filename=导入职员错误信息.xls'
+                book.save(response)
+                return response
 
             #except:
             #    messages.error(request, '导入格式错误, 需填写所有数据')
