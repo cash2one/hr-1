@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^company/', include('company.urls')),
     url(r'^manager/', include('manager.urls')),
 
-    url(r'^$', 'hr.views.login'),
+    url(r'^$', 'hr.views.test'),
     url(r'^chrome/$', 'hr.views.test'),
     url(r'^logout/', 'hr.views.logout'),
     url(r'^reset_pwd/', 'hr.views.reset_pwd'),
