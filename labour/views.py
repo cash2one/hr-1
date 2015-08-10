@@ -704,7 +704,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         month = int(line[5][10:12])
                         day = int(line[5][12:14])
                         print "year", year, month, day
-                        employee.birth = datetime.datetime(year, month, day)
+                        employee.birth = "{}-{}-{}".format(year, month, day)
                         employee.save()
 
                     contract = Contract(
