@@ -693,15 +693,16 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         serial_id += 1
                         if request.user.account.level in (0, 1):
                             employee.is_active = 1
-                            try:
-                                employee.save()
-                            except:
-                                year = int(line[5][6:10])
-                                month = int(line[5][10:12])
-                                day = int(line[5][12:14])
-                                print year, month, day
-                                employee.birth = datetime.datetime(year, month, day)
-                                employee.save()
+                            
+                        try:
+                            employee.save()
+                        except:
+                            year = int(line[5][6:10])
+                            month = int(line[5][10:12])
+                            day = int(line[5][12:14])
+                            print year, month, day
+                            employee.birth = datetime.datetime(year, month, day)
+                            employee.save()
 
                         contract = Contract(
                             employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
