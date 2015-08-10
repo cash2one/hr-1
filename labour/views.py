@@ -622,10 +622,10 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 ages = 60
             else:
                 ages = 50
-            return datetime.datetime(year+ages, month, day) + datetime.timedelta(hours=1)
+            return datetime.datetime(year+ages, month, day)
         else:
             start = datetime.date(1900, 1, 1)
-            return start + datetime.timedelta(int(value)-2) + datetime.timedelta(hours=1)
+            return start + datetime.timedelta(int(value)-2)
 
     # 已存在的人员字典
     name_id_no = {}
@@ -644,7 +644,6 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
             else:
                 employee_last = EmployeeProfile.objects.all().order_by('-created')[0]
                 serial_id = int(employee_last.serial_id) + 1
-            try:
                 for i in range(1, nrows):
                     line = table.row_values(i)
                     id_no = line[5]
@@ -694,7 +693,15 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                         serial_id += 1
                         if request.user.account.level in (0, 1):
                             employee.is_active = 1
-                            employee.save()
+                            try:
+                                employee.save()
+                            except:
+                                year = int(line[5][6:10])
+                                month = int(line[5][10:12])
+                                day = int(line[5][12:14])
+                                print year, month, day
+                                employee.birth = datetime.datetime(year, month, day)
+                                employee.save()
 
                         contract = Contract(
                             employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
@@ -704,9 +711,6 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                             salary_provide=format_date(line[29]),
                         )
                         contract.save()
-            except:
-                name_id_no[id_no] = line[0]
-                err_info[id_no] = u'删除该条数据单独录入'
 
             UserAction(
                 user=request.user,
