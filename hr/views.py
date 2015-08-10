@@ -17,7 +17,7 @@ def test(request, template_name='test.html'):
     return render(request, template_name)
 
 
-def login(request, form_class=LoginForm, template_name='login.html'):
+def login(request, form_class=LoginForm, template_name='test.html'):
     """ 用户登录"""
     if request.META.has_key('HTTP_X_FORWARDED_FOR'):  
         ip =  request.META['HTTP_X_FORWARDED_FOR']  
