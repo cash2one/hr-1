@@ -622,9 +622,9 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 ages = 60
             else:
                 ages = 50
-            return datetime.datetime(year+ages, month, day)
+            return datetime.date(year+ages, month, day)
         else:
-            start = datetime.date(1900, 1, 1)
+            start = datetime.datetime(1900, 1, 1, 1, 1, 1)
             return start + datetime.timedelta(int(value)-2)
 
     # 已存在的人员字典
@@ -700,15 +700,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                     else:
                         employee.is_active = 0
 
-                    try:
-                        employee.save()
-                    except:
-                        year = int(line[5][6:10])
-                        month = int(line[5][10:12])
-                        day = int(line[5][12:14])
-                        print "year", year, month, day
-                        employee.birth = "{}-{}-{}".format(year, month, day)
-                        employee.save()
+                    employee.save()
 
                     contract = Contract(
                         employee=employee, job_type=format_value(line[19]), company_protocal_start=format_date(line[20]), company_protocal_end=format_date(line[21]),
