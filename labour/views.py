@@ -659,8 +659,11 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                 elif line[4] == '':
                     name_id_no[id_no] = line[0]
                     err_info[id_no] = u'出生日期未填写'
+                elif len(str(line[18].encode("utf-8")).strip()) < 2:
+                    name_id_no[id_no] = line[0]
+                    err_info[id_no] = u'未填写公司名称'
                 else:
-                    company_name = str(line[18].encode("utf-8"))
+                    company_name = str(line[18].encode("utf-8")).strip()
                     if CompanyProfile.objects.filter(name=company_name).exists():
                         company = CompanyProfile.objects.get(name=company_name)
                     else:
