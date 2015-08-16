@@ -1,0 +1,75 @@
+{% extends 'manager/base.html' %} 
+{% load staticfiles %}
+{% block account %} display:block {% endblock %} 
+{% block companys %} inner_on {% endblock %} 
+{% block container %} 
+        <div class="w-right">
+                <div class="th-input" style="width:42%">
+                  <form action='.' method="get">
+                      <span class="ml24">姓名：</span><input class="txt_input" type="text" name="name" value="{{ name|default:''}}"/><br/>
+                      <span>身份证号：</span><input class="txt_input" type="text" name="id_no" value="{{ id_no|default:''}}"/><br/>
+                      <span>医保卡号：</span><input class="txt_input" type="text" name="health_card" value="{{ health_card|default:''}}"/><br/>
+                      <input type="hidden" value="0" name="search"/>
+                      <button style="submit" class="make_sure" style="margin:10px 0px 0px 120px">查询</button>
+                  </form>
+                </div>  
+              <div class="alert alert-error" id="error" style="display:none"></div>
+              <table class="reg-info">
+                  <tr>
+                      <th>
+                        <button style="margin:5px 0.1em 5px 0px;" class="select_second">全选</button>
+                      </th>
+                      <td>姓名</td>
+                      <td>性别</td>
+                      <td>身份证号</td>
+                      <td>医保卡号</td>
+                      <td>所属公司</td>
+                      <td>员工详情</td>
+                  </tr>
+                  {% for employee in employees %}
+                  <tr>
+                      <th><input type="checkbox" name="all_person" class="h37" value="{{ employee.id }}"/></th>
+                      <td> {{ employee.name }} </td>
+                      <td> {{ employee.sex|default:'无' }} </td>
+                      <td> {{ employee.id_no|default:'无' }} </td>
+                      <td> {{ employee.health_card|default:'无' }} </td>
+                      <td> {{ employee.company.name|default:'无' }} </td>
+                      <td>
+                      {% if employee.is_active %}
+                        <a href="javascript:;" ><button type="button" name="{{ employee.id }}" class="delete">删除</button></a>
+                      {% else %}
+                      未通过审核
+                      {% endif %}
+                  </tr>
+                  {% endfor %}
+                  {% if not employees %}
+                    <tr>
+                      <td colspan='7' style="height:40px;color:red">未搜索到数据</td>
+                    </tr>
+                  {% endif %}
+                </table> 
+                <div class="pager">
+                   <span class="fr">
+                       <button type="button" id="delete_select">批量删除</button>
+                   </span>
+                   <a href="?page=1">【首页】</a>
+                  {% if employees.has_previous %}
+                      <a href="?page={{ employees.previous_page_number }}">【上一页】</a>
+                  {% else %}
+                      <font style="color:grey">【上一页】</font>
+                  {% endif %}
+                  {% if employees.has_next %}
+                      <a href="?page={{ employees.next_page_number }}">【下一页】</a>
+                  {% else %}
+                      <font style="color:grey">【下一页】</font>
+                  {% endif %}
+                   <a href="?page={{ employees.paginator.num_pages }}">【尾页】</a>
+                   第{{ employees.number }}页/共{{ employees.paginator.num_pages }}页
+                </div>            
+        </div>
+    </div><!--wrapper END-->
+{% endblock %}
+
+{% block extra_script %}
+    <script type="text/javascript" src="{% static "script/export.js" %}"></script>
+{% endblock %}

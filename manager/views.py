@@ -322,3 +322,118 @@ def employee_audit(request, template_name='manager/employee_audit.html'):
     return render(request, template_name, {
         'employees': empoyees,
     })
+
+
+@login_required
+@csrf_exempt
+def companys(request, template_name='manager/companys.html'):
+    """ 公司信息-删除"""
+    user = request.user
+
+    if request.method == "POST":
+        if request.is_ajax():
+            try:
+                company_id = request.POST.get("company_id")
+                if not EmployeeProfile.objects.filter(company_id=company_id, is_deleted=0).exists():
+                    company = CompanyProfile.objects.get(id=company_id)
+                    company.is_deleted = 1
+                    company.save()
+                    UserAction(
+                        user=request.user,
+                        ip=request.META['REMOTE_ADDR'],
+                        table_name='公司信息表',
+                        modified_type=1,
+                        modified_id=None,
+                        action='删除',
+                    ).save()
+                    data = u'user=%s, delete_table=CompanyProfile,  action=删除, \
+                             delete_name=%s, delete_id=%s' % (user.username, company.name, company.id)
+                    INFO_LOG.info(data)
+                    return HttpResponse(json.dumps({"result": True, "msg": "删除成功"}))
+                else:
+                    return HttpResponse(json.dumps({"result": False, "msg": "请先删除全部员工信息再删除公司"}))
+            except CompanyProfile.DoesNotExist:
+                pass
+
+    company_list = CompanyProfile.objects.filter(is_deleted=0)
+
+    companys, page_numbers = adjacent_paginator(company_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'companys': companys,
+        'page_numbers': page_numbers,
+    })
+
+
+@login_required
+@csrf_exempt
+def company_employees(request, company_id, template_name='manager/company_employees.html'):
+    """ 公司人员信息-删除"""
+    user = request.user
+    name = request.GET.get('name', None)
+    id_no = request.GET.get('id_no', None)
+    health_card = request.GET.get('health_card', None)
+    search = request.GET.get('search', None)
+    search_dict = {}
+    extra_kwargs = {}
+
+    if search is not None:
+        if name != '':
+            search_dict['name__contains'] = name
+        if id_no != '':
+            search_dict['id_no__contains'] = id_no
+        if health_card != '':
+            search_dict['health_card__contains'] = health_card
+
+        UserAction(
+            user=user,
+            ip=request.META['REMOTE_ADDR'],
+            table_name='雇员信息表',
+            modified_type=2,
+            modified_id=None,
+            action='搜索',
+        ).save()
+        data = u'user=%s, search_table=EmployeeProfile,  action=搜索, search_name=%s, search_id_no=%s, search_health_card=%s' % (user.username, name, id_no, health_card)
+        INFO_LOG.info(data)
+
+        employee_list = EmployeeProfile.objects.filter(company_id=company_id, is_deleted=0, **search_dict)
+    else:
+        employee_list = EmployeeProfile.objects.filter(company_id=company_id, is_deleted=0, **extra_kwargs)
+
+    employees, page_numbers = adjacent_paginator(employee_list, request.GET.get('page', 1))
+
+    return render(request, template_name, {
+        'employees': employees,
+        'user': request.user,
+        'name': name,
+        'id_no': id_no,
+        'health_card': health_card,
+    })
+
+
+@login_required
+@csrf_exempt
+def delete_employee(request):
+    """ 公司人员信息-删除"""
+    if request.method == "POST":
+        if request.is_ajax():
+            try:
+                employee_arr = request.POST.get("employees_id").split(",")[1:]
+                employees = EmployeeProfile.objects.filter(id__in=employee_arr, is_deleted=0)
+                for employee in employees:
+                    employee.delete()
+                    UserAction(
+                        user=request.user,
+                        ip=request.META['REMOTE_ADDR'],
+                        table_name='职员信息表',
+                        modified_type=3,
+                        modified_id=employee.id,
+                        action='删除',
+                    ).save()
+                return HttpResponse(json.dumps({"result": True, "msg": "删除成功"}))
+
+            except EmployeeProfile.DoesNotExist:
+                return HttpResponse(json.dumps({"result": False, "msg": "职员不存在"}))
+    return HttpResponse(json.dumps({"result": False, "msg": "error"}))
+
+

@@ -123,7 +123,7 @@ def contract_add(request, employee_id, form_class=ContractForm, template_name="l
         return HttpResponseRedirect(reverse("labour.views.employee_add"))
 
     user = request.user
-    companys = CompanyProfile.objects.filter(**filter_company)
+    companys = CompanyProfile.objects.filter(is_deleted=0, **filter_company)
 
     if request.method == "POST":
         form = form_class(request, data=request.POST)
@@ -213,7 +213,7 @@ def company_update(request, company_id, form_class=CompanyForm, template_name='l
     """ 公司信息修改"""
     user = request.user
     try:
-        company = CompanyProfile.objects.get(id=company_id)
+        company = CompanyProfile.objects.get(id=company_id, is_deleted=0)
     except CompanyProfile.DoesNotExist:
         messages.error(request, '该公司不存在', extra_tags='company_not_exist')
         return HttpResponseRedirect(reverse("labour.views.company_add"))
@@ -243,7 +243,7 @@ def company_update(request, company_id, form_class=CompanyForm, template_name='l
 def company_show(request, company_id, template_name='labour/company_show.html'):
     """ 公司信息show"""
     try:
-        company = CompanyProfile.objects.get(id=company_id)
+        company = CompanyProfile.objects.get(id=company_id, is_deleted=0)
     except CompanyProfile.DoesNotExist:
         messages.error(request, '该公司不存在', extra_tags='company_not_exist')
         return HttpResponseRedirect(reverse("labour.views.company_add"))
@@ -272,7 +272,7 @@ def companys(request, template_name='labour/companys.html'):
     """ 全部公司信息"""
     search = request.GET.get('search', None)
     if search is not None:
-        company_list = CompanyProfile.objects.filter(name__contains=search)
+        company_list = CompanyProfile.objects.filter(name__contains=search, is_deleted=0)
     else:
         company_list = CompanyProfile.objects.filter(is_deleted=0)
 
@@ -337,7 +337,7 @@ def employees(request, template_name='labour/employees.html'):
 def company_employees(request, company_id, template_name='labour/company_employees.html'):
     """ 全部员工信息"""
     try:
-        company = CompanyProfile.objects.get(id=company_id)
+        company = CompanyProfile.objects.get(id=company_id, is_deleted=0)
     except CompanyProfile.DoesNotExist:
         messages.error(request, '该公司不存在', extra_tags='company_not_exist')
         return HttpResponseRedirect(reverse("labour.views.company_add"))
@@ -478,34 +478,34 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
         })
 
     elif statis_type == 'endowment':
-        profiles = EmployeeProfile.objects.filter(endowment_payment_end__lt=today)
+        profiles = EmployeeProfile.objects.filter(endowment_payment_end__lt=today, is_fired=0)
         is_employee = True
     elif statis_type == 'health':
-        profiles = EmployeeProfile.objects.filter(health_payment_end__lt=today)
+        profiles = EmployeeProfile.objects.filter(health_payment_end__lt=today, is_fired=0)
         is_employee = True
     elif statis_type == 'born':
-        profiles = EmployeeProfile.objects.filter(born_payment_end__lt=today)
+        profiles = EmployeeProfile.objects.filter(born_payment_end__lt=today, is_fired=0)
         is_employee = True
     elif statis_type == 'industrial':
-        profiles = EmployeeProfile.objects.filter(industrial_payment_end__lt=today)
+        profiles = EmployeeProfile.objects.filter(industrial_payment_end__lt=today, is_fired=0)
         is_employee = True
     elif statis_type == 'unemployed':
-        profiles = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today)
+        profiles = EmployeeProfile.objects.filter(unemployed_payment_end__lt=today, is_fired=0)
         is_employee = True
     elif statis_type == 'reserved':
-        profiles = EmployeeProfile.objects.filter(reserved_payment_end__lt=today)
+        profiles = EmployeeProfile.objects.filter(reserved_payment_end__lt=today, is_fired=0)
         is_employee = True
     elif statis_type == 'company_protocal':
-        profiles = Contract.objects.filter(company_protocal_end__lt=today)
+        profiles = Contract.objects.filter(company_protocal_end__lt=today, employee__is_fired=0)
         is_contract = True
     elif statis_type == 'labour_contract':
-        profiles = Contract.objects.filter(labour_contract_end__lt=today)
+        profiles = Contract.objects.filter(labour_contract_end__lt=today, employee__is_fired=0)
         is_contract = True
     elif statis_type == 'probation':
-        profiles = Contract.objects.filter(probation_end__lt=today)
+        profiles = Contract.objects.filter(probation_end__lt=today, employee__is_fired=0)
         is_contract = True
     elif statis_type == 'retire':
-        employee_list = EmployeeProfile.objects.all()
+        employee_list = EmployeeProfile.objects.filter(is_fired=0)
         is_employee = True
         year = datetime.datetime.now().year
         retire_id = []
@@ -521,7 +521,7 @@ def statistics(request, statis_type='all', template_name='labour/labour_statisti
             except ValueError:
                 pass
 
-        profiles = EmployeeProfile.objects.filter(id__in=retire_id)
+        profiles = EmployeeProfile.objects.filter(id__in=retire_id, is_fired=0)
     else:
         return HttpResponseRedirect(reverse('labour.views.statistics'))
 
@@ -549,7 +549,7 @@ def labour_history(request, template_name='labour/labour_history.html'):
         search_dict['company'] = user.account.profile
 
     employee_list = EmployeeProfile.objects.filter(is_fired=True, **employee_filter)
-    companys = CompanyProfile.objects.filter(**company_filter)
+    companys = CompanyProfile.objects.filter(is_deleted=0, **company_filter)
 
     name = request.GET.get('name', None)
     id_no = request.GET.get('id_no', None)
@@ -664,7 +664,7 @@ def labour_import(request, form_class=LabourImportForm, template_name='labour/la
                     err_info[id_no] = u'未填写公司名称'
                 else:
                     company_name = str(line[18].encode("utf-8")).strip()
-                    if CompanyProfile.objects.filter(name=company_name).exists():
+                    if CompanyProfile.objects.filter(name=company_name, is_deleted=0).exists():
                         company = CompanyProfile.objects.get(name=company_name)
                     else:
                         company = CompanyProfile(

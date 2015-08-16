@@ -15,4 +15,10 @@ urlpatterns = patterns('manager.views',
     # 人员审核
     url(r'^audit/$', 'employee_audit'),
 
+    # 公司信息管理
+    url(r'^companys/$', 'companys'),
+    url(r'^company/(?P<company_id>\d+)/employees/$', 'company_employees', name="company_employees"),
+    url(r'^company/employees/delete/$', 'delete_employee', name="delete_employee"),
+
+
 )
